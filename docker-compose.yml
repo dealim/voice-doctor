@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "10100:10100"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=production
+    restart: on-failure
