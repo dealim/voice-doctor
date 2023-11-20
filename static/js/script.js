@@ -50,6 +50,18 @@ function handleFiles(files) {
 }
 
 function uploadFile(file) {
-    // 여기서 파일 처리 (업로드 또는 미리보기 등)
-    console.log('Uploaded file:', file.name);
+    let formData = new FormData();
+    formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
+
+    fetch('/upload', { // Flask 엔드포인트
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
