@@ -1,5 +1,5 @@
 # 베이스 이미지 설정 (Python 3.8을 사용)
-FROM python:3.8
+FROM python:3.10
 
 # 애플리케이션 폴더 생성
 WORKDIR /app
