@@ -10,6 +10,7 @@
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
             rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap">
 </head>
 <body>
 
@@ -18,38 +19,41 @@
 <!-- Overlay -->
 <div class="overlay">
     <!-- Overlay inner wrapper -->
-    <div class="overlay__inner">
+    <div class="overlay-inner-left">
         <!-- Title -->
         <h1 class="overlay__title">
-            Hey, would you like to learn how to create a
-            <span class="text-gradient">generative</span> UI just like this?
+            <span class="text-gradient">Vertex AI</span> 활용 키워드 추출 및 감정 분석
         </h1>
         <!-- Description -->
         <p class="overlay__description">
-            In this tutorial we will be creating a generative “orb” animation
-            using pixi.js, picking some lovely random colors and pulling it all
-            together in a nice frosty UI.
-            <strong>We're gonna talk accessibility, too.</strong>
+            키워드 추출해서 증상, 환자 대화 요약, 대화 내용을 통해 감정 분석<br>
+            <strong>의사와 환자와의 대화를 분석햐여 결과를 리포트합니다</strong>
         </p>
         <!-- Buttons -->
         <div class="overlay__btns">
             <button class="overlay__btn overlay__btn--transparent">
                 <a href="https://georgefrancis.dev/writing/create-a-generative-landing-page-and-webgl-powered-background/"
                    target="_blank">
-
-                    View Tutorial
+                    보이스 텍스트 보기🔎
                 </a>
             </button>
-
             <button class="overlay__btn overlay__btn--colors">
-                <span>Randomise Colors</span>
-                <span class="overlay__btn-emoji">🎨</span>
+                <span>감정 분석 하기🧐</span>
+                <span class="overlay__btn-emoji"></span>
             </button>
+        </div>
+    </div>
+    <div class="overlay-inner-right">
+        <div class="voice-input-section">
+            <div id="dropArea" class="drop-area">
+                <p>여기에 파일을 드래그 앤 드롭하거나 <a href="#" id="fileInputLink">파일 찾아보기</a></p>
+                <input type="file" id="fileInput" accept="audio/*" hidden>
+            </div>
         </div>
     </div>
 </div>
 
 <script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
-
+<script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
