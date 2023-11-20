@@ -13,7 +13,7 @@ client = speech.SpeechClient()
 path = '/app/GCP-TEAM2/services/'
 
 # video_url = input("Please enter the video URL: ")
-video_url = "https://youtu.be/NVwM4yvf6Bw"
+video_url = "https://youtu.be/jznTCqrHoMw"
 yt = YouTube(video_url)
 
 #Get highest bitrate audio stream for given codec (defaults to mp4)
