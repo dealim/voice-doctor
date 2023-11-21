@@ -1,69 +1,138 @@
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
+// 동적 페이지, SPA 구현
 
-    // the link to your model provided by Teachable Machine export panel
-    const URL = "https://teachablemachine.withgoogle.com/models/_15t6VqbY/";
-    let model, webcam, ctx, labelContainer, maxPredictions;
-
-    async function init() {
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
-
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // Note: the pose library adds a tmPose object to your window (window.tmPose)
-        model = await tmPose.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
-
-        // Convenience function to setup a webcam
-        const size = 200;
-        const flip = true; // whether to flip the webcam
-        webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
-        await webcam.setup(); // request access to the webcam
-        await webcam.play();
-        window.requestAnimationFrame(loop);
-
-        // append/get elements to the DOM
-        const canvas = document.getElementById("canvas");
-        canvas.width = size; canvas.height = size;
-        ctx = canvas.getContext("2d");
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
-        }
+// 첫 페이지 로드
+document.addEventListener('DOMContentLoaded', (event) => {
+    loadContent('/main');
+});
+document.getElementById('dynamicContent').addEventListener('click', function (event) {
+    if (event.target.id === 'viewTextSummary') {
+        event.preventDefault();
+        loadContent('/show/voicetext');
+    } else if (event.target.id === 'startEmotionAnalysis') {
+        event.preventDefault();
+        loadContent('/show/emotion');
     }
+});
 
-    async function loop(timestamp) {
-        webcam.update(); // update the webcam frame
-        await predict();
-        window.requestAnimationFrame(loop);
-    }
+// 페이드 아웃 및 새 콘텐츠 로드 함수
+function loadContent(url) {
+    const dynamicContent = document.getElementById('dynamicContent');
+    // 페이드 아웃
+    dynamicContent.classList.add('hidden');
 
-    async function predict() {
-        // Prediction #1: run input through posenet
-        // estimatePose can take in an image, video or canvas html element
-        const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
-        // Prediction 2: run input through teachable machine classification model
-        const prediction = await model.predict(posenetOutput);
+    // CSS 트랜지션을 기다립니다
+    setTimeout(() => {
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                // 콘텐츠 업데이트 및 페이드 인
+                dynamicContent.innerHTML = html;
+                dynamicContent.classList.remove('hidden');
 
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
-        }
+                setupArrowClickListener();
 
-        // finally draw the poses
-        drawPose(pose);
-    }
+                // 필요한 경우 추가 초기화 함수 호출
+                if (url === '/main') {
+                    setupFileDragAndDrop();
+                }
+            });
+    }, 300); // CSS 트랜지션 시간과 일치
+}
 
-    function drawPose(pose) {
-        if (webcam.canvas) {
-            ctx.drawImage(webcam.canvas, 0, 0);
-            // draw the keypoints and skeleton
-            if (pose) {
-                const minPartConfidence = 0.5;
-                tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-                tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+// 화살표 클릭 이벤트 리스너 설정 함수
+function setupArrowClickListener() {
+    const arrowContainer = document.querySelector('.arrow-container');
+    if (arrowContainer) {
+        arrowContainer.addEventListener('click', function (event) {
+            // Arrow 부분이 클릭되면 main_page 로드
+            if (event.target.closest('.arrow')) {
+                event.preventDefault();
+                loadContent('/main');
             }
-        }
+        });
     }
+}
+
+// 보이스 넣는 설정
+function setupFileDragAndDrop() {
+    const dropArea = document.getElementById('dropArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInputLink = document.getElementById('fileInputLink');
+
+    // 파일 입력 필드 열기
+    fileInputLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+
+    // 드래그 이벤트 방지
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // 드래그 활성화/비활성화 스타일
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropArea.classList.add('active');
+    }
+
+    function unhighlight(e) {
+        dropArea.classList.remove('active');
+    }
+
+    // 파일 드롭 처리
+    dropArea.addEventListener('drop', handleDrop, false);
+    let isFileUploaded = false;
+
+    function handleDrop(e) {
+        if (isFileUploaded) {
+            return; // 파일이 이미 업로드된 경우, 추가 처리 방지
+        }
+        let dt = e.dataTransfer;
+        let files = dt.files;
+
+        handleFiles(files);
+    }
+
+    function handleFiles(files) {
+        ([...files]).forEach(uploadFile);
+    }
+
+    function uploadFile(file) {
+        let formData = new FormData();
+        formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
+
+        fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'File uploaded successfully!') {
+                    console.log(data);
+                    isFileUploaded = true; // 업로드 상태 업데이트
+                    document.getElementById('dropAreaMessage').innerText = "업로드가 완료 되었습니다"; // 메시지 변경
+                    dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
+                } else {
+                    document.getElementById('dropAreaMessage').innerText = "업로드 실패";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+

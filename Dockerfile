@@ -1,5 +1,7 @@
-# 베이스 이미지 설정 (Python 3.8을 사용)
-FROM python:3.8
+# 베이스 이미지 설정 (Python 3.9을 사용)
+FROM python:3.9
+
+# FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
 
 # 애플리케이션 폴더 생성
 WORKDIR /app
