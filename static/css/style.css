@@ -277,32 +277,13 @@ a {
 
 /*싱글 페이지 애니메이션*/
 
-.fade-out {
-    animation: fadeOut 0.5s;
+#dynamicContent {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.hidden {
     opacity: 0;
-    visibility: hidden;
 }
 
-.fade-in {
-    animation: fadeIn 0.5s;
-    opacity: 1;
-    visibility: visible;
-}
+/*뒤로가기*/
 
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
