@@ -240,16 +240,24 @@ a {
     border-color: #000;
 }
 
-/* 기본 링크 스타일 */
+.drop-area.uploaded {
+    transition: all 0.5s ease; /* 모든 변화에 대해 0.5초 동안 부드러운 전환 적용 */
+    border-color: blue; /* 업로드 완료시 보더 색상 변경 */
+    background-color: rgba(169, 169, 169, 0.5); /* 투명한 다크 그레이 배경색 */
+    pointer-events: none; /* 추가적인 드래그 및 클릭 방지 */
+}
+
 #fileInputLink {
     color: #007bff; /* 전통적인 하이퍼링크 파란색 */
     text-decoration: underline; /* 밑줄 */
     font-weight: normal; /* 일반 글씨 굵기 */
 }
 
-/* 마우스 오버 시 */
 #fileInputLink:hover {
     color: #0056b3; /* 마우스 오버시 약간 어두운 파란색으로 변경 */
     text-decoration: none; /* 마우스 오버시 밑줄 없애기 */
+}
+
+#dropAreaMessage{
 }
 

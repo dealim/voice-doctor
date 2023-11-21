@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Page Title</title>
+    <title>Team02</title>
     <link rel="preconnect" href="https://fonts.gstatic.com"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link
@@ -26,15 +26,14 @@
         </h1>
         <!-- Description -->
         <p class="overlay__description">
-            키워드 추출해서 증상, 환자 대화 요약, 대화 내용을 통해 감정 분석<br>
+            키워드 추출 및 환자 대화 요약, 대화 내용을 통해 감정 분석<br>
             <strong>의사와 환자와의 대화를 분석햐여 결과를 리포트합니다</strong>
         </p>
         <!-- Buttons -->
         <div class="overlay__btns">
             <button class="overlay__btn overlay__btn--transparent">
-                <a href="https://georgefrancis.dev/writing/create-a-generative-landing-page-and-webgl-powered-background/"
-                   target="_blank">
-                    보이스 텍스트 보기🔎
+                <a href="{{ url_for('show_voicetext') }}">
+                    요약된 텍스트 보기🔎
                 </a>
             </button>
             <button class="overlay__btn overlay__btn--colors">
@@ -46,7 +45,7 @@
     <div class="overlay-inner-right">
         <div class="voice-input-section">
             <div id="dropArea" class="drop-area">
-                <p>여기에 파일을 드래그 앤 드롭하거나 <a href="#" id="fileInputLink">파일 찾아보기</a></p>
+                <p id="dropAreaMessage">여기에 파일을 드래그 앤 드롭하거나 <a href="#" id="fileInputLink">파일 찾아보기</a></p>
                 <input type="file" id="fileInput" accept="audio/*" hidden>
             </div>
         </div>

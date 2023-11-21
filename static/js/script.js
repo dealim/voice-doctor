@@ -37,8 +37,12 @@ function unhighlight(e) {
 
 // 파일 드롭 처리
 dropArea.addEventListener('drop', handleDrop, false);
+let isFileUploaded = false;
 
 function handleDrop(e) {
+    if (isFileUploaded) {
+        return; // 파일이 이미 업로드된 경우, 추가 처리 방지
+    }
     let dt = e.dataTransfer;
     let files = dt.files;
 
@@ -53,15 +57,23 @@ function uploadFile(file) {
     let formData = new FormData();
     formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
 
-    fetch('/upload', { // Flask 엔드포인트
+    fetch('/api/upload', {
         method: 'POST',
         body: formData
     })
-        .then(response => response.json())
-        .then(data => {
+    .then(response => response.json())
+    .then(data => {
+        if(data.message === 'File uploaded successfully!') {
             console.log(data);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+            isFileUploaded = true; // 업로드 상태 업데이트
+            document.getElementById('dropAreaMessage').innerText = "업로드가 완료 되었습니다"; // 메시지 변경
+            dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
+        } else {
+            document.getElementById('dropAreaMessage').innerText = "업로드 실패";
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+

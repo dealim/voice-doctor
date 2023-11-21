@@ -27,8 +27,8 @@ class ColorPalette {
   setColors() {
     // Pick a random hue somewhere in the blue range, between 180 and 240
     this.hue = ~~random(180, 240);
-    this.complimentaryHue1 = this.hue + 10;
-    this.complimentaryHue2 = this.hue + 30;
+    this.complimentaryHue1 = this.hue + 30 ;
+    this.complimentaryHue2 = this.hue + 60;
     // Ensure that the complimentary hues stay within the 0-360 range
     this.complimentaryHue1 = this.complimentaryHue1 % 360;
     this.complimentaryHue2 = this.complimentaryHue2 % 360;
@@ -229,3 +229,8 @@ document
       orb.fill = colorPalette.randomColor();
     });
   });
+
+// 오버레이 페이지 관리
+
+
+

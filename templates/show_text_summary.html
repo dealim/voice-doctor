@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap">
+</head>
+<body>
+
+<!-- Canvas -->
+<canvas class="orb-canvas"></canvas>
+<!-- Overlay -->
+<div class="overlay">
+    <div class="overlay-inner-left">
+    </div>
+    <div class="overlay-inner-right">
+    </div>
+</div>
+
+<script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
