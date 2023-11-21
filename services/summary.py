@@ -3,7 +3,8 @@ import os
 import vertexai
 from vertexai.language_models import TextGenerationModel
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\user\\Desktop\\appteam02-c13c03fe47b7.json"
+os.environ[
+    "GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\seunggu\\Desktop\\GCP-TEAM2\\services\\appteam2-be6ee086c033.json"
 
 
 def text_summarization(
