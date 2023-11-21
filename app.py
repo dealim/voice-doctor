@@ -16,6 +16,11 @@ def show_voicetext():
     return render_template('show_text_summary.html')
 
 
+@app.route('/show/emotion', methods=['GET'])
+def show_emotion():
+    return render_template('show_text_emotion_analysis.html')
+
+
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' in request.files:
