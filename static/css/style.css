@@ -217,6 +217,8 @@ a {
 @media only screen and (max-width: 600px) {
     .overlay {
         padding: 1.5rem;
+        flex-direction: column;
+        max-height: none;
     }
 
     .overlay__btns {
@@ -231,6 +233,10 @@ a {
 
     .overlay__btn:first-child {
         margin-bottom: 1rem;
+    }
+
+    .drop-area {
+        flex-wrap: wrap;
     }
 }
 
