@@ -1,3 +1,33 @@
+// 동적 페이지, SPA 구현
+
+// 첫 페이지 로드
+document.addEventListener('DOMContentLoaded', (event) => {
+    fetch('/main')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('dynamicContent').innerHTML = html;
+        });
+});
+document.getElementById('dynamicContent').addEventListener('click', function (event) {
+    // event.target을 사용하여 클릭된 요소를 확인합니다.
+    if (event.target.id === 'viewTextSummary') {
+        event.preventDefault();
+        fetch('/show/voicetext')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('dynamicContent').innerHTML = html;
+            });
+    } else if (event.target.id === 'startEmotionAnalysis') {
+        event.preventDefault();
+        fetch('/show/emotion')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('dynamicContent').innerHTML = html;
+            });
+    }
+});
+
+// 보이스 넣기
 const dropArea = document.getElementById('dropArea');
 const fileInput = document.getElementById('fileInput');
 const fileInputLink = document.getElementById('fileInputLink');
@@ -61,19 +91,19 @@ function uploadFile(file) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if(data.message === 'File uploaded successfully!') {
-            console.log(data);
-            isFileUploaded = true; // 업로드 상태 업데이트
-            document.getElementById('dropAreaMessage').innerText = "업로드가 완료 되었습니다"; // 메시지 변경
-            dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
-        } else {
-            document.getElementById('dropAreaMessage').innerText = "업로드 실패";
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'File uploaded successfully!') {
+                console.log(data);
+                isFileUploaded = true; // 업로드 상태 업데이트
+                document.getElementById('dropAreaMessage').innerText = "업로드가 완료 되었습니다"; // 메시지 변경
+                dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
+            } else {
+                document.getElementById('dropAreaMessage').innerText = "업로드 실패";
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 

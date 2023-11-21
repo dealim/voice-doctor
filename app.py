@@ -11,12 +11,17 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/show/voicetext', methods=['GET'])
+@app.route('/main')
+def main_page():
+    return render_template('main_page.html')
+
+
+@app.route('/show/voicetext')
 def show_voicetext():
     return render_template('show_text_summary.html')
 
 
-@app.route('/show/emotion', methods=['GET'])
+@app.route('/show/emotion')
 def show_emotion():
     return render_template('show_text_emotion_analysis.html')
 

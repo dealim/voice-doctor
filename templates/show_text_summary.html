@@ -1,40 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="preconnect" href="https://fonts.gstatic.com"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
-            rel="stylesheet"
-    />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap">
-</head>
-<body>
-
-<!-- Canvas -->
-<canvas class="orb-canvas"></canvas>
-<!-- Overlay -->
-<div class="overlay">
-    <div class="overlay-summary-left">
-        <h1 class="overlay__title"> Voice Summary</h1>
-    </div>
-    <div class="overlay-summary-right">
-        <p class="overlay_summary_description">
-            Um-hum . Yeah. Hello , good morning . Good
-            morning . So , tell me what's going on . Uh , sure , so , um , I
-            woke up probably three or four days ago , which , uh , wheezing and short of breath .
-            Okay , any cough or chest pain ? I cough infrequently , but no ,
-            uh , chest pain . Have you been exposed to anyone with covid ?
-            Uh , no , and I also took a test , which was negative . Uh , is it getting
-            worse , or better ? Uh , it has been getting a lot worse
-        </p>
-    </div>
+<div class="overlay-summary-left">
+    <h1 class="overlay__title"> Voice Summary</h1>
 </div>
-
-<script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
-<script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+<div class="overlay-summary-right">
+    <p class="overlay_summary_description">
+        Um-hum . Yeah. Hello , good morning . Good
+        morning . So , tell me what's going on . Uh , sure , so , um , I
+        woke up probably three or four days ago , which , uh , wheezing and short of breath .
+        Okay , any cough or chest pain ? I cough infrequently , but no ,
+        uh , chest pain . Have you been exposed to anyone with covid ?
+        Uh , no , and I also took a test , which was negative . Uh , is it getting
+        worse , or better ? Uh , it has been getting a lot worse
+    </p>
+</div>
