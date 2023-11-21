@@ -26,7 +26,7 @@ class ColorPalette {
 
     setColors() {
         // Pick a random hue somewhere in the blue range, between 180 and 240
-        this.hue = ~~random(180, 230);
+        this.hue = ~~random(180, 220);
         this.complimentaryHue1 = this.hue + 10;
         this.complimentaryHue2 = this.hue + 30;
         // Ensure that the complimentary hues stay within the 0-360 range
