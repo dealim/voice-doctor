@@ -4,6 +4,7 @@ import settings
 
 # SECRET KEY 가져오기 
 SECRET_API_KEY = settings.get_secret("APIKEY_TEXT_EMOTION_ANALYSIS")
+PROJECT_ID = settings.get_projectId()
 
 def analyze_sentiment(text_content) -> None:
     """
@@ -14,10 +15,8 @@ def analyze_sentiment(text_content) -> None:
     """
    
     client = language_v2.LanguageServiceClient(
-        client_options={"api_key": SECRET_API_KEY, "quota_project_id": "appteam02"}
+        client_options={"api_key": SECRET_API_KEY, "quota_project_id": PROJECT_ID}
     )
-
-    # text_content = 'I am so happy and joyful.'
 
     # Available types: PLAIN_TEXT, HTML
     document_type_in_plain_text = language_v2.Document.Type.PLAIN_TEXT
@@ -39,22 +38,29 @@ def analyze_sentiment(text_content) -> None:
     response = client.analyze_sentiment(
         request={"document": document, "encoding_type": encoding_type}
     )
-    # Get overall sentiment of the input document
-    print(f"Document sentiment score: {response.document_sentiment.score}")
-    print(f"Document sentiment magnitude: {response.document_sentiment.magnitude}")
-    # Get sentiment for all sentences in the document
+    
+    # input 문장들의 종합적인 sentiment score, manitude
+    doc_sentiment_score = response.document_sentiment.score
+    doc_sentiment_magnitude = response.document_sentiment.magnitude
+    print("="*50)
+    print(f"전체 감정 score: {doc_sentiment_score}")
+    print(f"전체 감정 magnitude: {doc_sentiment_magnitude}")
+    print("="*50)
+    
+    # input 문장들 각각에 대한 sentiment score, manitude
     for sentence in response.sentences:
-        print(f"Sentence text: {sentence.text.content}")
-        print(f"Sentence sentiment score: {sentence.sentiment.score}")
-        print(f"Sentence sentiment magnitude: {sentence.sentiment.magnitude}")
+        print(f"문장: {sentence.text.content}")
+        print(f"감정 score: {sentence.sentiment.score}")
+        print(f"감정 magnitude: {sentence.sentiment.magnitude}")
+        print()
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print(f"Language of the text: {response.language_code}")
+    print(f"언어: {response.language_code}")
 
 # JSON 파일 읽기 예제
-with open('text_request.json', 'r', encoding='utf-8') as file:
+with open('./services/patient_text_request.json', 'r', encoding='utf-8') as file:
     json_data = json.load(file)
 
 # 각 문장에 대해 감정 분석 수행
