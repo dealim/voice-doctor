@@ -77,6 +77,14 @@ strong {
     min-width: 30%;
 }
 
+.overlay-summary-left {
+    min-width: 30%;
+}
+
+.overlay-summary-right {
+
+}
+
 .voice-input-section {
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-direction: column; /* 아이템을 세로 방향으로 정렬 */
@@ -112,6 +120,12 @@ strong {
 .overlay__description {
     font-size: 1rem;
     line-height: 1.75rem;
+    margin-bottom: 3rem;
+}
+
+.overlay_summary_description {
+    font-size: 1.5rem;
+    line-height: 2rem;
     margin-bottom: 3rem;
 }
 
@@ -258,6 +272,6 @@ a {
     text-decoration: none; /* 마우스 오버시 밑줄 없애기 */
 }
 
-#dropAreaMessage{
+#dropAreaMessage {
 }
 
