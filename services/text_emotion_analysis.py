@@ -1,8 +1,10 @@
 from google.cloud import language_v2
 import json
+
 def analyze_sentiment(text_content) -> None:
     """
     문자열 내에서 감정 분석
+    아직 수정 중
 
     Args:
       text_content: The text content to analyze.
