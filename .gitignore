@@ -159,3 +159,6 @@ secrets.json
 
 # Docker env files
 docker-compose.env
+
+# certificate
+certs/
