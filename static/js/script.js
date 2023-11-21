@@ -28,16 +28,33 @@ function loadContent(url) {
                 // 콘텐츠 업데이트 및 페이드 인
                 dynamicContent.innerHTML = html;
                 dynamicContent.classList.remove('hidden');
+
+                setupArrowClickListener();
+
                 // 필요한 경우 추가 초기화 함수 호출
                 if (url === '/main') {
-                    initializeFileDragAndDrop();
+                    setupFileDragAndDrop();
                 }
             });
     }, 300); // CSS 트랜지션 시간과 일치
 }
 
-// 보이스 넣기
-function initializeFileDragAndDrop() {
+// 화살표 클릭 이벤트 리스너 설정 함수
+function setupArrowClickListener() {
+    const arrowContainer = document.querySelector('.arrow-container');
+    if (arrowContainer) {
+        arrowContainer.addEventListener('click', function (event) {
+            // Arrow 부분이 클릭되면 main_page 로드
+            if (event.target.closest('.arrow')) {
+                event.preventDefault();
+                loadContent('/main');
+            }
+        });
+    }
+}
+
+// 보이스 넣는 설정
+function setupFileDragAndDrop() {
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const fileInputLink = document.getElementById('fileInputLink');
