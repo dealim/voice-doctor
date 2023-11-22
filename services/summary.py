@@ -2,10 +2,7 @@
 import os
 import vertexai
 from vertexai.language_models import TextGenerationModel
-
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\seunggu\\Desktop\\GCP-TEAM2\\services\\appteam2-be6ee086c033.json"
-
+from settings import get_secret
 
 def text_summarization(
     temperature: float,
@@ -15,7 +12,6 @@ def text_summarization(
     """Summarization Example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
-    # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -25,6 +21,7 @@ def text_summarization(
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
+        """Provide a summary with about two sentences for the following conversation:""" + 
         """Um-hum . Yeah. Hello , good morning . Good
           morning . So , tell me what's going on . Uh , sure , so , um , I
           woke up probably three or four days ago , which , uh , wheezing and short of breath .
@@ -40,4 +37,5 @@ def text_summarization(
     return response.text
 
 if __name__ == "__main__":
-    text_summarization(0.0, 'appteam02', 'us-central1')
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
+    text_summarization(0.0, 'applicationteam02', 'us-central1')
