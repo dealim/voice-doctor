@@ -13,6 +13,7 @@
     
     <!-- chart 정보 정의-->
     <script>
+      const chartTitle = "The patient's sentiment analysis chart";
       var sentences = {{ patient.text_contents | tojson}};
       var sentiScores = {{ patient.senti_scores | tojson }};
       var sentiMagnitudes = {{ patient.senti_magnitudes | tojson }};
@@ -70,7 +71,7 @@
             },
             title: {
               display: true,
-              text: "The patient's sentiment analysis chart"
+              text: chartTitle
             }
           }
         },
