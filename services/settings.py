@@ -1,8 +1,8 @@
 import os, json
 
 # secrets.json 파일 위치를 명시
-BASE_PATH = os.getcwd()
-secret_file = os.path.join(BASE_PATH, 'secrets.json')  
+BASE_PATH = os.environ['PYTHONPATH']
+secret_file = os.path.join(BASE_PATH, 'keys\secrets.json')
 
 with open(secret_file) as f:
     secrets = json.loads(f.read())

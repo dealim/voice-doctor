@@ -155,6 +155,7 @@ Thumbs.db
 *.pem
 *.key
 *.cert
+keys/
 secrets.json
 
 # Docker env files
