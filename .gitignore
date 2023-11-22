@@ -155,7 +155,12 @@ Thumbs.db
 *.pem
 *.key
 *.cert
-secrets.json
+keys/
+keys/secrets.json
 
 # Docker env files
 docker-compose.env
+
+# certificate
+certs/
+services/appteam2-b11b34493f7a.json

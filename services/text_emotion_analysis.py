@@ -1,23 +1,32 @@
 from google.cloud import language_v2
 import json
-import settings
+
+"""text_emotion_analysis.py를 실행하고 싶은 경우"""
+# from settings import get_projectId, get_secret
+
+"""app.py를 실행하고 싶은 경우"""
+from .settings import get_projectId, get_secret
 
 # SECRET KEY 가져오기 
-SECRET_API_KEY = settings.get_secret("APIKEY_TEXT_EMOTION_ANALYSIS")
+SECRET_API_KEY = get_secret("APIKEY_TEXT_EMOTION_ANALYSIS")
+PROJECT_ID = get_projectId()
 
-def analyze_sentiment(text_content) -> None:
+def analyze_sentiment(text_content):
     """
     문자열 내에서 감정 분석
 
     Args:
-      text_content: The text content to analyze.
+      text_content: 한 화자의 담화 문장들
+      
+    return:
+        dict안에 다음의 변수들이 묶어서 들어감
+            int : doc_sentiment_score, doc_sentiment_magnitude
+            list : text_contents, senti_scores, senti_magnitude
     """
    
     client = language_v2.LanguageServiceClient(
-        client_options={"api_key": SECRET_API_KEY, "quota_project_id": "appteam02"}
+        client_options={"api_key": SECRET_API_KEY, "quota_project_id": PROJECT_ID}
     )
-
-    # text_content = 'I am so happy and joyful.'
 
     # Available types: PLAIN_TEXT, HTML
     document_type_in_plain_text = language_v2.Document.Type.PLAIN_TEXT
@@ -39,26 +48,72 @@ def analyze_sentiment(text_content) -> None:
     response = client.analyze_sentiment(
         request={"document": document, "encoding_type": encoding_type}
     )
-    # Get overall sentiment of the input document
-    print(f"Document sentiment score: {response.document_sentiment.score}")
-    print(f"Document sentiment magnitude: {response.document_sentiment.magnitude}")
-    # Get sentiment for all sentences in the document
+    
+    # input 문장들의 종합적인 sentiment score, manitude
+    doc_sentiment_score = response.document_sentiment.score
+    doc_sentiment_magnitude = response.document_sentiment.magnitude
+    
+    # input 문장들 각각에 대한 sentiment score, manitude
+    text_contents = []
+    senti_scores = []
+    senti_magnitudes = []
     for sentence in response.sentences:
-        print(f"Sentence text: {sentence.text.content}")
-        print(f"Sentence sentiment score: {sentence.sentiment.score}")
-        print(f"Sentence sentiment magnitude: {sentence.sentiment.magnitude}")
+        text_contents.append(sentence.text.content)
+        senti_scores.append(sentence.sentiment.score)
+        senti_magnitudes.append(sentence.sentiment.magnitude)
+    
+    # json 형식으로 묶어서 return
+    sentiment_result = {
+        "doc_sentiment_score" : doc_sentiment_score,
+        "doc_sentiment_magnitude" : doc_sentiment_magnitude,
+        "text_contents" : text_contents,
+        "senti_scores" : senti_scores,
+        "senti_magnitudes" : senti_magnitudes 
+    }
+    
+    """
+    # input 문장들의 종합적인 sentiment score, manitude
+    print("="*50)
+    print(f"전체 감정 score: {doc_sentiment_score}")
+    print(f"전체 감정 magnitude: {doc_sentiment_magnitude}")
+    print("="*50)
+    
+    # input 문장들 각각에 대한 sentiment score, manitude
+    for sentence in response.sentences:
+        print(f"문장: {sentence.text.content}")
+        print(f"감정 score: {sentence.sentiment.score}")
+        print(f"감정 magnitude: {sentence.sentiment.magnitude}")
+        print()
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print(f"Language of the text: {response.language_code}")
+    print(f"언어: {response.language_code}")
+    """
+    
+    return sentiment_result
 
-# JSON 파일 읽기 예제
-with open('text_request.json', 'r', encoding='utf-8') as file:
-    json_data = json.load(file)
 
-# 각 문장에 대해 감정 분석 수행
-for result in json_data["results"]:
-    for alternative in result["alternatives"]:
-        text = alternative["transcript"]
-        analyze_sentiment(text)
+def json_analyze_sentiment(jsonfile):
+    """
+    Speech to text 파일을 읽고, analyze_sentiment 진행
+    
+    Args:
+        jsonfile : 감정 분석을 진행할 Speech to text를 마친 json 파일의 주소
+
+    Returns:
+        list : sentiment_results
+            하나의 화자마다 analyze_sentiment로 나온 dict 결과들을 list로 묶어서 반환
+    """
+    # JSON 파일 읽기 예제
+    with open(jsonfile, 'r', encoding='utf-8') as file:
+        json_data = json.load(file)
+
+    sentiment_results = []
+    # 각 문장에 대해 감정 분석 수행
+    for result in json_data["results"]:
+        for alternative in result["alternatives"]:
+            text = alternative["transcript"]
+            sentiment_results.append(analyze_sentiment(text))
+    
+    return sentiment_results

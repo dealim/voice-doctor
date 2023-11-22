@@ -1,0 +1,29 @@
+<!-- Overlay inner wrapper -->
+<div class="overlay-inner-left">
+    <!-- Title -->
+    <h1 class="overlay__title">
+        Advanced Doctor-Patient Conversation Analysis with <span class="text-gradient">Vertex AI</span>
+    </h1>
+    <!-- Description -->
+    <p class="overlay__description">
+        This app extracts keywords and analyzes sentiment from doctor-patient conversations to predict illnesses. It identifies important terms and emotional cues, aiding in early disease detection.
+        <strong></strong>
+    </p>
+    <!-- Buttons -->
+    <div class="overlay__btns">
+        <button id="viewTextSummary" class="overlay__btn overlay__btn--transparent">
+            View Conversation Text 🔎
+        </button>
+        <button id="startEmotionAnalysis" class="overlay__btn overlay__btn--colors">
+            Start Analysis
+        </button>
+    </div>
+</div>
+<div class="overlay-inner-right">
+    <div class="voice-input-section">
+        <div id="dropArea" class="drop-area">
+            <p class="drop-area-content" id="dropAreaMessage">Drag and drop files here or <a href="#" id="fileInputLink">browse for files</a></p>
+            <input type="file" id="fileInput" accept="audio/*" hidden>
+        </div>
+    </div>
+</div>
