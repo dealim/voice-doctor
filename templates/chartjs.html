@@ -13,20 +13,32 @@
     
     <!-- chart 정보 정의-->
     <script>
-      const labels = {{ patient | tojson}};
+      const labels = {{ patient.text_contents | tojson}};
       const data = {
         labels: labels,
         datasets: [{
-          label: 'Doctor',
+          label: 'sentiment scores',
           backgroundColor: 'rgb(000, 153, 255)',
           borderColor: 'rgb(000, 153, 255)',
-          data: {{ value1 | tojson }},
+          data: {{ patient.senti_scores | tojson }},
         },
         {
-          label: 'Patient',
+          label: 'sentiment magnitudes',
           backgroundColor: 'rgb(255, 99, 132)',
           borderColor: 'rgb(255, 99, 132)',
-          data: {{ value2 | tojson }},
+          data: {{ patient.senti_magnitudes | tojson }},
+        },
+        {
+          label: 'overall sentiment score',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: {{ patient.doc_sentiment_score | tojson }},
+        },
+        {
+          label: 'overall sentiment magnitude',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: {{ patient.doc_sentiment_magnitude | tojson }},
         }]
       };
 
@@ -41,7 +53,7 @@
             },
             title: {
               display: true,
-              text: '의사와 환자의 담화 감정 분석 차트'
+              text: "The patient's sentiment analysis chart"
             }
           }
         },
@@ -52,59 +64,7 @@
       <!-- div 태그로 정의한 곳에 차트 그리기-->
       <script>
         const myChart = new Chart(
-          document.getElementById('myChart'),
-          config
-        );
-    </script>
-
-    <!-- 의사용 -->
-    <!-- chart 넣고 싶은 위치에 태그 넣기-->
-    <div>
-      <canvas id="myChart"></canvas>
-    </div>
-    
-    <!-- chart 정보 정의-->
-    <script>
-      const labels = {{ labels | tojson}};
-      const data = {
-        labels: labels,
-        datasets: [{
-          label: 'Doctor',
-          backgroundColor: 'rgb(000, 153, 255)',
-          borderColor: 'rgb(000, 153, 255)',
-          data: {{ value1 | tojson }},
-        },
-        {
-          label: 'Patient',
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          data: {{ value2 | tojson }},
-        }]
-      };
-
-      const config = {
-        type: 'line',
-        data: data,
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: '의사 담화 감정 분석 차트'
-            }
-          }
-        },
-      };
-
-      </script>
-
-      <!-- div 태그로 정의한 곳에 차트 그리기-->
-      <script>
-        const myChart = new Chart(
-          document.getElementById('myChart'),
+          document.getElementById('patientChart'),
           config
         );
     </script>
