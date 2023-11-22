@@ -14,11 +14,11 @@ def view():
     # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
     doctor = json_analyze_sentiment('./services/doctor_text_request.json')
     
-    # print(patient[0])
-    # print()
-    # print(doctor[0])
+    print(patient[0]) #
+    print()
+    print(doctor[0])
     
-    return render_template('chartjs.html', patient=patient, doctor=doctor)
+    return render_template('chartjs.html', patient=patient[0], doctor=doctor[0])
 
 if __name__ == '__main__':
     app.run()
