@@ -156,7 +156,7 @@ Thumbs.db
 *.key
 *.cert
 keys/
-secrets.json
+keys/secrets.json
 
 # Docker env files
 docker-compose.env

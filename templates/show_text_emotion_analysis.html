@@ -1,6 +1,9 @@
 <!-- Overlay -->
 <div class="overlay">
     <div class="overlay-inner-left">
+        <div>
+            <canvas id="patientChart"></canvas>
+        </div>
     </div>
     <div class="overlay-inner-right">
     </div>
@@ -12,3 +15,4 @@
         <span></span>
     </div>
 </div>
+<script type="module" src="{{ url_for('static', filename='js/chartscript.js') }}"></script>
