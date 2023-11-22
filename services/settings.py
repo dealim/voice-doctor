@@ -11,14 +11,17 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 def get_projectId():
-    return "appteam2"
+    return "applicationteam02"
 
 def get_secret(setting):
     """비밀 변수를 가져오거나 명시적 예외를 반환한다."""
-    try:
+    if setting == "APIKEY_TEXT_EMOTION_ANALYSIS":
         return secrets[setting]
-    except KeyError:
-        error_msg = "{} 키를 찾을 수 없습니다.".format(setting)
-        return error_msg
+    elif setting == "SUMMARY":
+        return os.path.join(parent_dir, 'keys', secrets[setting])
+    elif setting == "STT":
+        return os.path.join(parent_dir, 'keys', secrets[setting])
+    else:
+        raise "{} 키를 찾을 수 없습니다.".format(setting)
 
 
