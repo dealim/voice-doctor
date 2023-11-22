@@ -3,7 +3,7 @@ from services.text_emotion_analysis import json_analyze_sentiment
 import os
 
 app = Flask(__name__)
-app.config.from_object('config.DevelopmentConfig')
+app.config.from_object('config.Config')
 
 
 # Root page
@@ -25,6 +25,7 @@ def show_voicetext():
 @app.route('/show/emotion')
 def show_emotion():
     # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
+
     patient = json_analyze_sentiment('./services/patient_text_request.json')
 
     # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행

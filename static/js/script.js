@@ -1,3 +1,4 @@
+
 // 동적 페이지, SPA 구현
 
 // 첫 페이지 로드
@@ -8,7 +9,8 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     if (event.target.id === 'viewTextSummary') {
         event.preventDefault();
         loadContent('/show/voicetext');
-    } else if (event.target.id === 'startEmotionAnalysis') {
+    }
+    if (event.target.id === 'startEmotionAnalysis') {
         event.preventDefault();
         loadContent('/show/emotion');
     }
@@ -28,6 +30,11 @@ function loadContent(url) {
                 // 콘텐츠 업데이트 및 페이드 인
                 dynamicContent.innerHTML = html;
                 dynamicContent.classList.remove('hidden');
+
+                // 'show emotion' 페이지가 로드된 경우, 차트 초기화
+                if (url === '/show/emotion') {
+                    initializeChart();
+                }
 
                 setupArrowClickListener();
 
