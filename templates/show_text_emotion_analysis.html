@@ -11,16 +11,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-
 <!-- Canvas background-->
 <canvas class="orb-canvas"></canvas>
-<div class="overlay-inner-left">
-    <div>
-        <canvas id="patientChart"></canvas>
+<div class="overlay" style="padding: 4rem 2rem">
+    <div class="overlay-inner-left">
+        <canvas id="patientChart" ></canvas>
+    </div>
+    <div class="overlay-inner-right">
     </div>
 </div>
-<div class="overlay-inner-right">
-</div>
+
 
 <script>
 
@@ -79,6 +79,7 @@
             plugins: {
                 legend: {
                     position: 'top',
+                    height:'10vw'
                 },
                 title: {
                     display: true,

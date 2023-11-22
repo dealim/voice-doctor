@@ -3,8 +3,6 @@ from services.text_emotion_analysis import json_analyze_sentiment
 import os
 
 app = Flask(__name__)
-app.config.from_object('config.DevelopmentConfig')
-
 
 # Root page
 @app.route('/')
@@ -48,4 +46,4 @@ def upload_file():
 
 # execute app
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=10100)
+    app.run(host="0.0.0.0", port=10100, debug=True)
