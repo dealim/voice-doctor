@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', (event) => {
     loadContent('/main');
 });
+
 document.getElementById('dynamicContent').addEventListener('click', function (event) {
     if (event.target.id === 'viewTextSummary') {
         event.preventDefault();
@@ -12,7 +13,8 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     }
     if (event.target.id === 'startEmotionAnalysis') {
         event.preventDefault();
-        loadContent('/show/emotion');
+        // loadContent('/show/emotion');
+        window.location.href = '/show/emotion';
     }
 });
 
@@ -33,7 +35,6 @@ function loadContent(url) {
 
                 // 'show emotion' 페이지가 로드된 경우, 차트 초기화
                 if (url === '/show/emotion') {
-                    initializeChart();
                 }
 
                 setupArrowClickListener();
@@ -141,5 +142,6 @@ function setupFileDragAndDrop() {
             });
     }
 }
+
 
 

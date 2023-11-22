@@ -3,7 +3,7 @@ from services.text_emotion_analysis import json_analyze_sentiment
 import os
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object('config.DevelopmentConfig')
 
 
 # Root page

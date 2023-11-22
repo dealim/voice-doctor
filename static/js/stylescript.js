@@ -219,14 +219,14 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     });
 }
 
-document
-    .querySelector(".overlay__btn--colors")
-    .addEventListener("click", () => {
-        colorPalette.setColors();
-        colorPalette.setCustomProperties();
-
-        orbs.forEach((orb) => {
-            orb.fill = colorPalette.randomColor();
-        });
-    });
+// document
+//     .querySelector(".overlay__btn--colors")
+//     .addEventListener("click", () => {
+//         colorPalette.setColors();
+//         colorPalette.setCustomProperties();
+//
+//         orbs.forEach((orb) => {
+//             orb.fill = colorPalette.randomColor();
+//         });
+//     });
 

@@ -1,4 +1,19 @@
-<!-- Overlay -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team02</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nanum+Gothic:400,700,800&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Canvas background-->
+<canvas class="orb-canvas"></canvas>
 <div class="overlay-inner-left">
     <div>
         <canvas id="patientChart"></canvas>
@@ -6,11 +21,87 @@
 </div>
 <div class="overlay-inner-right">
 </div>
-<div class="arrow-container">
-    <div class="arrow">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-</div>
-<script type="module" src="{{ url_for('static', filename='js/chartscript.js') }}"></script>
+
+<script>
+
+    const chartTitle = "The patient's sentiment analysis chart";
+    var sentences = {{ patient.text_contents | tojson}};
+    var sentiScores = {{ patient.senti_scores | tojson }};
+    var sentiMagnitudes = {{ patient.senti_magnitudes | tojson }};
+    var overallScore = {{ patient.doc_sentiment_score | tojson }};
+    var overallMagnitude = {{ patient.doc_sentiment_magnitude | tojson }};
+
+    // 전체적인 값은 기준선으로 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
+    var overallScoreList = new Array(sentiScores.length).fill(overallScore);
+    var overallMagnitudeList = new Array(sentiScores.length).fill(overallMagnitude);
+
+    // labels를 sentence 개수만큼 만듦 => text1, text2, ...
+    var labels = []
+    for (var i = 1; i <= sentences.length; i++) {
+        labels.push("text" + i);
+    }
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'sentiment scores',
+            backgroundColor: 'rgb(000, 153, 255)',
+            borderColor: 'rgb(000, 153, 255)',
+            data: sentiScores,
+        },
+            {
+                label: 'sentiment magnitudes',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: sentiMagnitudes,
+            },
+            {
+                label: 'overall sentiment score',
+                backgroundColor: 'rgb(000, 051, 204)',
+                borderColor: 'rgb(000, 051, 204)',
+                borderDash: [5, 5],
+                data: overallScoreList,
+            },
+            {
+                label: 'overall sentiment magnitude',
+                backgroundColor: 'rgb(255, 000, 153)',
+                borderColor: 'rgb(255, 000, 153)',
+                borderDash: [5, 5],
+                data: overallMagnitudeList,
+            }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: chartTitle
+                }
+            }
+        },
+    };
+
+</script>
+
+<script>
+    const myChart = new Chart(
+        document.getElementById('patientChart'),
+        config
+    );
+</script>
+<script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
