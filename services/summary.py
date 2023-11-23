@@ -5,7 +5,7 @@ import vertexai
 from vertexai.language_models import TextGenerationModel
 from settings import get_secret, get_projectId
 import requests
-
+current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 print_token = get_secret("seunggu") # $(gcloud auth print-access-token)
@@ -74,4 +74,4 @@ def json_analyze_sentiment(jsonfile):
 
 
 if __name__ == "__main__":
-    json_analyze_sentiment("C:\\Users\\seunggu\\Desktop\\GCP-TEAM2\\services\\patient_text_request.json")
+    json_analyze_sentiment(current_dir + "/patient_text_request.json")

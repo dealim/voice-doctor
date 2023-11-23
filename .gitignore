@@ -164,4 +164,5 @@ docker-compose.env
 # certificate
 certs/
 services/appteam2-b11b34493f7a.json
-applicationteam02-cf34308f779b.json
+services/applicationteam02-cf34308f779b.json
+services/applicationteam02-00eec0f87726.json

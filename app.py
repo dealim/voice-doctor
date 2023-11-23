@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 from services.text_emotion_analysis import json_analyze_sentiment
+from services.merge_real_final import transcribe_audio
 import os
+import json
 
 app = Flask(__name__)
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Root page
 @app.route('/')
@@ -17,16 +20,20 @@ def main_page():
 
 @app.route('/show/voicetext')
 def show_voicetext():
-
+    # filename = request.cookies.get('uploadedFileName', None)
+    # transcribe_audio(current_dir + '/services/voice/' + filename, current_dir + '/services/voice/voice.json')
     return render_template('show_text_summary.html')
 
 @app.route('/get/voicetext')
 def get_voicetext():
-    new_data = {
-        'name': 'jckim',
-        'age': 38
-    }
-    return jsonify(new_data)
+    file_path = current_dir + '/services/voice/voice.json'
+
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+            return jsonify(data)
+    else:
+        return jsonify({"error": "File not found"}), 404
 
 @app.route('/show/emotion')
 def show_emotion():
@@ -63,7 +70,7 @@ def upload_file():
         # 파일 저장 경로 설정
         save_path = os.path.join('services/voice', filename)
         file.save(save_path)
-        return jsonify({'message': 'File uploaded successfully!'})
+        return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:
         return jsonify({'message': 'No file part'})
 

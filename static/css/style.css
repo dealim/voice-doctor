@@ -55,6 +55,7 @@ strong {
     width: 100%;
     max-width: 1140px;
     max-height: 640px;
+    min-height: 300px;
     padding: 8rem 6rem;
     display: flex;
     gap:20px;
