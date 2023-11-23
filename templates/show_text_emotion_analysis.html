@@ -13,7 +13,7 @@
 <body>
 <!-- Canvas background-->
 <canvas class="orb-canvas"></canvas>
-<div class="overlay" style="padding: 4rem 2rem">
+<div class="overlay" style="padding: 4rem 2rem" >
     <div class="overlay-inner-left">
         <canvas id="patientChart" ></canvas>
     </div>
@@ -23,6 +23,7 @@
 
 
 <script>
+    Chart.defaults.font.family = "sans-serif";
 
     const chartTitle = "The patient's sentiment analysis chart";
     var sentences = {{ patient.text_contents | tojson}};
@@ -76,14 +77,30 @@
         data: data,
         options: {
             responsive: true,
+            scales: {
+              x:{
+                  ticks:{
+                      font:{
+                          size: 14
+                      }
+                  }
+              }
+            },
             plugins: {
                 legend: {
                     position: 'top',
-                    height:'10vw'
+                    labels: {
+                        font: {
+                            size: 14 // 범례 글씨 크기 수정
+                        }
+                    }
                 },
                 title: {
                     display: true,
-                    text: chartTitle
+                    text: chartTitle,
+                    font: {
+                        size: 16 // 제목 글씨 크기 수정
+                    }
                 }
             }
         },
@@ -96,6 +113,7 @@
         document.getElementById('patientChart'),
         config
     );
+    Chart.defaults.font.family = 'Arial';
 </script>
 <script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
