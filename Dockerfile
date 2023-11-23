@@ -1,7 +1,9 @@
-# 베이스 이미지 설정 (Python 3.9을 사용)
-FROM python:3.9
+#FROM python:3.9
 
-# FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
+
+# 파이썬 설치
+RUN apt-get update && apt-get install -y python3.9 python3-pip
 
 # 애플리케이션 폴더 생성
 WORKDIR /app
