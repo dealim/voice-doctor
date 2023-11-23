@@ -296,12 +296,12 @@ a {
     opacity: 0;
 }
 
-/*뒤로가기*/
+/*뒤로가기 화살표*/
 
 .arrow-container {
     position: absolute;
     left: 10%;
-    bottom: 15%;
+    bottom: 20%;
 }
 
 .arrow {
