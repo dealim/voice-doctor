@@ -7,11 +7,13 @@ parent_dir = os.path.join(current_dir, '..')
 # 예시: 'keys/secrets.json' 파일의 경로를 상위 디렉토리 기준으로 구함
 secret_file = os.path.join(parent_dir, 'keys', 'secrets.json')
 
+
 with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 def get_projectId():
     return "applicationteam02"
+
 
 def get_secret(setting):
     """비밀 변수를 가져오거나 명시적 예외를 반환한다."""

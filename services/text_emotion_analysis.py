@@ -53,14 +53,14 @@ def analyze_sentiment(text_content):
     doc_sentiment_score = response.document_sentiment.score
     doc_sentiment_magnitude = response.document_sentiment.magnitude
     
-    # input 문장들 각각에 대한 sentiment score, manitude
+    # input 문장들 각각에 대한 sentiment score, magnitude
     text_contents = []
     senti_scores = []
     senti_magnitudes = []
     for sentence in response.sentences:
         text_contents.append(sentence.text.content)
-        senti_scores.append(sentence.sentiment.score)
-        senti_magnitudes.append(sentence.sentiment.magnitude)
+        senti_scores.append(round(sentence.sentiment.score,3))
+        senti_magnitudes.append(round(sentence.sentiment.magnitude,3))
     
     # json 형식으로 묶어서 return
     sentiment_result = {
@@ -117,3 +117,12 @@ def json_analyze_sentiment(jsonfile):
             sentiment_results.append(analyze_sentiment(text))
     
     return sentiment_results
+
+"""
+# 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
+patient = json_analyze_sentiment('./patient_text_request.json')
+
+print(patient[0])
+"""
+
+
