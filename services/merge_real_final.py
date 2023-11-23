@@ -6,9 +6,9 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import json
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ[
-    "GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/yuhyerin/PycharmProjects/STT_test/applicationteam02-cf34308f779b.json"
-
+    "GOOGLE_APPLICATION_CREDENTIALS"] = current_dir + "/applicationteam02-cf34308f779b.json"
 
 def transcribe_audio(file_path, output_json_file):
     client = speech_v1.SpeechClient()
@@ -61,7 +61,7 @@ class MyHandler(FileSystemEventHandler):
 
 
 if __name__ == "__main__":
-    folder_to_watch = '/Users/yuhyerin/PycharmProjects/GCP-TEAM2/services/voice'
+    folder_to_watch = current_dir + '/voice'
 
     event_handler = MyHandler()
     observer = Observer()
