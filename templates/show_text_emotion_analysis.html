@@ -21,7 +21,7 @@
         <div class="chart__table">
             <table>
                 <tr>
-                    <th>Text Content</th>
+                    <th>Emotionally Charged Messages</th>
                     <th>Sentiment Score</th>
                     <th>Sentiment Magnitude</th>
                 </tr>
@@ -97,43 +97,43 @@
     var overallScore = {{ patient.doc_sentiment_score | tojson }};
     var overallMagnitude = {{ patient.doc_sentiment_magnitude | tojson }};
 
-    // 전체적인 값은 기준선으로 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
-    var overallScoreList = new Array(sentiScores.length).fill(overallScore);
-    var overallMagnitudeList = new Array(sentiScores.length).fill(overallMagnitude);
+    // 긍정, 부정 기준선을 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
+    var positiveBaseline = new Array(sentiScores.length).fill(0.25);
+    var negativeBaseline = new Array(sentiScores.length).fill(-0.25);
 
     // labels를 sentence 개수만큼 만듦 => text1, text2, ...
     var labels = []
     for (var i = 1; i <= sentences.length; i++) {
-        labels.push("text" + i);
+          labels.push("");
     }
 
     const data = {
         labels: labels,
         datasets: [{
-            label: 'sentiment scores',
+            label: 'Sentiment Scores',
             backgroundColor: 'rgb(000, 153, 255)',
             borderColor: 'rgb(000, 153, 255)',
             data: sentiScores,
         },
             {
-                label: 'sentiment magnitudes',
+                label: 'Sentiment Magnitudes',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: sentiMagnitudes,
             },
             {
-                label: 'overall sentiment score',
-                backgroundColor: 'rgb(000, 051, 204)',
-                borderColor: 'rgb(000, 051, 204)',
+                label: 'Positive Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
                 borderDash: [5, 5],
-                data: overallScoreList,
+                data: positiveBaseline,
             },
             {
-                label: 'overall sentiment magnitude',
-                backgroundColor: 'rgb(255, 000, 153)',
-                borderColor: 'rgb(255, 000, 153)',
+                label: 'Negative Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
                 borderDash: [5, 5],
-                data: overallMagnitudeList,
+                data: negativeBaseline,
             }]
     };
 
