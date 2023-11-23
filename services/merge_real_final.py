@@ -47,31 +47,31 @@ def save_response_as_json(response, output_file):
         json.dump(results, json_file, indent=4)
 
 
-class MyHandler(FileSystemEventHandler):
-    def on_created(self, event):
-        if not event.is_directory:
-            filename = event.src_path
-            print(f"새 파일이 생성되었습니다: {filename}")
-            if filename.endswith('.flac') and not filename.endswith('.json'):
-                output_json_file = filename.rsplit('.', 1)[0] + ".json"
-                transcribe_audio(filename, output_json_file)
-            # elif filename.endswith('.json'):
-            #     # .json 파일이 생성되면 변환 과정은 수행하지 않고 로그만 출력
-            #     print("json 파일이 이미 생성되었습니다.")
-
-
-if __name__ == "__main__":
-    folder_to_watch = current_dir + '/voice'
-
-    event_handler = MyHandler()
-    observer = Observer()
-    observer.schedule(event_handler, path=folder_to_watch, recursive=False)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-
-    observer.join()
+# class MyHandler(FileSystemEventHandler):
+#     def on_created(self, event):
+#         if not event.is_directory:
+#             filename = event.src_path
+#             print(f"새 파일이 생성되었습니다: {filename}")
+#             if filename.endswith('.flac') and not filename.endswith('.json'):
+#                 output_json_file = filename.rsplit('.', 1)[0] + ".json"
+#                 transcribe_audio(filename, output_json_file)
+#             # elif filename.endswith('.json'):
+#             #     # .json 파일이 생성되면 변환 과정은 수행하지 않고 로그만 출력
+#             #     print("json 파일이 이미 생성되었습니다.")
+#
+#
+# if __name__ == "__main__":
+#     folder_to_watch = current_dir + '/voice'
+#
+#     event_handler = MyHandler()
+#     observer = Observer()
+#     observer.schedule(event_handler, path=folder_to_watch, recursive=False)
+#     observer.start()
+#
+#     try:
+#         while True:
+#             time.sleep(1)
+#     except KeyboardInterrupt:
+#         observer.stop()
+#
+#     observer.join()
