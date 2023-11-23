@@ -348,4 +348,32 @@ a {
 
 /*차트 그리기*/
 
+/* start : 차트 오른쪽 감정 표현 상세히 */
+/* 지창님 여기 px로 되어있어요!!! */
+.chart__table table {
+    border-collapse: collapse;
+}
+
+.chart__table th, .chart__table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.chart__table th {
+    background-color: #f2f2f2;
+}
+
+.chart__table .positive {
+    background-color: lightgreen;
+}
+
+.chart__table .negative {
+    background-color: lightcoral;
+}
+
+.chart__todayMood img {
+    width: 20px;
+}
+/* end : 차트 오른쪽 감정 표현 상세히 */
 

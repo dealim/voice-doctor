@@ -18,6 +18,71 @@
         <canvas id="patientChart" ></canvas>
     </div>
     <div class="overlay-inner-right">
+        <div class="chart__table">
+            <table>
+                <tr>
+                    <th>Emotionally Charged Messages</th>
+                    <th>Sentiment Score</th>
+                    <th>Sentiment Magnitude</th>
+                </tr>
+                <script>
+                    var sentences = {{ patient.text_contents | tojson }};
+                    var sentiScores = {{ patient.senti_scores | tojson }};
+                    var sentiMagnitudes = {{ patient.senti_magnitudes | tojson }};
+                    var overallScore = {{ patient.doc_sentiment_score | tojson }};
+                    var overallMagnitude = {{ patient.doc_sentiment_magnitude | tojson }};
+
+                    for (var i = 0; i < sentiScores.length; i++) {
+                        if (sentiScores[i] < -0.25 || sentiScores[i] > 0.25) {
+                            var row = document.createElement('tr');
+                            var cell1 = document.createElement('td');
+                            var cell2 = document.createElement('td');
+                            var cell3 = document.createElement('td');
+
+                            cell1.textContent = sentences[i];
+                            cell2.textContent = sentiScores[i];
+                            cell3.textContent = sentiMagnitudes[i];
+
+                            if (sentiScores[i] >= 0.25 && sentiScores[i] <= 1) {
+                                cell2.classList.add('positive');
+                                cell3.classList.add('positive');
+                            } else if (sentiScores[i] >= -1 && sentiScores[i] < -0.25) {
+                                cell2.classList.add('negative');
+                                cell3.classList.add('negative');
+                            }
+
+                            row.appendChild(cell1);
+                            row.appendChild(cell2);
+                            row.appendChild(cell3);
+                            document.querySelector('.chart__table table').appendChild(row);
+                        }
+                    }
+                </script>
+            </table>
+        </div>
+        <div class = "chart__todayMood">
+            <h1>오늘의 환자 기분</h1>
+
+            {% if patient.doc_sentiment_score > 0.25 %}
+                <img src="{{ url_for('static', filename='images/sad_disabled.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment_disabled.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy.png') }}" alt="Happy">
+            {% elif patient.doc_sentiment_score < -0.25 %}
+                <img src="{{ url_for('static', filename='images/sad.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment_disabled.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy_disabled.png') }}" alt="Happy">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/sad_disabled.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy_disabled.png') }}" alt="Happy">
+            {% endif %}
+
+            <p>Score: {{ patient.doc_sentiment_score }}</p>
+            <p>Magnitude: {{ patient.doc_sentiment_magnitude }}</p>
+            <p>기준 점수 : 0.25 ~ 1.0 (긍정)</p>
+            <p> -0.25 ~ 0.25 (중립) </p>
+            <p> -1.0 ~ 0.25 (부정) </p>
+    </div>
     </div>
 </div>
 
@@ -32,43 +97,43 @@
     var overallScore = {{ patient.doc_sentiment_score | tojson }};
     var overallMagnitude = {{ patient.doc_sentiment_magnitude | tojson }};
 
-    // 전체적인 값은 기준선으로 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
-    var overallScoreList = new Array(sentiScores.length).fill(overallScore);
-    var overallMagnitudeList = new Array(sentiScores.length).fill(overallMagnitude);
+    // 긍정, 부정 기준선을 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
+    var positiveBaseline = new Array(sentiScores.length).fill(0.25);
+    var negativeBaseline = new Array(sentiScores.length).fill(-0.25);
 
     // labels를 sentence 개수만큼 만듦 => text1, text2, ...
     var labels = []
     for (var i = 1; i <= sentences.length; i++) {
-        labels.push("text" + i);
+          labels.push("");
     }
 
     const data = {
         labels: labels,
         datasets: [{
-            label: 'sentiment scores',
+            label: 'Sentiment Scores',
             backgroundColor: 'rgb(000, 153, 255)',
             borderColor: 'rgb(000, 153, 255)',
             data: sentiScores,
         },
             {
-                label: 'sentiment magnitudes',
+                label: 'Sentiment Magnitudes',
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: sentiMagnitudes,
             },
             {
-                label: 'overall sentiment score',
-                backgroundColor: 'rgb(000, 051, 204)',
-                borderColor: 'rgb(000, 051, 204)',
+                label: 'Positive Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
                 borderDash: [5, 5],
-                data: overallScoreList,
+                data: positiveBaseline,
             },
             {
-                label: 'overall sentiment magnitude',
-                backgroundColor: 'rgb(255, 000, 153)',
-                borderColor: 'rgb(255, 000, 153)',
+                label: 'Negative Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
                 borderDash: [5, 5],
-                data: overallMagnitudeList,
+                data: negativeBaseline,
             }]
     };
 
