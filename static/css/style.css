@@ -54,8 +54,6 @@ strong {
     position: relative;
     width: 100%;
     max-width: 1140px;
-    max-height: 640px;
-    min-height: 300px;
     padding: 8rem 6rem;
     display: flex;
     gap:20px;
@@ -351,30 +349,51 @@ a {
 
 /* start : 차트 오른쪽 감정 표현 상세히 */
 /* 지창님 여기 px로 되어있어요!!! */
-.chart__table table {
-    border-collapse: collapse;
+.chart__todayMood {
+    text-align: center;
 }
 
-.chart__table th, .chart__table td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-.chart__table th {
-    background-color: #f2f2f2;
-}
-
-.chart__table .positive {
-    background-color: lightgreen;
-}
-
-.chart__table .negative {
-    background-color: lightcoral;
+.chart__todayMood h2{
+    font-size: 2rem;
+    padding-bottom: 2rem;
 }
 
 .chart__todayMood img {
-    width: 20px;
+    width: 30%;
 }
+.chart__table table {
+    width: 100%; /* 테이블 너비 */
+    border-collapse: collapse; /* 셀 간 테두리 합치기 */
+    background: transparent;
+    overflow: hidden; /* 모서리 넘어가는 내용 숨김 */
+    font-size: 0.9rem;
+}
+
+.chart__table th, .chart__table td {
+    border: 1px solid rgba(0, 0, 0, 0.11);
+    text-align: left;
+    padding: 12px; /* 패딩 증가 */
+    color: #333; /* 글자 색상 */
+}
+
+.chart__table th {
+    background-color: rgba(242, 242, 242, 0.2);
+    color: #444; /* 헤더 글자 색상 */
+    font-weight: bold; /* 글자 굵게 */
+}
+
+.chart__table tr:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* 호버 효과 */
+}
+
+.chart__table .positive {
+    background-color: rgba(175, 248, 175, 0.46); /* 반투명 lightgreen */
+}
+
+.chart__table .negative {
+    background-color: rgba(255, 176, 176, 0.5); /* 반투명 lightcoral */
+}
+
+
 /* end : 차트 오른쪽 감정 표현 상세히 */
 

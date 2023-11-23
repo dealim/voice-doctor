@@ -42,7 +42,7 @@ def show_emotion():
     # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
     doctor = json_analyze_sentiment('./services/doctor_text_request.json')
 
-    print(patient)
+    # print(patient)
     """ 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
     patient = [{
         'doc_sentiment_score': -1,
