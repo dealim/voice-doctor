@@ -25,5 +25,3 @@ def get_secret(setting):
         return os.path.join(parent_dir, 'keys', secrets[setting])
     else:
         raise "{} 키를 찾을 수 없습니다.".format(setting)
-
-
