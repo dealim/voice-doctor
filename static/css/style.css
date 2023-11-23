@@ -92,6 +92,7 @@ strong {
     flex-direction: column; /* 아이템을 세로 방향으로 정렬 */
     align-items: center; /* 수평 중앙 정렬 (선택적) */
     justify-content: center; /* 수직 중앙 정렬 (선택적) */
+    width: 100%;
 }
 
 .voice-input-section > button,
