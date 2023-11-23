@@ -4,6 +4,7 @@ import json
 import vertexai
 from vertexai.language_models import TextGenerationModel
 from settings import get_secret, get_projectId
+import requests
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 PROJ = get_projectId()
@@ -30,7 +31,17 @@ def text_summarization(
         """Provide a summary with about two sentences for the following conversation:""" + text,
         **parameters,
     )
-    # print(f"Response from Model: {response.text}")
+    print(response.text)
+    req = json.dumps({
+        "documentContent": response.text,
+        "alternativeOutputFormatc": "FHIR_BUNDLE"
+    }).encode()
+    header={"Authorization": "Bearer ya29.a0AfB_byA9V-zhsMaLKrkN3QganUcErCPMVvFhtgCI-zKpuodhEOyklbQD6Dv3VY_QtyuHUzoS_HZrhyUfOj7zCl_T_TzGC1Vae0Hm9piBAHFfDO7D8YmxyBCimxTdr5WKKpl1x8Pk_crevG9-JOAmRc2U5WFEh0yOZNicZWIk5nMaCgYKAYkSARISFQHGX2Mik7XM0g1cH2C7JtB8Jd-u8w0178", \
+            "Content-Type": "application/json"}
+    data = req
+    url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/LOCATION/services/nlp:analyzeEntities"
+    res = requests.post(url, data=data, headers=header)
+    print(res)
 
     return response.text
 
