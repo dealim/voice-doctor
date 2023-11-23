@@ -142,10 +142,10 @@ function setupFileDragAndDrop() {
                 if (data.message === 'File uploaded successfully!') {
                     console.log(data);
                     isFileUploaded = true; // 업로드 상태 업데이트
-                    document.getElementById('dropAreaMessage').innerText = "업로드가 완료 되었습니다"; // 메시지 변경
+                    document.getElementById('dropAreaMessage').innerText = "waiting for voice to text"; // 메시지 변경
                     dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
                 } else {
-                    document.getElementById('dropAreaMessage').innerText = "업로드 실패";
+                    document.getElementById('dropAreaMessage').innerText = "upload failed";
                 }
             })
             .catch(error => {
