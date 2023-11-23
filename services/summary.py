@@ -8,6 +8,7 @@ import requests
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
+print_token = get_secret("seunggu") # $(gcloud auth print-access-token)
 PROJ = get_projectId()
 
 def text_summarization(
@@ -33,15 +34,12 @@ def text_summarization(
         **parameters,
     )
     print(response.text)
-    data = {
-        "documentContent": response.text,
-        "alternativeOutputFormatc": "FHIR_BUNDLE"
-    }
+    data = f"""{{
+        'documentContent': '{response.text}',
+        'alternativeOutputFormat': 'FHIR_BUNDLE'
+    }}"""
     
-    # with open('health_request.json') as f:
-    #     data = f.read().replace('\n', '').replace('\r', '').encode()
-    # print(data)
-    header={"Authorization": "Bearer $(gcloud auth print-access-token)", \
+    header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
     res = requests.post(url, data=data, headers=header)

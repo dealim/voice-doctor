@@ -23,6 +23,8 @@ def get_secret(setting):
         return os.path.join(parent_dir, 'keys', secrets[setting])
     elif setting == "HEALTH":
         return os.path.join(parent_dir, 'keys', secrets[setting])
+    elif setting == "seunggu":
+        return secrets[setting]
     elif setting == "STT":
         return os.path.join(parent_dir, 'keys', secrets[setting])
     else:
