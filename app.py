@@ -31,7 +31,6 @@ def get_voicetext():
 @app.route('/show/emotion')
 def show_emotion():
     # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-
     patient = json_analyze_sentiment('./services/patient_text_request.json')
 
     # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
