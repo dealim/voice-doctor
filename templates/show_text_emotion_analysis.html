@@ -18,6 +18,71 @@
         <canvas id="patientChart" ></canvas>
     </div>
     <div class="overlay-inner-right">
+        <div class="chart__table">
+            <table>
+                <tr>
+                    <th>Text Content</th>
+                    <th>Sentiment Score</th>
+                    <th>Sentiment Magnitude</th>
+                </tr>
+                <script>
+                    var sentences = {{ patient.text_contents | tojson }};
+                    var sentiScores = {{ patient.senti_scores | tojson }};
+                    var sentiMagnitudes = {{ patient.senti_magnitudes | tojson }};
+                    var overallScore = {{ patient.doc_sentiment_score | tojson }};
+                    var overallMagnitude = {{ patient.doc_sentiment_magnitude | tojson }};
+
+                    for (var i = 0; i < sentiScores.length; i++) {
+                        if (sentiScores[i] < -0.25 || sentiScores[i] > 0.25) {
+                            var row = document.createElement('tr');
+                            var cell1 = document.createElement('td');
+                            var cell2 = document.createElement('td');
+                            var cell3 = document.createElement('td');
+
+                            cell1.textContent = sentences[i];
+                            cell2.textContent = sentiScores[i];
+                            cell3.textContent = sentiMagnitudes[i];
+
+                            if (sentiScores[i] >= 0.25 && sentiScores[i] <= 1) {
+                                cell2.classList.add('positive');
+                                cell3.classList.add('positive');
+                            } else if (sentiScores[i] >= -1 && sentiScores[i] < -0.25) {
+                                cell2.classList.add('negative');
+                                cell3.classList.add('negative');
+                            }
+
+                            row.appendChild(cell1);
+                            row.appendChild(cell2);
+                            row.appendChild(cell3);
+                            document.querySelector('.chart__table table').appendChild(row);
+                        }
+                    }
+                </script>
+            </table>
+        </div>
+        <div class = "chart__todayMood">
+            <h1>오늘의 환자 기분</h1>
+
+            {% if patient.doc_sentiment_score > 0.25 %}
+                <img src="{{ url_for('static', filename='images/sad_disabled.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment_disabled.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy.png') }}" alt="Happy">
+            {% elif patient.doc_sentiment_score < -0.25 %}
+                <img src="{{ url_for('static', filename='images/sad.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment_disabled.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy_disabled.png') }}" alt="Happy">
+            {% else %}
+                <img src="{{ url_for('static', filename='images/sad_disabled.png') }}" alt="Sad">
+                <img src="{{ url_for('static', filename='images/nocomment.png') }}" alt="No Comment">
+                <img src="{{ url_for('static', filename='images/happy_disabled.png') }}" alt="Happy">
+            {% endif %}
+
+            <p>Score: {{ patient.doc_sentiment_score }}</p>
+            <p>Magnitude: {{ patient.doc_sentiment_magnitude }}</p>
+            <p>기준 점수 : 0.25 ~ 1.0 (긍정)</p>
+            <p> -0.25 ~ 0.25 (중립) </p>
+            <p> -1.0 ~ 0.25 (부정) </p>
+    </div>
     </div>
 </div>
 
