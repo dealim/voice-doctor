@@ -10,6 +10,7 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     if (event.target.id === 'viewTextSummary') {
         event.preventDefault();
         loadContent('/show/voicetext');
+
     }
     if (event.target.id === 'startEmotionAnalysis') {
         event.preventDefault();
@@ -33,8 +34,18 @@ function loadContent(url) {
                 dynamicContent.innerHTML = html;
                 dynamicContent.classList.remove('hidden');
 
-                // 'show emotion' 페이지가 로드된 경우, 차트 초기화
-                if (url === '/show/emotion') {
+                // '/show/voicetext' 페이지가 로드된 후 추가적인 JSON 데이터 요청
+                if (url === '/show/voicetext') {
+                    fetch('/get/voicetext')
+                        .then(response => response.json())
+                        .then(data => {
+                            const descriptionElement = document.querySelector('.overlay_summary_description');
+
+                            descriptionElement.innerHTML += `
+                                Name: ${data.name}
+                                Age: ${data.age}
+                            `;
+                        });
                 }
 
                 setupArrowClickListener();

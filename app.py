@@ -17,12 +17,16 @@ def main_page():
 
 @app.route('/show/voicetext')
 def show_voicetext():
-    new_data = {
-        'name' : 'jckim',
-        'age' : 38
-    }
-    return render_template('show_text_summary.html', jsonify(new_data))
 
+    return render_template('show_text_summary.html')
+
+@app.route('/get/voicetext')
+def get_voicetext():
+    new_data = {
+        'name': 'jckim',
+        'age': 38
+    }
+    return jsonify(new_data)
 
 @app.route('/show/emotion')
 def show_emotion():
