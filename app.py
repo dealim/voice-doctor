@@ -36,6 +36,7 @@ def show_emotion():
     doctor = json_analyze_sentiment('./services/doctor_text_request.json')
 
     print(patient)
+
     """ 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
     patient = [{
         'doc_sentiment_score': -1,
