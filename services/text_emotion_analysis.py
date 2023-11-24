@@ -94,29 +94,32 @@ def analyze_sentiment(text_content):
     return sentiment_result
 
 
+import json
+
 def json_analyze_sentiment(jsonfile):
     """
     Speech to text 파일을 읽고, analyze_sentiment 진행
-    
+
     Args:
         jsonfile : 감정 분석을 진행할 Speech to text를 마친 json 파일의 주소
 
     Returns:
         list : sentiment_results
-            하나의 화자마다 analyze_sentiment로 나온 dict 결과들을 list로 묶어서 반환
+            "transcript" 필드의 값들에 대한 감정 분석 결과를 list로 묶어서 반환
     """
-    # JSON 파일 읽기 예제
+    sentiment_results = []
+
+    # JSON 파일 읽기
     with open(jsonfile, 'r', encoding='utf-8') as file:
         json_data = json.load(file)
 
-    sentiment_results = []
-    # 각 문장에 대해 감정 분석 수행
-    for result in json_data["results"]:
-        for alternative in result["alternatives"]:
-            text = alternative["transcript"]
-            sentiment_results.append(analyze_sentiment(text))
+    for result in json_data:
+        transcript = result["transcript"]
+        sentiment_result = analyze_sentiment(transcript)
+        sentiment_results.append(sentiment_result)
 
     return sentiment_results
+
 
 # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
 # patient = json_analyze_sentiment('./patient_text_request.json')

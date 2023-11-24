@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from services.text_emotion_analysis import json_analyze_sentiment
 from services.merge_real_final import transcribe_audio
+# from services.summary import json_summary
 import os
 import json
 
@@ -31,18 +32,19 @@ def get_voicetext():
     if os.path.exists(file_path):
         with open(file_path, 'r') as file:
             data = json.load(file)
+            print(json_summary(data))
             return jsonify(data)
     else:
         return jsonify({"error": "File not found"}), 404
 
+
 @app.route('/show/emotion')
 def show_emotion():
+    json_file_name = request.cookies.get('uploadedFileName', None).rsplit('.', 1)[0] + ".json" # 만들어진 json 파일명
     # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-    patient = json_analyze_sentiment('./services/patient_text_request.json')
+    patient = json_analyze_sentiment(os.path.join(voice_dir, json_file_name))
     # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-    doctor = json_analyze_sentiment('./services/doctor_text_request.json')
-
-    print(patient)
+    # doctor = json_analyze_sentiment('./services/voice/test.json')
 
     """ 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
     patient = [{
@@ -61,7 +63,7 @@ def show_emotion():
     }]
     """
 
-    return render_template('show_text_emotion_analysis.html', patient=patient[0], doctor=doctor[0])
+    return render_template('show_text_emotion_analysis.html', patient=patient[0])
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -71,9 +73,9 @@ def upload_file():
         # 파일 저장 경로 설정
         save_path = os.path.join(voice_dir, filename)
         file.save(save_path)
-        output_json_name = filename.rsplit('.', 1)[0] + ".json"
+
         # json으로 변환
-        transcribe_audio(save_path, os.path.join(voice_dir, output_json_name))
+        transcribe_audio(save_path, os.path.join(voice_dir, 'stt.json'))
 
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:
