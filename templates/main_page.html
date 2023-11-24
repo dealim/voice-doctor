@@ -11,11 +11,11 @@
     </p>
     <!-- Buttons -->
     <div class="overlay__btns">
-        <button id="viewTextSummary" class="overlay__btn overlay__btn--transparent">
-            View Conversation Text 🔎
-        </button>
-        <button id="startEmotionAnalysis" class="overlay__btn overlay__btn--colors">
+        <button id="startEmotionAnalysis" class="overlay__btn overlay__btn--transparent">
             Start Analysis
+        </button>
+        <button id="viewTextSummary" class="overlay__btn overlay__btn--colors">
+            View Sentiment 🔎
         </button>
     </div>
 </div>
@@ -24,6 +24,9 @@
         <div id="dropArea" class="drop-area">
             <p class="drop-area-content" id="dropAreaMessage">Drag and drop files here or <a href="#" id="fileInputLink">browse for files</a></p>
             <input type="file" id="fileInput" accept="audio/*" hidden>
+            <div id="loadingSpinner" class="loading-spinner-hidden">
+                <div class="spinner"></div>
+            </div>
         </div>
     </div>
 </div>

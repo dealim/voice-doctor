@@ -6,6 +6,7 @@ import json
 
 app = Flask(__name__)
 current_dir = os.path.dirname(os.path.abspath(__file__))
+voice_dir = os.path.join(current_dir,'services/voice')
 
 # Root page
 @app.route('/')
@@ -20,13 +21,12 @@ def main_page():
 
 @app.route('/show/voicetext')
 def show_voicetext():
-    # filename = request.cookies.get('uploadedFileName', None)
-    # transcribe_audio(current_dir + '/services/voice/' + filename, current_dir + '/services/voice/voice.json')
     return render_template('show_text_summary.html')
 
 @app.route('/get/voicetext')
 def get_voicetext():
-    file_path = current_dir + '/services/voice/voice.json'
+    json_file_name = request.cookies.get('uploadedFileName', None).rsplit('.', 1)[0] + ".json" # 만들어진 json 파일명
+    file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
         with open(file_path, 'r') as file:
@@ -69,8 +69,12 @@ def upload_file():
         file = request.files['file']
         filename = file.filename
         # 파일 저장 경로 설정
-        save_path = os.path.join('services/voice', filename)
+        save_path = os.path.join(voice_dir, filename)
         file.save(save_path)
+        output_json_name = filename.rsplit('.', 1)[0] + ".json"
+        # json으로 변환
+        transcribe_audio(save_path, os.path.join(voice_dir, output_json_name))
+
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:
         return jsonify({'message': 'No file part'})
