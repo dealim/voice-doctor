@@ -40,10 +40,12 @@ function loadContent(url) {
                         .then(response => response.json())
                         .then(data => {
                             const descriptionElement = document.querySelector('.overlay_summary_description');
-
-                            descriptionElement.innerHTML += `
-                                ${data[0].transcript} 
-                            `;
+                            console.log(data);
+                            if (data && data[0]) {
+                                descriptionElement.innerHTML += `
+                                ${data[0]}
+                                `;
+                            }
                         });
                 }
 
@@ -143,12 +145,23 @@ function setupFileDragAndDrop() {
         })
             .then(response => response.json())
             .then(data => {
-                // 업로드 완료시 디스플레이 숨기기
+                // 업로드 완료시 스피너 숨기기
                 document.getElementById('loadingSpinner').style.display = 'none';
-                document.getElementById('dropAreaMessage').style.display = 'block';
 
                 if (data.message === 'File uploaded successfully!') {
                     dropArea.classList.remove('uploading');
+                    dropArea.classList.add('uploaded');
+
+                    // 업로드 완료 메시지 표시
+                    const completeMessage = document.getElementById('completeMessage');
+                    completeMessage.style.display = 'block';
+
+                    // 3초 후에 'uploaded' 클래스 제거 + 원래대로 돌리기
+                    setTimeout(() => {
+                        dropArea.classList.remove('uploaded');
+                        document.getElementById('dropAreaMessage').style.display = 'block';
+                        completeMessage.style.display = 'none';
+                    }, 3000);
                     // 업로드 완료시 쿠키에 파일 이름 저장
                     document.cookie = "uploadedFileName=" + encodeURIComponent(data.filename) + "; path=/";
                 } else {

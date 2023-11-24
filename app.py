@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from services.text_emotion_analysis import json_analyze_sentiment
-from services.merge_real_final import transcribe_audio
-# from services.summary import json_summary
+from services.sound_to_text import transcribe_audio
+from services.summary import json_summary
 import os
 import json
 
@@ -24,44 +24,25 @@ def main_page():
 def show_voicetext():
     return render_template('show_text_summary.html')
 
+
 @app.route('/get/voicetext')
 def get_voicetext():
-    json_file_name = request.cookies.get('uploadedFileName', None).rsplit('.', 1)[0] + ".json" # 만들어진 json 파일명
+    json_file_name = 'summary.json'
     file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-            print(json_summary(data))
-            return jsonify(data)
+        with open(file_path, 'r', encoding='utf-8') as file:
+            json_data = json.load(file)
+        return jsonify(json_data)
     else:
         return jsonify({"error": "File not found"}), 404
 
 
 @app.route('/show/emotion')
 def show_emotion():
-    json_file_name = request.cookies.get('uploadedFileName', None).rsplit('.', 1)[0] + ".json" # 만들어진 json 파일명
+    json_file_name = 'stt.json'
     # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
     patient = json_analyze_sentiment(os.path.join(voice_dir, json_file_name))
-    # 의사용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-    # doctor = json_analyze_sentiment('./services/voice/test.json')
-
-    """ 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
-    patient = [{
-        'doc_sentiment_score': -1,
-        'doc_sentiment_magnitude': 2.931999921798706,
-        'text_contents': [
-            'Good morning.',
-            'Uh , sure , so , um , I woke up probably three or four days ago , which , uh , wheezing and short of breath .',
-            'I cough infrequently , but no , uh , chest pain .',
-            'Uh , no , and I also took a test , which was negative .',
-            'Uh , it has been getting a lot worse .',
-            'Um , I had a gone hiking , and I got caught in the rain the day before this all started .'
-        ],
-        'senti_scores': [0.337, -0.671, 0.0, 0.069, -0.952, -0.231],
-        'senti_magnitudes': [0.379, 0.724, 0.3, 0.286, 0.987, 0.257]
-    }]
-    """
 
     return render_template('show_text_emotion_analysis.html', patient=patient[0])
 
@@ -70,12 +51,16 @@ def upload_file():
     if 'file' in request.files:
         file = request.files['file']
         filename = file.filename
+
         # 파일 저장 경로 설정
         save_path = os.path.join(voice_dir, filename)
         file.save(save_path)
 
-        # json으로 변환
+        # ~.flac을 stt.json으로 변환
         transcribe_audio(save_path, os.path.join(voice_dir, 'stt.json'))
+
+        # stt.json을 summary.json으로 변환
+        json_summary(os.path.join(voice_dir, 'stt.json'))
 
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:

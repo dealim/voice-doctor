@@ -29,5 +29,7 @@ def get_secret(setting):
         return secrets[setting]
     elif setting == "STT":
         return os.path.join(parent_dir, 'keys', secrets[setting])
+    elif setting == "dealimmmm":
+        return secrets[setting]
     else:
         raise "{} 키를 찾을 수 없습니다.".format(setting)
