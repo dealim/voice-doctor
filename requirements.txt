@@ -1,4 +1,4 @@
 flask~=3.0.0
 google-cloud-language
 google-cloud-aiplatform
-watchdog
+google-cloud-speech
