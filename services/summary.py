@@ -3,7 +3,7 @@ import os
 import json
 import vertexai
 from vertexai.language_models import TextGenerationModel
-from .settings import get_secret, get_projectId
+from settings import get_secret, get_projectId
 import requests
 current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
@@ -30,20 +30,24 @@ def text_summarization(
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-        """Provide a summary with about two sentences for the following conversation:""" + text,
+        """Provide a summary with about three sentences for the following conversation:""" + text,
         **parameters,
     )
-    # print(response.text)
+    print(response)
+
     data = f"""{{
         'documentContent': '{response.text}',
         'alternativeOutputFormat': 'FHIR_BUNDLE'
     }}"""
-    
+
+
     header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
     res = requests.post(url, data=data, headers=header)
-    print(res)
+
+
+
     return response.text
 
 
