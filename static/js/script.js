@@ -131,25 +131,33 @@ function setupFileDragAndDrop() {
     function uploadFile(file) {
         let formData = new FormData();
         formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
+        // 업로드 애니메이션 및 메시지 표시
+        dropArea.classList.add('uploading')
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.getElementById('dropAreaMessage').style.display = 'none';
 
+        // 파일 업로드 요청
         fetch('/api/upload', {
             method: 'POST',
             body: formData
         })
             .then(response => response.json())
             .then(data => {
+                // 업로드 완료시 디스플레이 숨기기
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('dropAreaMessage').style.display = 'block';
+
                 if (data.message === 'File uploaded successfully!') {
-                    console.log(data);
-                    isFileUploaded = true; // 업로드 상태 업데이트
-                    document.getElementById('dropAreaMessage').innerText = "Upload complete"; // 메시지 변경
-                    document.cookie = "uploadedFileName=" + encodeURIComponent(data.filename) + "; path=/"; // 쿠키에 파일명 추가
-                    dropArea.classList.add('uploaded'); // 업로드된 상태 스타일 적용
+                    dropArea.classList.remove('uploading');
+                    // 업로드 완료시 쿠키에 파일 이름 저장
+                    document.cookie = "uploadedFileName=" + encodeURIComponent(data.filename) + "; path=/";
                 } else {
-                    document.getElementById('dropAreaMessage').innerText = "upload failed";
+                    document.getElementById('dropAreaMessage').innerText = "Upload failed";
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('dropAreaMessage').innerText = "Upload failed";
             });
     }
 }

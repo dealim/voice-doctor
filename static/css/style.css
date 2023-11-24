@@ -248,18 +248,18 @@ a {
 }
 
 .drop-area {
+    display: flex;
+    flex-direction: column; /* 자식 요소를 세로로 정렬 */
+    justify-content: center; /* 자식 요소를 수직 중앙에 배치 */
+    align-items: center; /* 자식 요소를 수평 중앙에 배치 */
+    position: relative; /* 자식 요소의 위치 기준점 설정 */
     border: 2px dashed #ccc;
     border-radius: 20px;
     width: 100%;
     aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
     text-align: center;
     padding: 20px;
-    transition: border .3s ease-in-out;
-
-    display: flex;
-    flex-direction: column; /* 자식 요소를 세로로 정렬 */
-    justify-content: center; /* 자식 요소를 수직 중앙에 배치 */
-    align-items: center; /* 자식 요소를 수평 중앙에 배치 */
+    transition: all .3s ease-in-out
 }
 
 
@@ -267,16 +267,45 @@ a {
     border-color: #000;
 }
 
-.drop-area.uploaded {
-    transition: all 0.5s ease;
-    border-color: blue;
+.drop-area.uploading {
+    transition: all 0.3s ease;
     background-color: rgba(169, 169, 169, 0.3);
+    border-color: rgba(84, 163, 255, 0.81);
     pointer-events: none;
+    opacity: 0.8;
 }
+
 .drop-area-content{
     font-size: 1rem;
     line-height: 1.75rem;
 }
+
+.loading-spinner-hidden {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: none;
+}
+
+.spinner {
+    transform: translate(-50%, -50%); /* 요소의 중앙 정렬 */
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid rgba(44, 170, 245, 0.8);
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
 #fileInputLink {
     color: #007bff;
     text-decoration: underline;
