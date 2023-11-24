@@ -42,10 +42,16 @@ def text_summarization(
     header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
-    res = requests.post(url, data=data, headers=header)
-    print(res.status_code, res.text)
+    response = requests.post(url, data=data, headers=header)
+    # print(response.status_code, response.text)
 
-    return response.text
+    response = json.loads(response.text)
+    filtered_entities = [mention for mention in response["entityMentions"] if "mentionId" in mention.keys()]
+    print(filtered_entities)
+    with open('health_response.json', 'w') as f:
+        json.dump(filtered_entities, f)
+
+    return filtered_entities
 
 
 def json_analyze_sentiment(jsonfile):
