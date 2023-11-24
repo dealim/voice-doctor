@@ -2,14 +2,16 @@ import os, json
 
 # 현재 파일의 디렉토리를 기준으로 상위 디렉토리의 경로를 구함
 current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.join(current_dir, '..')
+parent_dir = os.path.dirname(current_dir)
 
 # 예시: 'keys/secrets.json' 파일의 경로를 상위 디렉토리 기준으로 구함
 secret_file = os.path.join(parent_dir, 'keys', 'secrets.json')
 
-
-with open(secret_file) as f:
-    secrets = json.loads(f.read())
+try:
+    with open(secret_file) as f:
+        secrets = json.loads(f.read())
+except Exception as e:
+    print("파일 읽기 오류:", e)
 
 def get_projectId():
     return "applicationteam02"

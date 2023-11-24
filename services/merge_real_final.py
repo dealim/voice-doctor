@@ -7,8 +7,9 @@ from watchdog.events import FileSystemEventHandler
 import json
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
 os.environ[
-    "GOOGLE_APPLICATION_CREDENTIALS"] = current_dir + "/applicationteam02-cf34308f779b.json"
+    "GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(parent_dir, "keys/applicationteam02-cf34308f779b.json")
 
 def transcribe_audio(file_path, output_json_file):
     client = speech_v1.SpeechClient()
