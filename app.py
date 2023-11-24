@@ -43,22 +43,22 @@ def show_emotion():
     doctor = json_analyze_sentiment('./services/doctor_text_request.json')
 
     # print(patient)
-    """ 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
-    patient = [{
-        'doc_sentiment_score': -1,
-        'doc_sentiment_magnitude': 2.931999921798706,
-        'text_contents': [
-            'Good morning.',
-            'Uh , sure , so , um , I woke up probably three or four days ago , which , uh , wheezing and short of breath .',
-            'I cough infrequently , but no , uh , chest pain .',
-            'Uh , no , and I also took a test , which was negative .',
-            'Uh , it has been getting a lot worse .',
-            'Um , I had a gone hiking , and I got caught in the rain the day before this all started .'
-        ],
-        'senti_scores': [0.337, -0.671, 0.0, 0.069, -0.952, -0.231],
-        'senti_magnitudes': [0.379, 0.724, 0.3, 0.286, 0.987, 0.257]
-    }]
-    """
+    # 기분 바뀌는지 확인용 (doc_sentiment_score 수치 바꾸면 얼굴 바뀜
+    # patient = [{
+    #     'doc_sentiment_score': 1,
+    #     'doc_sentiment_magnitude': 2.931999921798706,
+    #     'text_contents': [
+    #         'Good morning.',
+    #         'Uh , sure , so , um , I woke up probably three or four days ago , which , uh , wheezing and short of breath .',
+    #         'I cough infrequently , but no , uh , chest pain .',
+    #         'Uh , no , and I also took a test , which was negative .',
+    #         'Uh , it has been getting a lot worse .',
+    #         'Um , I had a gone hiking , and I got caught in the rain the day before this all started .'
+    #     ],
+    #     'senti_scores': [0.337, -0.671, 0.0, 0.069, -0.952, -0.231],
+    #     'senti_magnitudes': [0.379, 0.724, 0.3, 0.286, 0.987, 0.257]
+    # }]
+
 
     return render_template('show_text_emotion_analysis.html', patient=patient[0], doctor=doctor[0])
 
