@@ -2,10 +2,10 @@ from google.cloud import language_v2
 import json
 
 """text_emotion_analysis.py를 실행하고 싶은 경우"""
-# from settings import get_projectId, get_secret
+from settings import get_projectId, get_secret
 
 """app.py를 실행하고 싶은 경우"""
-from .settings import get_projectId, get_secret
+# from .settings import get_projectId, get_secret
 
 # SECRET KEY 가져오기 
 SECRET_API_KEY = get_secret("APIKEY_TEXT_EMOTION_ANALYSIS")
@@ -23,7 +23,7 @@ def analyze_sentiment(text_content):
             int : doc_sentiment_score, doc_sentiment_magnitude
             list : text_contents, senti_scores, senti_magnitude
     """
-   
+
     client = language_v2.LanguageServiceClient(
         client_options={"api_key": SECRET_API_KEY, "quota_project_id": PROJECT_ID}
     )
@@ -48,11 +48,11 @@ def analyze_sentiment(text_content):
     response = client.analyze_sentiment(
         request={"document": document, "encoding_type": encoding_type}
     )
-    
+
     # input 문장들의 종합적인 sentiment score, manitude
     doc_sentiment_score = response.document_sentiment.score
     doc_sentiment_magnitude = response.document_sentiment.magnitude
-    
+
     # input 문장들 각각에 대한 sentiment score, magnitude
     text_contents = []
     senti_scores = []
@@ -61,16 +61,16 @@ def analyze_sentiment(text_content):
         text_contents.append(sentence.text.content)
         senti_scores.append(round(sentence.sentiment.score,3))
         senti_magnitudes.append(round(sentence.sentiment.magnitude,3))
-    
+
     # json 형식으로 묶어서 return
     sentiment_result = {
         "doc_sentiment_score" : doc_sentiment_score,
         "doc_sentiment_magnitude" : doc_sentiment_magnitude,
         "text_contents" : text_contents,
         "senti_scores" : senti_scores,
-        "senti_magnitudes" : senti_magnitudes 
+        "senti_magnitudes" : senti_magnitudes
     }
-    
+
     """
     # input 문장들의 종합적인 sentiment score, manitude
     print("="*50)
@@ -90,7 +90,7 @@ def analyze_sentiment(text_content):
     # the automatically-detected language.
     print(f"언어: {response.language_code}")
     """
-    
+
     return sentiment_result
 
 
@@ -115,7 +115,7 @@ def json_analyze_sentiment(jsonfile):
         for alternative in result["alternatives"]:
             text = alternative["transcript"]
             sentiment_results.append(analyze_sentiment(text))
-    
+
     return sentiment_results
 
 """
