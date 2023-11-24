@@ -3,7 +3,7 @@ import os
 import json
 import vertexai
 from vertexai.language_models import TextGenerationModel
-from settings import get_secret, get_projectId
+from .settings import get_secret, get_projectId
 import requests
 current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
@@ -21,8 +21,8 @@ def text_summarization(
 
     vertexai.init(project=project_id, location=location)
     parameters = {
-        "temperature": temperature, # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256, # Token limit determines the maximum amount of text output.
+        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
         "top_p": 0.95,
         # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
@@ -30,45 +30,52 @@ def text_summarization(
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-        """Provide a summary with about three sentences for the following conversation:""" + text,
+        """Provide a summary with about two sentences for the following conversation:""" + text,
         **parameters,
-    )
-    print(response)
+        )
+
+    summary = response.text
 
     data = f"""{{
         'documentContent': '{response.text}',
         'alternativeOutputFormat': 'FHIR_BUNDLE'
     }}"""
 
-
     header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
-    res = requests.post(url, data=data, headers=header)
+    response = requests.post(url, data=data, headers=header)
+    response_json = response.json()
+    print(response.status_code, response.text)
+
+    filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
+
+    final_output = {
+        "summary": summary,
+        "keywords": filtered_entities
+    }
+
+    with open(os.path.join(current_dir,'voice/health_response.json'), 'w') as f:
+            json.dump(final_output, f)
+
+    return filtered_entities
 
 
-
-    return response.text
-
-
-def json_summary(jsonfile):
+def json_analyze_sentiment(jsonfile):
 
     # JSON 파일 읽기 예제
     with open(jsonfile, 'r', encoding='utf-8') as file:
         json_data = json.load(file)
 
     summarize_results = []
-    # 요약 수행
-    for result in json_data:
-        transcript = result["transcript"]
-        summarize_results.append(text_summarization(0.0, PROJ, 'us-central1', transcript))
+    # 각 문장에 대해 감정 분석 수행
+    for result in json_data["results"]:
+        for alternative in result["alternatives"]:
+            text = alternative["transcript"]
+            summarize_results.append(text_summarization(0.0, PROJ, 'us-central1', text))
 
-    with open(current_dir + '/voice/summary.json', 'w') as json_file:
-        json.dump(summarize_results, json_file, indent=4)
-
-    print('summary.json 생성 완료')
-
+    return summarize_results
 
 
 if __name__ == "__main__":
-    json_summary(current_dir + "/voice/stt.json")
+    json_analyze_sentiment(current_dir + "/patient_text_request.json")

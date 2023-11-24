@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from services.text_emotion_analysis import json_analyze_sentiment
 from services.sound_to_text import transcribe_audio
-from services.summary import json_summary
+from services.summary import text_summarization
 import os
 import json
 
@@ -27,7 +27,7 @@ def show_voicetext():
 
 @app.route('/get/voicetext')
 def get_voicetext():
-    json_file_name = 'summary.json'
+    json_file_name = 'health_response.json'
     file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
@@ -59,8 +59,13 @@ def upload_file():
         # ~.flac을 stt.json으로 변환
         transcribe_audio(save_path, os.path.join(voice_dir, 'stt.json'))
 
-        # stt.json을 summary.json으로 변환
-        json_summary(os.path.join(voice_dir, 'stt.json'))
+        # JSON 파일 읽기
+        with open(os.path.join(voice_dir, 'stt.json'), 'r', encoding='utf-8') as file:
+            json_data = json.load(file)
+            text = json_data[0]['transcript']
+
+        # stt.json을 health_response, summary.json 으로 변환
+        text_summarization(0.0, 'applicationteam02', 'us-central1', text);
 
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:

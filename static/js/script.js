@@ -40,11 +40,21 @@ function loadContent(url) {
                         .then(response => response.json())
                         .then(data => {
                             const descriptionElement = document.querySelector('.overlay_summary_description');
-                            console.log(data);
-                            if (data && data[0]) {
-                                descriptionElement.innerHTML += `
-                                ${data[0]}
-                                `;
+                            const keywordsElement = document.querySelector('.overlay-summary-right');
+
+                            // Summary 내용 표시
+                            if (data && data.summary) {
+                                descriptionElement.innerHTML = data.summary;
+                            }
+
+                            // Keywords 및 신뢰도 표시
+                            if (data && data.keywords) {
+                                data.keywords.forEach(keyword => {
+                                    const labels = data.keywords.map(keyword => keyword.text.content);
+                                    const confidences = data.keywords.map(keyword => keyword.certaintyAssessment.confidence.toFixed(3));
+
+                                    createKeywordsChart(labels, confidences);
+                                });
                             }
                         });
                 }
@@ -175,5 +185,29 @@ function setupFileDragAndDrop() {
     }
 }
 
+// 차트 만들기
+function createKeywordsChart(labels, confidences) {
+    const ctx = document.getElementById('summaryChart').getContext('2d');
+    const keywordsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Confidence Scores',
+                data: confidences,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
 

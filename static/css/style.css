@@ -277,8 +277,8 @@ a {
 
 .drop-area.uploaded{
     transition: all 0.3s ease;
-    background-color: rgba(10, 248, 0, 0.32);
-    border-color: rgba(107, 255, 84, 0.81);
+    background-color: rgba(8, 255, 0, 0.38);
+    border-color: rgba(63, 169, 56, 0.81);
     pointer-events: none;
     opacity: 0.8;
 }
