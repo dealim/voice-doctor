@@ -42,7 +42,9 @@ def text_summarization(
         'documentContent': '{response.text}',
         'alternativeOutputFormat': 'FHIR_BUNDLE'
     }}"""
+    # cli로 키받아오기
     print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
+    print(print_token)
     header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
@@ -51,8 +53,8 @@ def text_summarization(
     print(response.status_code, response.text)
     response_json = response.json()
 
+    # 요약, 키워드 요소들만 뽑아서 json으로 저장
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
-
     final_output = {
         "summary": summary,
         "keywords": filtered_entities
