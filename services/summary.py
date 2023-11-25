@@ -49,7 +49,7 @@ def text_summarization(
 
     response = requests.post(url, data=data, headers=header)
     response_json = response.json()
-    # print(response.status_code, response.text)
+    print(response.status_code, response.text)
 
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
 
