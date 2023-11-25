@@ -5,7 +5,7 @@ import subprocess
 import vertexai
 import requests
 from vertexai.language_models import TextGenerationModel
-from settings import get_secret, get_projectId
+from .settings import get_secret, get_projectId
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
