@@ -1,14 +1,16 @@
 # pip install google-cloud-aiplatform
 import os
 import json
+import subprocess
 import vertexai
-from vertexai.language_models import TextGenerationModel
-from .settings import get_secret, get_projectId
 import requests
+from vertexai.language_models import TextGenerationModel
+from settings import get_secret, get_projectId
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
-print_token = get_secret("dealimmmm") # $(gcloud auth print-access-token)
+# print_token = get_secret("dealimmmm") # $(gcloud auth print-access-token)
 PROJ = get_projectId()
 
 def text_summarization(
@@ -40,13 +42,14 @@ def text_summarization(
         'documentContent': '{response.text}',
         'alternativeOutputFormat': 'FHIR_BUNDLE'
     }}"""
-
+    print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
     header={"Authorization": f"Bearer {print_token}", \
             "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
+
     response = requests.post(url, data=data, headers=header)
     response_json = response.json()
-    print(response.status_code, response.text)
+    # print(response.status_code, response.text)
 
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
 
@@ -63,7 +66,7 @@ def text_summarization(
 
 def json_analyze_sentiment(jsonfile):
 
-    # JSON 파일 읽기 예제
+    # JSON 파일 읽기예
     with open(jsonfile, 'r', encoding='utf-8') as file:
         json_data = json.load(file)
 

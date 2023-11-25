@@ -185,7 +185,7 @@ function setupFileDragAndDrop() {
     }
 }
 
-// 차트 만들기
+// keyword 차트 만들기
 function createKeywordsChart(labels, confidences) {
     const ctx = document.getElementById('summaryChart').getContext('2d');
     const keywordsChart = new Chart(ctx, {

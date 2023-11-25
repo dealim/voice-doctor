@@ -410,7 +410,7 @@ a {
 .chart__table th, .chart__table td {
     border: 1px solid rgba(0, 0, 0, 0.11);
     text-align: left;
-    padding: 12px; /* 패딩 증가 */
+    padding: 8px; /* 패딩 증가 */
     color: #333; /* 글자 색상 */
 }
 
