@@ -48,8 +48,8 @@ def text_summarization(
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
 
     response = requests.post(url, data=data, headers=header)
-    response_json = response.json()
     print(response.status_code, response.text)
+    response_json = response.json()
 
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
 
