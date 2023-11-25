@@ -6,7 +6,7 @@ FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
 RUN apt-get update && apt-get install -y python3.9 python3-pip
 
 # ffmpeg 설치
-RUN apt-get install ffmpeg
+RUN apt-get install -y ffmpeg
 
 # 애플리케이션 폴더 생성
 WORKDIR /app
