@@ -57,7 +57,7 @@ def upload_file():
         file.save(save_path)
 
         # ~.flac을 stt.json으로 변환
-        transcribe_audio(save_path, os.path.join(voice_dir, 'stt.json'))
+        transcribe_audio(filename, save_path, os.path.join(voice_dir, 'stt.json'))
 
         # JSON 파일 읽기
         with open(os.path.join(voice_dir, 'stt.json'), 'r', encoding='utf-8') as file:

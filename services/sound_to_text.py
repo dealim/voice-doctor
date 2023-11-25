@@ -1,4 +1,5 @@
 from google.cloud import speech_v1
+from pydub.utils import mediainfo
 import io
 import os
 import time
@@ -9,9 +10,12 @@ parent_dir = os.path.dirname(current_dir)
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(parent_dir, "keys/applicationteam02-cf34308f779b.json")
 
-def transcribe_audio(file_path, output_json_file):
-    client = speech_v1.SpeechClient()
 
+def transcribe_audio(filename, file_path, output_json_file):
+    client = speech_v1.SpeechClient()
+    file_path = os.path.join(current_dir, 'voice', filename)
+    audio_info = mediainfo(file_path)
+    sample_rate = int(audio_info['sample_rate'])
     start_time = time.time()
 
     with io.open(file_path, "rb") as audio_file:
@@ -21,9 +25,9 @@ def transcribe_audio(file_path, output_json_file):
 
     config = {
         "language_code": "en-US",
-        "model": "medical_conversation",
+        "model": "medical_dictation",
         "encoding": "FLAC",
-        "sample_rate_hertz": 48000
+        "sample_rate_hertz": sample_rate
     }
 
     response = client.recognize(config=config, audio=audio)

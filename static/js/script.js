@@ -40,7 +40,6 @@ function loadContent(url) {
                         .then(response => response.json())
                         .then(data => {
                             const descriptionElement = document.querySelector('.overlay_summary_description');
-                            const keywordsElement = document.querySelector('.overlay-summary-right');
 
                             // Summary 내용 표시
                             if (data && data.summary) {
@@ -49,13 +48,23 @@ function loadContent(url) {
 
                             // Keywords 및 신뢰도 표시
                             if (data && data.keywords) {
-                                data.keywords.forEach(keyword => {
-                                    const labels = data.keywords.map(keyword => keyword.text.content);
-                                    const confidences = data.keywords.map(keyword => keyword.certaintyAssessment.confidence.toFixed(3));
-
-                                    createKeywordsChart(labels, confidences);
+                                const labels = data.keywords.map(keyword => keyword.text.content);
+                                const confidences = data.keywords.map(keyword => {
+                                    // certaintyAssessment 객체와 confidence 속성이 있는지 확인
+                                    if (keyword.certaintyAssessment && typeof keyword.certaintyAssessment.confidence === 'number') {
+                                        return keyword.certaintyAssessment.confidence.toFixed(3);
+                                    } else {
+                                        // certaintyAssessment 객체 또는 confidence 속성이 없는 경우 안전한 기본값 반환
+                                        return '0.000';
+                                    }
                                 });
+
+
+                                createKeywordsChart(labels, confidences);
                             }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching voice text data:', error);
                         });
                 }
 
@@ -93,6 +102,10 @@ function setupFileDragAndDrop() {
     fileInputLink.addEventListener('click', (e) => {
         e.preventDefault();
         fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function(e) {
+        handleFiles(this.files);
     });
 
     // 드래그 이벤트 방지
