@@ -39,14 +39,13 @@ def text_summarization(
     summary = response.text
 
     data = f"""{{
-        'documentContent': '{response.text}',
-        'alternativeOutputFormat': 'FHIR_BUNDLE'
+        "documentContent": "{response.text}",
+        "alternativeOutputFormat": "FHIR_BUNDLE"
     }}"""
+
     # cli로 키받아오기
     print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
-    print(print_token)
-    header={"Authorization": f"Bearer {print_token}", \
-            "Content-Type": "application/json"}
+    header={"Authorization": f"Bearer {print_token}", "Content-Type": "application/json"}
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
 
     response = requests.post(url, data=data, headers=header)
