@@ -14,14 +14,18 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     }
     if (event.target.id === 'startEmotionAnalysis') {
         event.preventDefault();
-        // loadContent('/show/emotion');
-        window.location.href = '/show/emotion';
+        loadContent('/show/emotion');
+        // window.location.href = '/show/emotion';
     }
 });
 
 // 페이드 아웃 및 새 콘텐츠 로드 함수
 function loadContent(url) {
+    // 동적 페이지 구현
     const dynamicContent = document.getElementById('dynamicContent');
+
+
+
     // 페이드 아웃
     dynamicContent.classList.add('hidden');
 
@@ -59,9 +63,22 @@ function loadContent(url) {
                                     }
                                 });
 
-
                                 createKeywordsChart(labels, confidences);
                             }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching voice text data:', error);
+                        });
+                }
+
+                // '/show/emotion' 페이지가 로드된 후 추가적인 JSON 데이터 요청
+                if (url === '/show/emotion') {
+                    fetch('/get/emotion')
+                        .then(response => response.json())
+                        .then(data => {
+
+                                createEmotionChart(data)
+
                         })
                         .catch(error => {
                             console.error('Error fetching voice text data:', error);
@@ -223,4 +240,91 @@ function createKeywordsChart(labels, confidences) {
     });
 }
 
+// emotion 차트 만들기
+function createEmotionChart(patient) {
+    var sentences = data.text_contents;
+    var sentiScores = data.senti_scores;
+    var sentiMagnitudes = data.senti_magnitudes;
+    var overallScore = data.doc_sentiment_score;
+    var overallMagnitude = data.doc_sentiment_magnitude;
 
+    // 긍정, 부정 기준선을 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
+    var positiveBaseline = new Array(sentiScores.length).fill(0.25);
+    var negativeBaseline = new Array(sentiScores.length).fill(-0.25);
+
+    // labels를 sentence 개수만큼 만듦 => text1, text2, ...
+    var labels = []
+    for (var i = 1; i <= sentences.length; i++) {
+        labels.push("");
+    }
+
+
+    // 차트 구성 설정
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Sentiment Scores',
+            backgroundColor: 'rgb(000, 153, 255)',
+            borderColor: 'rgb(000, 153, 255)',
+            data: sentiScores,
+        },
+            {
+                label: 'Sentiment Magnitudes',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: sentiMagnitudes,
+            },
+            {
+                label: 'Positive Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
+                borderDash: [5, 5],
+                data: positiveBaseline,
+            },
+            {
+                label: 'Negative Baseline',
+                backgroundColor: 'rgb(102, 102, 102)',
+                borderColor: 'rgb(102, 102, 102)',
+                borderDash: [5, 5],
+                data: negativeBaseline,
+            }]
+    };
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                x:{
+                    ticks:{
+                        font:{
+                            size: 14
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 14 // 범례 글씨 크기 수정
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+                    text: chartTitle,
+                    font: {
+                        size: 16 // 제목 글씨 크기 수정
+                    }
+                }
+            }
+        },
+    };
+
+    const myChart = new Chart(
+        document.getElementById('patientChart'),
+        config
+    );
+}

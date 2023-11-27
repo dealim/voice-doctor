@@ -1,5 +1,6 @@
 from google.cloud import language_v2
 import json
+import os
 
 """text_emotion_analysis.py를 실행하고 싶은 경우"""
 # from settings import get_projectId, get_secret
@@ -10,6 +11,9 @@ from .settings import get_projectId, get_secret
 # SECRET KEY 가져오기 
 SECRET_API_KEY = get_secret("APIKEY_TEXT_EMOTION_ANALYSIS")
 PROJECT_ID = get_projectId()
+
+# 현재 폴더 경로 가져오기
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
 def analyze_sentiment(text_content):
     """
@@ -122,8 +126,8 @@ def json_analyze_sentiment(jsonfile):
 
 
 # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-# patient = json_analyze_sentiment('./patient_text_request.json')
-#
-# print(patient[0])
+def get_json_sentiment(jsonfile):
+    patient = json_analyze_sentiment(jsonfile)
 
-
+    with open(os.path.join(current_dir, 'voice/test.json'), 'w') as f:
+        json.dump(patient[0], f)

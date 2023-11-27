@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from services.text_emotion_analysis import json_analyze_sentiment
+from services.text_emotion_analysis import get_json_sentiment
 from services.sound_to_text import transcribe_audio
 from services.summary import text_summarization
 import os
@@ -43,13 +43,22 @@ def get_voicetext():
 
 @app.route('/show/emotion')
 def show_emotion():
+    return render_template('show_text_emotion_analysis.html')
+
+@app.route('/get/emotion')
+def get_emotion():
     filename = request.cookies.get('uploadedFileName')
     fileleftname = filename.rsplit('.')[0]
     json_file_name = fileleftname + '_stt.json'
-    # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-    patient = json_analyze_sentiment(os.path.join(voice_dir, json_file_name))
 
-    return render_template('show_text_emotion_analysis.html', patient=patient[0])
+    # 환자용 JSON 파일 만들기 & 각 문장에 대해 감정 분석 수행
+    get_json_sentiment(os.path.join(voice_dir, json_file_name))
+    if os.path.exists(os.path.join(voice_dir, json_file_name)):
+        with open(os.path.join(voice_dir, json_file_name), 'r', encoding='utf-8') as file:
+            json_data = json.load(file)
+        return jsonify(json_data)
+    else:
+        return jsonify({"error": "File not found"}), 404
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
