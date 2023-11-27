@@ -8,14 +8,12 @@ from vertexai.language_models import TextGenerationModel
 from .settings import get_secret, get_projectId
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-voice_dir = os.path.join(current_dir,'voice')
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 # print_token = get_secret("dealimmmm") # $(gcloud auth print-access-token)
 PROJ = get_projectId()
 
 def text_summarization(
-        filename: str,
         temperature: float,
         project_id: str,
         location: str,
@@ -51,8 +49,7 @@ def text_summarization(
     url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
 
     response = requests.post(url, data=data, headers=header)
-    # print(response.status_code, response.text)
-    print(response.status_code)
+    print(response.status_code, response.text)
     response_json = response.json()
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
@@ -62,7 +59,7 @@ def text_summarization(
         "keywords": filtered_entities
     }
 
-    with open(os.path.join(voice_dir, filename), 'w') as f:
+    with open(os.path.join(current_dir,'voice/health_response.json'), 'w') as f:
             json.dump(final_output, f)
 
 
