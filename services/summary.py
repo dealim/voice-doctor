@@ -63,24 +63,6 @@ def text_summarization(
     with open(os.path.join(current_dir,'voice/health_response.json'), 'w') as f:
             json.dump(final_output, f)
 
-    return filtered_entities
-
-
-def json_analyze_sentiment(jsonfile):
-
-    # JSON 파일 읽기예
-    with open(jsonfile, 'r', encoding='utf-8') as file:
-        json_data = json.load(file)
-
-    summarize_results = []
-    # 각 문장에 대해 감정 분석 수행
-    for result in json_data["results"]:
-        for alternative in result["alternatives"]:
-            text = alternative["transcript"]
-            summarize_results.append(text_summarization(0.0, PROJ, 'us-central1', text))
-
-    return summarize_results
-
 
 if __name__ == "__main__":
     json_analyze_sentiment(current_dir + "/patient_text_request.json")
