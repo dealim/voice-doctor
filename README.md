@@ -5,33 +5,32 @@
 GCP-TEAM2/
 │
 ├── static/                 
-│   ├── css/                 # CSS 파일들
-│   ├── js/                  # JavaScript 파일들
-│   └── images/              # 이미지 파일들
+│   ├── css/                                    # CSS 파일들
+│   ├── js/                                     # JavaScript 파일들
+│   └── images/                                 # 이미지 파일들
 │
 ├── templates/               
-│   ├── index.html           # 메인 페이지 템플릿
-│   └── other.html           # 다른 페이지 템플릿들
+│   ├── index.html                              # index 페이지
+│   ├── main_page.html                          # 메인 화면
+│   ├── show_text_emotion_analysis.html         # 감정분석 결과 페이지
+│   └── show_text_summary.html                  # 환자 녹음 내용 요약, 키워드 정확도
 │
-├── venv/                    # 가상 환경 폴더
-│
-├── services/                # 비즈니스 로직
-│   ├── emotion_analysis.py  # 감정 분석 로직
-│   ├── text_processing.py   # 텍스트 처리 및 요약
-│   ├── image_processing.py  # 이미지 처리 및 감정 분석
-│   └── health_prediction.py # 건강 지표 예측 로직
-│
-├── models/                  # 데이터 모델 / 모델은 없이 해도 될듯
-│   ├── patient.py           # 환자 관련 모델
-│   └── session.py           # 세션/대화 관련 모델
-│
-├── utils/                   # 유틸리티 함수 및 클래스
-│   └── helpers.py           # 도우미 함수들
+├── services/                                   # 비즈니스 로직
+│   ├── settings.py                             # 프로젝트명, 키설정
+│   ├── sound_to_text.py                        # STT 구현, json 반환
+│   ├── summary.py                              # summary, keyword 분석, json 반환
+│   ├── text_emotion_analysis.py                # 감정분석, json 반환
+│   └── voice
+│       ├── [음성 파일 이름]_stt.json  
+│       ├── [음성 파일 이름]_health_response.json
+│       └── [음성 파일 이름].flac  
 │
 ├── app.py                   # Flask 앱의 메인 실행 파일
 ├── config.py                # 애플리케이션 설정 / 이것도 없어도 됨
 ├── .env                     # 환경 변수 파일
 ├── Dockerfile               # 컨테이너 환경
-├── docker-compose.yml       # 같이 실행될 DB서버 있으면 작성
+├── docker-compose.yml       # nginx + flask 서버
 └── requirements.txt         # 프로젝트 의존성 목록 파일
 ```
+
+![아키텍쳐](./assets/아키텍쳐.png)
