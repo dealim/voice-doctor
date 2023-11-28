@@ -221,6 +221,29 @@ a {
     line-height: 1.75rem;
 }
 
+.downloadFiles {
+    position: absolute; /* 또는 relative가 있는 부모 요소에 대해 absolute */
+    bottom: 10px; /* 아래쪽에서 0의 위치 */
+    flex-wrap: nowrap;
+    display: flex;
+}
+
+.downloadFiles a{
+    color: #007bff;
+    text-decoration: underline;
+    display: inline-block;
+    text-align: center;
+}
+
+.downloadFiles a+a{
+    margin-left: 10px;
+}
+
+.downloadFiles a:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
 .loading-spinner-hidden {
     position: absolute;
     top: 50%;
@@ -245,6 +268,10 @@ a {
     100% { transform: rotate(360deg); }
 }
 
+#patientChart {
+    height: 300px !important;
+    width: 100% !important;
+}
 
 
 #fileInputLink {
@@ -406,27 +433,27 @@ a {
         margin-bottom: 2.5rem;
     }
 
-    .drop-area-content{
+    .drop-area{
         font-size: 0.7rem;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .arrow-container {
-        bottom: 0; /* 맨 아래에 위치 */
+        bottom: -1%; /* 맨 아래에 위치 */
         left: 50%; /* 가로 중앙에 위치 */
         transform: translateX(-50%); /* X축 기준 중앙 정렬 보정 */
     }
     .body table{
         word-break: break-word;
     }
-    .overlay-inner-right{
-        width: 80%;
-    }
     .overlay {
-        padding: 1.5rem;
+        padding: 1rem;
         flex-direction: column;
         max-height: none;
+    }
+    .overlay-inner-left{
+        width: 100%;
     }
 
     .overlay__btns {
@@ -443,12 +470,29 @@ a {
         margin-bottom: 1rem;
     }
 
-    .drop-area {
-        flex-wrap: wrap;
-    }
-
     .overlay_summary_description {
         font-size: 1rem;
+    }
+
+    .chart__table{
+        display: none;
+    }
+
+    .drop-area{
+        width: 180px;
+        height: 180px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .drop-area-content{
+        line-height: 1rem;
+    }
+
+;
+
+    .downloadFiles{
+
     }
 
 }

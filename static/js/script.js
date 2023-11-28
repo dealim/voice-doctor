@@ -293,6 +293,7 @@ function createEmotionChart(patient) {
         data: data,
         options: {
             responsive: true,
+            maintainAspectRatio: false, // 이 부분을 추가
             scales: {
                 x:{
                     ticks:{
