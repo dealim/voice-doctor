@@ -126,8 +126,8 @@ def json_analyze_sentiment(jsonfile):
 
 
 # 환자용 JSON 파일 읽기 & 각 문장에 대해 감정 분석 수행
-def get_json_sentiment(jsonfile):
+def get_json_sentiment(jsonfile, filename):
     patient = json_analyze_sentiment(jsonfile)
 
-    with open(os.path.join(current_dir, 'voice/test.json'), 'w') as f:
+    with open(os.path.join(current_dir, 'voice', filename + '_emotion.json'), 'w') as f:
         json.dump(patient[0], f)

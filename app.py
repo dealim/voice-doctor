@@ -49,10 +49,8 @@ def show_emotion():
 def get_emotion():
     filename = request.cookies.get('uploadedFileName')
     fileleftname = filename.rsplit('.')[0]
-    json_file_name = fileleftname + '_stt.json'
+    json_file_name = fileleftname + '_emotion.json'
 
-    # 환자용 JSON 파일 만들기 & 각 문장에 대해 감정 분석 수행
-    get_json_sentiment(os.path.join(voice_dir, json_file_name))
     if os.path.exists(os.path.join(voice_dir, json_file_name)):
         with open(os.path.join(voice_dir, json_file_name), 'r', encoding='utf-8') as file:
             json_data = json.load(file)
@@ -79,6 +77,9 @@ def upload_file():
         with open(os.path.join(voice_dir, stt_name), 'r', encoding='utf-8') as file:
             json_data = json.load(file)
             text = json_data[0]['transcript']
+
+        # stt.json을 [파일이름]_emotion.json 으로 변환
+        get_json_sentiment(os.path.join(voice_dir, filerleftname + '_stt.json'), filerleftname)
 
         # stt.json을 [파일이름]_health_response.json 으로 변환
         file_health_response = filerleftname + '_health_response.json'

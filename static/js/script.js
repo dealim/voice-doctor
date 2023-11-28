@@ -1,4 +1,3 @@
-
 // 동적 페이지, SPA 구현
 
 // 첫 페이지 로드
@@ -24,16 +23,15 @@ function loadContent(url) {
     // 동적 페이지 구현
     const dynamicContent = document.getElementById('dynamicContent');
 
-
-
     // 페이드 아웃
     dynamicContent.classList.add('hidden');
 
-    // CSS 트랜지션을 기다립니다
+    // CSS 트랜지션을 기다린 후 페이지에 따른
     setTimeout(() => {
         fetch(url)
             .then(response => response.text())
             .then(html => {
+
                 // 콘텐츠 업데이트 및 페이드 인
                 dynamicContent.innerHTML = html;
                 dynamicContent.classList.remove('hidden');
@@ -109,7 +107,7 @@ function setupArrowClickListener() {
     }
 }
 
-// 보이스 넣는 설정
+// 보이스 파일 드래그 앤 드롭
 function setupFileDragAndDrop() {
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
@@ -242,11 +240,12 @@ function createKeywordsChart(labels, confidences) {
 
 // emotion 차트 만들기
 function createEmotionChart(patient) {
-    var sentences = data.text_contents;
-    var sentiScores = data.senti_scores;
-    var sentiMagnitudes = data.senti_magnitudes;
-    var overallScore = data.doc_sentiment_score;
-    var overallMagnitude = data.doc_sentiment_magnitude;
+    const chartTitle = "The patient's sentiment analysis chart";
+    var sentences = patient.text_contents;
+    var sentiScores = patient.senti_scores;
+    var sentiMagnitudes = patient.senti_magnitudes;
+    var overallScore = patient.doc_sentiment_score;
+    var overallMagnitude = patient.doc_sentiment_magnitude;
 
     // 긍정, 부정 기준선을 그래프에 그리기 위해 리스트에 문장 개수만큼 채워 넣음
     var positiveBaseline = new Array(sentiScores.length).fill(0.25);
@@ -257,7 +256,6 @@ function createEmotionChart(patient) {
     for (var i = 1; i <= sentences.length; i++) {
         labels.push("");
     }
-
 
     // 차트 구성 설정
     const data = {
@@ -289,6 +287,7 @@ function createEmotionChart(patient) {
                 data: negativeBaseline,
             }]
     };
+
     const config = {
         type: 'line',
         data: data,
