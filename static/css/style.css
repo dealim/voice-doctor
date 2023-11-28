@@ -40,8 +40,8 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
     z-index: -1;
 }
@@ -67,16 +67,15 @@ strong {
 
 .overlay-inner-left {
     position: relative;
-    flex:70;
+    width: 70%;
 }
 
 .overlay-inner-right {
     position: relative;
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex:30;
+    width: 30%;
 }
 
 .overlay-summary-left {
@@ -181,71 +180,6 @@ a {
     align-items: center;
 }
 
-/* Not too many browser support this yet but it's good to add! */
-@media (prefers-contrast: high) {
-    .orb-canvas {
-        display: none;
-    }
-}
-
-@media only screen and (max-width: 1140px) {
-    .overlay {
-        padding: 8rem 4rem;
-    }
-}
-
-@media only screen and (max-width: 840px) {
-    body {
-        padding: 1.5rem;
-    }
-
-    .overlay {
-        padding: 4rem;
-        height: auto;
-    }
-
-    .overlay__title {
-        font-size: 1.25rem;
-        line-height: 2rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .overlay__description {
-        font-size: 0.875rem;
-        line-height: 1.5rem;
-        margin-bottom: 2.5rem;
-    }
-
-    .drop-area-content{
-        font-size: 0.7rem;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .overlay {
-        padding: 1.5rem;
-        flex-direction: column;
-        max-height: none;
-    }
-
-    .overlay__btns {
-        flex-wrap: wrap;
-    }
-
-    .overlay__btn {
-        width: 100%;
-        font-size: 0.75rem;
-        margin-right: 0;
-    }
-
-    .overlay__btn:first-child {
-        margin-bottom: 1rem;
-    }
-
-    .drop-area {
-        flex-wrap: wrap;
-    }
-}
 
 .drop-area {
     display: flex;
@@ -255,7 +189,6 @@ a {
     position: relative; /* 자식 요소의 위치 기준점 설정 */
     border: 2px dashed #ccc;
     border-radius: 20px;
-    width: 100%;
     aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
     text-align: center;
     padding: 20px;
@@ -338,7 +271,7 @@ a {
 .arrow-container {
     position: absolute;
     left: 10%;
-    bottom: 20%;
+    bottom: 15%;
 }
 
 .arrow {
@@ -353,7 +286,9 @@ a {
 .arrow span {
     display: block;
     width: 2vw;
+    min-width: 30px;
     height: 2vw;
+    min-height: 30px;
     border-bottom: 5px solid white;
     border-right: 5px solid white;
     transform: rotate(45deg);
@@ -399,8 +334,13 @@ a {
 .chart__todayMood img {
     width: 30%;
 }
+.chart__table{
+    justify-content: center;
+}
+
 .chart__table table {
     width: 100%; /* 테이블 너비 */
+    margin: 0 auto;
     border-collapse: collapse; /* 셀 간 테두리 합치기 */
     background: transparent;
     overflow: hidden; /* 모서리 넘어가는 내용 숨김 */
@@ -410,7 +350,7 @@ a {
 .chart__table th, .chart__table td {
     border: 1px solid rgba(0, 0, 0, 0.11);
     text-align: left;
-    padding: 8px; /* 패딩 증가 */
+    padding: 3px; /* 패딩 증가 */
     color: #333; /* 글자 색상 */
 }
 
@@ -432,6 +372,83 @@ a {
     background-color: rgba(255, 176, 176, 0.5); /* 반투명 lightcoral */
 }
 
+@media (prefers-contrast: high) {
+    .orb-canvas {
+        display: none;
+    }
+}
 
-/* end : 차트 오른쪽 감정 표현 상세히 */
+@media only screen and (max-width: 1140px) {
+    .overlay {
+        padding: 8rem 4rem;
+    }
+}
 
+@media only screen and (max-width: 840px) {
+    body {
+        padding: 1.5rem;
+    }
+
+    .overlay {
+        padding: 4rem;
+        height: auto;
+    }
+
+    .overlay__title {
+        font-size: 1.25rem;
+        line-height: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .overlay__description {
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .drop-area-content{
+        font-size: 0.7rem;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .arrow-container {
+        bottom: 0; /* 맨 아래에 위치 */
+        left: 50%; /* 가로 중앙에 위치 */
+        transform: translateX(-50%); /* X축 기준 중앙 정렬 보정 */
+    }
+    .body table{
+        word-break: break-word;
+    }
+    .overlay-inner-right{
+        width: 80%;
+    }
+    .overlay {
+        padding: 1.5rem;
+        flex-direction: column;
+        max-height: none;
+    }
+
+    .overlay__btns {
+        flex-wrap: wrap;
+    }
+
+    .overlay__btn {
+        width: 100%;
+        font-size: 0.75rem;
+        margin-right: 0;
+    }
+
+    .overlay__btn:first-child {
+        margin-bottom: 1rem;
+    }
+
+    .drop-area {
+        flex-wrap: wrap;
+    }
+
+    .overlay_summary_description {
+        font-size: 1rem;
+    }
+
+}

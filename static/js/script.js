@@ -75,7 +75,9 @@ function loadContent(url) {
                         .then(response => response.json())
                         .then(data => {
 
-                                createEmotionChart(data)
+                                createEmotionChart(data);
+                                showEmotionTable(data);
+                                showEmotionImage(data);
 
                         })
                         .catch(error => {
@@ -200,8 +202,6 @@ function setupFileDragAndDrop() {
                         document.getElementById('dropAreaMessage').style.display = 'block';
                         completeMessage.style.display = 'none';
                     }, 3000);
-                    // 업로드 완료시 쿠키에 파일 이름 저장
-                    document.cookie = "uploadedFileName=" + encodeURIComponent(data.filename) + "; path=/";
                 } else {
                     document.getElementById('dropAreaMessage').innerText = "Upload failed";
                 }
@@ -231,7 +231,7 @@ function createKeywordsChart(labels, confidences) {
         options: {
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
                 }
             }
         }
@@ -326,4 +326,62 @@ function createEmotionChart(patient) {
         document.getElementById('patientChart'),
         config
     );
+}
+
+// 감정분석 테이블 삽입
+function showEmotionTable(patient){
+    var sentences = patient.text_contents;
+    var sentiScores = patient.senti_scores;
+    var sentiMagnitudes = patient.senti_magnitudes;
+    var overallScore = patient.doc_sentiment_score;
+    var overallMagnitude = patient.doc_sentiment_magnitude;
+
+    for (var i = 0; i < sentiScores.length; i++) {
+        if (sentiScores[i] < -0.25 || sentiScores[i] > 0.25) {
+            var row = document.createElement('tr');
+            var cell1 = document.createElement('td');
+            var cell2 = document.createElement('td');
+            var cell3 = document.createElement('td');
+
+            cell1.textContent = sentences[i];
+            cell2.textContent = sentiScores[i];
+            cell3.textContent = sentiMagnitudes[i];
+
+            if (sentiScores[i] >= 0.25 && sentiScores[i] <= 1) {
+                cell2.classList.add('positive');
+                cell3.classList.add('positive');
+            } else if (sentiScores[i] >= -1 && sentiScores[i] < -0.25) {
+                cell2.classList.add('negative');
+                cell3.classList.add('negative');
+            }
+
+            row.appendChild(cell1);
+            row.appendChild(cell2);
+            row.appendChild(cell3);
+            document.querySelector('.chart__table table').appendChild(row);
+        }
+    }
+}
+
+// 오늘의 기분 그림
+function showEmotionImage(patient){
+    const sentimentScore = patient.doc_sentiment_score;
+
+    const sadImage = document.getElementById('sadImage');
+    const noCommentImage = document.getElementById('noCommentImage');
+    const happyImage = document.getElementById('happyImage');
+
+    if (sentimentScore > 0.25) {
+        sadImage.src = '/static/images/sad_disabled.png';
+        noCommentImage.src = '/static/images/nocomment_disabled.png';
+        happyImage.src = '/static/images/happy.png';
+    } else if (sentimentScore < -0.25) {
+        sadImage.src = '/static/images/sad.png';
+        noCommentImage.src = '/static/images/nocomment_disabled.png';
+        happyImage.src = '/static/images/happy_disabled.png';
+    } else {
+        sadImage.src = '/static/images/sad_disabled.png';
+        noCommentImage.src = '/static/images/nocomment.png';
+        happyImage.src = '/static/images/happy_disabled.png';
+    }
 }

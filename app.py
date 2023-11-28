@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session
 from services.text_emotion_analysis import get_json_sentiment
 from services.sound_to_text import transcribe_audio
 from services.summary import text_summarization
@@ -6,6 +6,8 @@ import os
 import json
 
 app = Flask(__name__)
+
+app.secret_key = os.urandom(24)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir,'services/voice')
 stt_name = ''
@@ -28,9 +30,8 @@ def show_voicetext():
 
 @app.route('/get/voicetext')
 def get_voicetext():
-    filename = request.cookies.get('uploadedFileName')
-    fileleftname = filename.rsplit('.')[0]
-    json_file_name = fileleftname + '_health_response.json'
+    filename = session.get('uploadedFileName')
+    json_file_name = filename + '_health_response.json'
     file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
@@ -45,25 +46,28 @@ def get_voicetext():
 def show_emotion():
     return render_template('show_text_emotion_analysis.html')
 
+
 @app.route('/get/emotion')
 def get_emotion():
-    filename = request.cookies.get('uploadedFileName')
-    fileleftname = filename.rsplit('.')[0]
-    json_file_name = fileleftname + '_emotion.json'
+    filename = session.get('uploadedFileName')
+    json_file_name = filename + '_emotion.json'
+    file_path = os.path.join(voice_dir, json_file_name)
 
-    if os.path.exists(os.path.join(voice_dir, json_file_name)):
-        with open(os.path.join(voice_dir, json_file_name), 'r', encoding='utf-8') as file:
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
             json_data = json.load(file)
         return jsonify(json_data)
     else:
         return jsonify({"error": "File not found"}), 404
 
+
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' in request.files:
         file = request.files['file']
-        filename = request.cookies.get('uploadedFileName')
+        filename = file.filename
         filerleftname = filename.rsplit('.')[0]
+        session['uploadedFileName'] = filerleftname
 
         # 파일 저장 경로 설정
         save_path = os.path.join(voice_dir, filename)
@@ -88,6 +92,7 @@ def upload_file():
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:
         return jsonify({'message': 'No file part'})
+
 
 # execute app
 if __name__ == '__main__':

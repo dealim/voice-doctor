@@ -1,13 +1,21 @@
 <div class="overlay-inner-left">
     <canvas id="patientChart" ></canvas>
     <div class="chart__table">
-
+        <table>
+            <tr>
+                <th>Emotionally Charged Messages</th>
+                <th>Sentiment Score</th>
+                <th>Sentiment Magnitude</th>
+            </tr>
+        </table>
     </div>
 </div>
 <div class="overlay-inner-right">
     <div class = "chart__todayMood">
         <h2>Today's sentiment</h2>
-
+        <img id="sadImage" src="/static/images/sad_disabled.png" alt="Sad">
+        <img id="noCommentImage" src="/static/images/nocomment_disabled.png" alt="No Comment">
+        <img id="happyImage" src="/static/images/happy_disabled.png" alt="Happy">
     </div>
 </div>
 <div class="arrow-container">
