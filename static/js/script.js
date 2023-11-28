@@ -157,9 +157,6 @@ function setupFileDragAndDrop() {
     let isFileUploaded = false;
 
     function handleDrop(e) {
-        if (isFileUploaded) {
-            return; // 파일이 이미 업로드된 경우, 추가 처리 방지
-        }
         let dt = e.dataTransfer;
         let files = dt.files;
 
@@ -177,6 +174,7 @@ function setupFileDragAndDrop() {
         dropArea.classList.add('uploading')
         document.getElementById('loadingSpinner').style.display = 'block';
         document.getElementById('dropAreaMessage').style.display = 'none';
+        document.getElementById('downloadFiles').style.display = 'none';
 
         // 파일 업로드 요청
         fetch('/api/upload', {
@@ -200,6 +198,7 @@ function setupFileDragAndDrop() {
                     setTimeout(() => {
                         dropArea.classList.remove('uploaded');
                         document.getElementById('dropAreaMessage').style.display = 'block';
+                        document.getElementById('downloadFiles').style.display = 'flex';
                         completeMessage.style.display = 'none';
                     }, 3000);
                 } else {
