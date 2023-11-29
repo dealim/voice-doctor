@@ -15,7 +15,6 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-
 # 애플리케이션 소스 코드 복사
 COPY . /app
 
