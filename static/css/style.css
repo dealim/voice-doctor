@@ -89,7 +89,6 @@ strong {
 .voice-input-section {
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-direction: column; /* 아이템을 세로 방향으로 정렬 */
-    align-items: center; /* 수평 중앙 정렬 (선택적) */
     justify-content: center; /* 수직 중앙 정렬 (선택적) */
     width: 100%;
 }
@@ -174,8 +173,6 @@ strong {
 a {
     text-decoration: none;
     color: var(--dark-color);
-    width: 100%;
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -184,7 +181,6 @@ a {
 
 .drop-area {
     display: flex;
-    flex-direction: column; /* 자식 요소를 세로로 정렬 */
     justify-content: center; /* 자식 요소를 수직 중앙에 배치 */
     align-items: center; /* 자식 요소를 수평 중앙에 배치 */
     position: relative; /* 자식 요소의 위치 기준점 설정 */
@@ -193,7 +189,8 @@ a {
     aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
     text-align: center;
     padding: 20px;
-    transition: all .3s ease-in-out
+    transition: all .3s ease-in-out;
+    gap: 8px;
 }
 
 
@@ -449,7 +446,7 @@ a {
         word-break: break-word;
     }
     .overlay {
-        padding: 1rem;
+        padding: 1.5rem;
         flex-direction: column;
         max-height: none;
     }
@@ -490,10 +487,14 @@ a {
         line-height: 1rem;
     }
 
-;
-
-    .downloadFiles{
-
+    .voice-input-section{
+        flex-direction: inherit;
     }
+
+    .summary-chart{
+        display: none;
+    }
+
+
 
 }
