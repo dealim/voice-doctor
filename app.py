@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, render_template, request, jsonify, session, send_from_directory
 from services.text_emotion_analysis import get_json_sentiment
 from services.sound_to_text import transcribe_audio
 from services.summary import text_summarization
@@ -93,6 +93,10 @@ def upload_file():
     else:
         return jsonify({'message': 'No file part'})
 
+@app.route('/audio/<filename>')
+def download_file(filename):
+    print(filename)
+    return send_from_directory('assets', filename)
 
 # execute app
 if __name__ == '__main__':
