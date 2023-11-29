@@ -18,6 +18,30 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     }
 });
 
+// 오디오 파일 다운로드 구현
+document.body.addEventListener('click', function(e) {
+    if (e.target.matches('.downloadFiles a')) {
+        e.preventDefault();
+        const fileUrl = e.target.href;
+        const fileName = e.target.textContent;
+
+        // 파일 다운로드를 위한 fetch 요청
+        fetch(fileUrl)
+            .then(response => response.blob()) // Blob 형태로 응답을 받음
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = fileName; // 다운로드할 파일 이름 설정
+                document.body.appendChild(a);
+                a.click(); // 링크 클릭 이벤트 트리거
+                window.URL.revokeObjectURL(url); // URL 메모리 해제
+            })
+            .catch(() => console.error('Could not download the file.'));
+    }
+});
+
 // 페이드 아웃 및 새 콘텐츠 로드 함수
 function loadContent(url) {
     // 동적 페이지 구현
