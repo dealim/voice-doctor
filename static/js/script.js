@@ -194,7 +194,6 @@ function setupFileDragAndDrop() {
     function uploadFile(file) {
         let formData = new FormData();
         formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
-
         // 업로드 애니메이션 및 메시지 표시
         dropArea.classList.add('uploading')
         document.getElementById('loadingSpinner').style.display = 'block';
