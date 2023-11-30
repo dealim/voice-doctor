@@ -56,7 +56,7 @@ strong {
     max-width: 1140px;
     padding: 8rem 6rem;
     display: flex;
-    gap:20px;
+    gap: 20px;
     align-items: center;
     background: rgba(255, 255, 255, 0.375);
     box-shadow: 0 0.75rem 2rem 0 rgba(0, 0, 0, 0.1);
@@ -206,7 +206,7 @@ a {
     opacity: 0.8;
 }
 
-.drop-area.uploaded{
+.drop-area.uploaded {
     transition: all 0.3s ease;
     background-color: rgba(8, 255, 0, 0.38);
     border-color: rgba(63, 169, 56, 0.81);
@@ -214,7 +214,7 @@ a {
     opacity: 0.8;
 }
 
-.drop-area-content{
+.drop-area-content {
     font-size: 1rem;
     line-height: 1.75rem;
 }
@@ -226,20 +226,24 @@ a {
     display: flex;
 }
 
-.downloadFiles a{
+.downloadFiles a {
     color: #007bff;
     text-decoration: underline;
     display: inline-block;
     text-align: center;
 }
 
-.downloadFiles a+a{
+.downloadFiles a + a {
     margin-left: 10px;
 }
 
 .downloadFiles a:hover {
     color: #0056b3;
     text-decoration: none;
+}
+
+.emotion-chart {
+    width: 100%;
 }
 
 .loading-spinner-hidden {
@@ -262,13 +266,12 @@ a {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-#patientChart {
-    height: 300px !important;
-    width: 100% !important;
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 
@@ -351,7 +354,7 @@ a {
     text-align: center;
 }
 
-.chart__todayMood h2{
+.chart__todayMood h2 {
     font-size: 2rem;
     padding-bottom: 2rem;
 }
@@ -359,11 +362,12 @@ a {
 .chart__todayMood img {
     width: 30%;
 }
-.chart__table{
+
+.emotion-table {
     justify-content: center;
 }
 
-.chart__table table {
+.emotion-table table {
     width: 100%; /* 테이블 너비 */
     margin: 0 auto;
     border-collapse: collapse; /* 셀 간 테두리 합치기 */
@@ -372,28 +376,28 @@ a {
     font-size: 0.9rem;
 }
 
-.chart__table th, .chart__table td {
+.emotion-table th, .emotion-table td {
     border: 1px solid rgba(0, 0, 0, 0.11);
     text-align: left;
     padding: 3px; /* 패딩 증가 */
     color: #333; /* 글자 색상 */
 }
 
-.chart__table th {
+.emotion-table th {
     background-color: rgba(242, 242, 242, 0.2);
     color: #444; /* 헤더 글자 색상 */
     font-weight: bold; /* 글자 굵게 */
 }
 
-.chart__table tr:hover {
+.emotion-table tr:hover {
     background-color: rgba(0, 0, 0, 0.1); /* 호버 효과 */
 }
 
-.chart__table .positive {
+.emotion-table .positive {
     background-color: rgba(175, 248, 175, 0.46); /* 반투명 lightgreen */
 }
 
-.chart__table .negative {
+.emotion-table .negative {
     background-color: rgba(255, 176, 176, 0.5); /* 반투명 lightcoral */
 }
 
@@ -431,26 +435,29 @@ a {
         margin-bottom: 2.5rem;
     }
 
-    .drop-area{
+    .drop-area {
         font-size: 0.7rem;
     }
 }
 
 @media only screen and (max-width: 600px) {
     .arrow-container {
-        bottom: -1%; /* 맨 아래에 위치 */
-        left: 50%; /* 가로 중앙에 위치 */
-        transform: translateX(-50%); /* X축 기준 중앙 정렬 보정 */
+        bottom: -1%;
+        left: 50%;
+        transform: translateX(-50%);
     }
-    .body table{
+
+    .body table {
         word-break: break-word;
     }
+
     .overlay {
-        padding: 1.5rem;
+        padding: 2rem;
         flex-direction: column;
         max-height: none;
     }
-    .overlay-inner-left{
+
+    .overlay-inner-left {
         width: 100%;
     }
 
@@ -472,29 +479,35 @@ a {
         font-size: 1rem;
     }
 
-    .chart__table{
-        display: none;
-    }
-
-    .drop-area{
+    .drop-area {
         width: 180px;
         height: 180px;
         flex-wrap: nowrap;
         align-items: center;
     }
 
-    .drop-area-content{
+    .drop-area-content {
         line-height: 1rem;
     }
 
-    .voice-input-section{
+    .voice-input-section {
         flex-direction: inherit;
     }
 
-    .summary-chart{
+    .summary-chart {
         display: none;
     }
 
+    .emotion-chart{
+        display: none;
+    }
 
+    .emotion-table {
+        display: none;
+    }
+
+    .chart__todayMood img {
+        width: 60%;
+    }
 
 }

@@ -265,7 +265,7 @@ function createKeywordsChart(labels, confidences) {
     });
 }
 
-// emotion 차트 만들기
+// emotion 차트
 function createEmotionChart(patient) {
     const chartTitle = "The patient's sentiment analysis chart";
     var sentences = patient.text_contents;
@@ -320,7 +320,6 @@ function createEmotionChart(patient) {
         data: data,
         options: {
             responsive: true,
-            maintainAspectRatio: false, // 이 부분을 추가
             scales: {
                 x:{
                     ticks:{
@@ -328,7 +327,7 @@ function createEmotionChart(patient) {
                             size: 14
                         }
                     }
-                }
+                },
             },
             plugins: {
                 legend: {
@@ -354,7 +353,26 @@ function createEmotionChart(patient) {
         document.getElementById('patientChart'),
         config
     );
+
+    function updateChartOptions() {
+        var width = window.innerWidth;
+        // 화면 크기에 따라 차트 옵션을 조정
+        if (width < 600) {
+            myChart.options.plugins.legend.labels.font.size = 8;
+            myChart.options.plugins.legend.display = false;
+        } else {
+            myChart.options.plugins.legend.labels.font.size = 14;
+            myChart.options.plugins.legend.position = 'top';
+        }
+        myChart.update(); // 차트 업데이트
+    };
+
+    window.addEventListener('resize', updateChartOptions);
+
 }
+
+
+
 
 // 감정분석 테이블 삽입
 function showEmotionTable(patient){
@@ -386,7 +404,7 @@ function showEmotionTable(patient){
             row.appendChild(cell1);
             row.appendChild(cell2);
             row.appendChild(cell3);
-            document.querySelector('.chart__table table').appendChild(row);
+            document.querySelector('.emotion-table table').appendChild(row);
         }
     }
 }
