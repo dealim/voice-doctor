@@ -510,4 +510,8 @@ a {
         width: 60%;
     }
 
+    .overlay_summary_description{
+        margin-bottom: 0;
+    }
+
 }
