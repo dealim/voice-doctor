@@ -168,3 +168,6 @@ applicationteam02-00eec0f87726.json
 
 # voice files
 services/voice/
+
+# api response json files
+services/*.json
