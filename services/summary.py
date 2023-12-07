@@ -9,7 +9,7 @@ from .settings import get_secret, get_projectId
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir,'voice')
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 PROJ = get_projectId()
 
@@ -37,7 +37,9 @@ def text_summarization(
         **parameters,
         )
 
+    # 요약 완료
     summary = response.text
+    print("요약 완료")
 
     data = f"""{{
         "documentContent": "{response.text}",

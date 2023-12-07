@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 from services.text_emotion_analysis import get_json_sentiment
-from services.sound_to_text import transcribe_audio
+from services.speech_to_text import transcribe_audio
 from services.summary import text_summarization
 import os
 import json
