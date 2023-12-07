@@ -23,14 +23,14 @@ jobs:
         timeout : 60s
         script: |
           echo "##### START #####"
-          cd ~/GCP-TEAM2
+          cd ~/GCP-TEAM4
           
           echo "##### GIT PULL #####"
           git pull origin main
 
           echo "##### DOCKER DOWN #####"
-          # docker compose down
+          docker compose down
 
           echo "##### DOCKER UP #####"
-          # docker compose up -d
+          docker compose up -d
         debug: true
