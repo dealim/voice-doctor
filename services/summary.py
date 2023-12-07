@@ -2,16 +2,21 @@
 import os
 import json
 import subprocess
+
+import google.auth
 import vertexai
 import requests
 from vertexai.language_models import TextGenerationModel
 from .settings import get_secret, get_projectId
+from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-voice_dir = os.path.join(current_dir,'voice')
+voice_dir = os.path.join(current_dir, 'voice')
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 PROJ = get_projectId()
+
 
 def text_summarization(
         filename: str,
@@ -35,28 +40,41 @@ def text_summarization(
     response = model.predict(
         """Provide a summary with about two sentences for the following conversation:""" + text,
         **parameters,
-        )
+    )
 
     # 요약 완료
     summary = response.text
     print("요약 완료")
 
+    # 필요한 스코프 지정
+    scopes = ['https://www.googleapis.com/auth/cloud-platform']
+
+    # 서비스 계정을 사용하여 인증 정보 생성
+    credentials = service_account.Credentials.from_service_account_file(
+        get_secret("HEALTH"),
+        scopes=scopes
+    )
+
+    # 기존 로직을 유지하면서 credentials 객체를 사용하여 헤더 설정
+    credentials.refresh(Request())
+    header = {
+        "Authorization": f"Bearer {credentials.token}",
+        "Content-Type": "application/json"
+    }
+
+    # 데이터 및 URL 설정
     data = f"""{{
         "documentContent": "{response.text}",
         "alternativeOutputFormat": "FHIR_BUNDLE"
     }}"""
+    url = "https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
 
-    # cli로 키받아오기
-    print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
-    header={"Authorization": f"Bearer {print_token}", "Content-Type": "application/json"}
-    url="https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
-
+    # Healthcare API 요청
     response = requests.post(url, data=data, headers=header)
-    # print(response.status_code, response.text)
     print(response.status_code)
-    response_json = response.json()
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
+    response_json = response.json()
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
     final_output = {
         "summary": summary,
@@ -64,8 +82,7 @@ def text_summarization(
     }
 
     with open(os.path.join(voice_dir, filename), 'w') as f:
-            json.dump(final_output, f)
-
+        json.dump(final_output, f)
 
 if __name__ == "__main__":
     text_summarization(current_dir + "/patient_text_request.json")
