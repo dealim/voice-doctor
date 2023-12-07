@@ -17,7 +17,7 @@ stt_name = ''
 def index():
     return render_template('index.html')
 
-
+# 동적 메인 페이지
 @app.route('/main')
 def main_page():
     return render_template('main_page.html')
@@ -64,18 +64,21 @@ def get_emotion():
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
     if 'file' in request.files:
+        # 파일에 대한 이름 처리
         file = request.files['file']
         filename = file.filename
-        filerleftname = filename.rsplit('.')[0]
-        session['uploadedFileName'] = filerleftname
+        fileleftname = filename.rsplit('.')[0]
+        session['uploadedFileName'] = fileleftname
 
         # 파일 저장 경로 설정
         save_path = os.path.join(voice_dir, filename)
         file.save(save_path)
+        print(fileleftname + ".flac 파일이 서버에 저장됨")
 
         # ~.flac을 [파일이름]_stt.json으로 변환
-        stt_name = filerleftname +'_stt.json'
+        stt_name = fileleftname +'_stt.json'
         transcribe_audio(filename, save_path, os.path.join(voice_dir, stt_name))
+        print(stt_name + " : stt 완료")
 
         # JSON 파일 읽기
         with open(os.path.join(voice_dir, stt_name), 'r', encoding='utf-8') as file:
@@ -83,20 +86,24 @@ def upload_file():
             text = json_data[0]['transcript']
 
         # stt.json을 [파일이름]_emotion.json 으로 변환
-        get_json_sentiment(os.path.join(voice_dir, filerleftname + '_stt.json'), filerleftname)
+        emotion_name = fileleftname + '_stt.json'
+        get_json_sentiment(os.path.join(voice_dir, emotion_name), fileleftname)
+        print(emotion_name + " : 감정 분석 완료")
 
         # stt.json을 [파일이름]_health_response.json 으로 변환
-        file_health_response = filerleftname + '_health_response.json'
+        file_health_response = fileleftname + '_health_response.json'
         text_summarization(file_health_response,0.0, 'applicationteam02', 'us-central1', text);
+        print(file_health_response + " : 헬스케어 요약 완료")
 
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
     else:
         return jsonify({'message': 'No file part'})
 
+
 @app.route('/audio/<filename>')
 def download_file(filename):
-    print(filename)
     return send_from_directory('assets', filename)
+
 
 # execute app
 if __name__ == '__main__':

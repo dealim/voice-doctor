@@ -18,7 +18,6 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     }
 });
 
-
 // 파일 다운로드 이벤트
 document.body.addEventListener('click', function(e) {
     if (e.target.matches('.downloadFiles a')) {
@@ -115,7 +114,7 @@ function loadContent(url) {
 
                 setupArrowClickListener();
 
-                // 필요한 경우 추가 초기화 함수 호출
+                // 드래그앤드랍 기능 셋업
                 if (url === '/main') {
                     setupFileDragAndDrop();
                 }
@@ -370,9 +369,6 @@ function createEmotionChart(patient) {
     window.addEventListener('resize', updateChartOptions);
 
 }
-
-
-
 
 // 감정분석 테이블 삽입
 function showEmotionTable(patient){

@@ -11,7 +11,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir,'voice')
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
-# print_token = get_secret("dealimmmm") # $(gcloud auth print-access-token)
 PROJ = get_projectId()
 
 def text_summarization(
@@ -67,4 +66,4 @@ def text_summarization(
 
 
 if __name__ == "__main__":
-    json_analyze_sentiment(current_dir + "/patient_text_request.json")
+    text_summarization(current_dir + "/patient_text_request.json")
