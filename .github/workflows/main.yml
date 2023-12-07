@@ -29,8 +29,8 @@ jobs:
           git pull origin main
 
           echo "##### DOCKER DOWN #####"
-          # docker compose down
+          docker compose down
 
           echo "##### DOCKER UP #####"
-          # docker compose up -d
+          docker compose up -d
         debug: true
