@@ -1,6 +1,7 @@
 # pip install google-cloud-aiplatform
 import os
 import json
+from flask import current_app
 import subprocess
 
 import google.auth
@@ -44,7 +45,7 @@ def text_summarization(
 
     # 요약 완료
     summary = response.text
-    print("요약 완료")
+    current_app.logger.info("[text_summarization] : 요약 완료")
 
     # 필요한 스코프 지정
     scopes = ['https://www.googleapis.com/auth/cloud-platform']
@@ -62,6 +63,9 @@ def text_summarization(
         "Content-Type": "application/json"
     }
 
+    # print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
+    # header={"Authorization": f"Bearer {print_token}", "Content-Type": "application/json"}
+
     # 데이터 및 URL 설정
     data = f"""{{
         "documentContent": "{response.text}",
@@ -71,7 +75,7 @@ def text_summarization(
 
     # Healthcare API 요청
     response = requests.post(url, data=data, headers=header)
-    print(response.status_code)
+    current_app.logger.info("Healthcare API 응답 코드 : " + response.status_code)
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
     response_json = response.json()
