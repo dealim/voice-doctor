@@ -7,7 +7,7 @@ import subprocess
 import google.auth
 import vertexai
 import requests
-from vertexai.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel
 from .settings import get_secret, get_projectId
 from google.auth.transport.requests import Request
 from google.oauth2 import service_account
@@ -37,9 +37,9 @@ def text_summarization(
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison")
     response = model.predict(
-        """Provide a summary with about two sentences for the following conversation:""" + text,
+        """Provide a summary for the following conversation in three sentences:""" + text,
         **parameters,
     )
 
@@ -75,7 +75,7 @@ def text_summarization(
 
     # Healthcare API 요청
     response = requests.post(url, data=data, headers=header)
-    current_app.logger.info("Healthcare API 응답 코드 : " + response.status_code)
+    current_app.logger.info("Healthcare API 응답 코드 : " + str(response.status_code))
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
     response_json = response.json()
