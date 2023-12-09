@@ -178,7 +178,6 @@ a {
     align-items: center;
 }
 
-
 .drop-area {
     display: flex;
     justify-content: center; /* 자식 요소를 수직 중앙에 배치 */
@@ -273,7 +272,6 @@ a {
         transform: rotate(360deg);
     }
 }
-
 
 #fileInputLink {
     color: #007bff;

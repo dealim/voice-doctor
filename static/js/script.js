@@ -14,7 +14,6 @@ document.getElementById('dynamicContent').addEventListener('click', function (ev
     if (event.target.id === 'startEmotionAnalysis') {
         event.preventDefault();
         loadContent('/show/emotion');
-        // window.location.href = '/show/emotion';
     }
 });
 
@@ -367,7 +366,6 @@ function createEmotionChart(patient) {
     };
 
     window.addEventListener('resize', updateChartOptions);
-
 }
 
 // 감정분석 테이블 삽입
