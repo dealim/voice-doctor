@@ -20,14 +20,18 @@
     </div>
 </div>
 <div class="overlay-inner-right">
-    <div class="voice-input-section">
-        <div id="dropArea" class="drop-area">
-            <p class="drop-area-content" id="dropAreaMessage">Drag and drop files here or <a href="#" id="fileInputLink">browse for files</a></p>
-            <input type="file" id="fileInput" accept=".wav,.aif,.aiff,.flac,.alac,.aac,.ogg,.mp3" hidden>
-            <div id="loadingSpinner" class="loading-spinner-hidden">
-                <div class="spinner"></div>
-            </div>
-            <div class="completeMessage" id="completeMessage" style="display: none">Upload complete!!</div>
+    <div id="dropArea" class="drop-area">
+        <div class="voice-recording-icon">
+            <img id="voice-recording-icon" src="static/images/recording.svg" alt="recording">
+        </div>
+        <p class="drop-area-p" id="dropAreaMessage">click icon to record voice or drag and drop file  <a href="#" id="fileInputLink">browse
+            for files</a></p>
+        <input type="file" id="fileInput" accept=".wav,.aif,.aiff,.flac,.alac,.aac,.ogg,.mp3" hidden>
+        <div id="loadingSpinner" class="loading-spinner-hidden">
+            <div class="spinner"></div>
+        </div>
+        <div class="completeMessage" id="completeMessage" style="display: none">
+            Upload complete!!
         </div>
     </div>
 </div>

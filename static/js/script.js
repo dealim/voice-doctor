@@ -6,18 +6,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 // 버튼별 페이지 이동
-document.getElementById('dynamicContent').addEventListener('click', function (event) {
-    if (event.target.id === 'viewTextSummary') {
-        event.preventDefault();
+document.getElementById('dynamicContent').addEventListener('click', function (e) {
+    if (e.target.id === 'viewTextSummary') {
+        e.preventDefault();
         loadContent('/show/voicetext');
     }
-    if (event.target.id === 'startEmotionAnalysis') {
-        event.preventDefault();
+    if (e.target.id === 'startEmotionAnalysis') {
+        e.preventDefault();
         loadContent('/show/emotion');
     }
 });
 
-// 파일 다운로드 이벤트
+// 파일 다운로드 이벤트(동적 페이지에 이븐트 구현법)
 document.body.addEventListener('click', function(e) {
     if (e.target.matches('.downloadFiles a')) {
         e.preventDefault();
@@ -41,6 +41,22 @@ document.body.addEventListener('click', function(e) {
                 window.URL.revokeObjectURL(url); // URL 메모리 해제
             })
             .catch(() => console.error('Could not download the file.'));
+    }
+});
+
+// 녹음기 아이콘에 녹음 기능
+let mediaRecorder;
+let audioChunks = [];
+document.body.addEventListener('click', function(e) {
+    // 클릭된 요소가 voice-recording-icon인지 확인
+    if (e.target.matches('#voice-recording-icon')) {
+        // 녹음 상태 확인 후 시작 또는 중지
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+
+            stopRecording();
+        } else {
+            startRecording();
+        }
     }
 });
 
@@ -125,10 +141,10 @@ function loadContent(url) {
 function setupArrowClickListener() {
     const arrowContainer = document.querySelector('.arrow-container');
     if (arrowContainer) {
-        arrowContainer.addEventListener('click', function (event) {
+        arrowContainer.addEventListener('click', function (e) {
             // Arrow 부분이 클릭되면 main_page 로드
-            if (event.target.closest('.arrow')) {
-                event.preventDefault();
+            if (e.target.closest('.arrow')) {
+                e.preventDefault();
                 loadContent('/main');
             }
         });
@@ -423,5 +439,40 @@ function showEmotionImage(patient){
         sadImage.src = '/static/images/sad_disabled.png';
         noCommentImage.src = '/static/images/nocomment.png';
         happyImage.src = '/static/images/happy_disabled.png';
+    }
+}
+
+// 사용자의 오디오 스트림을 얻는 함수
+function startRecording() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                audioChunks = [];
+            };
+
+            //펄스 애니메이션 클래스 추가
+            document.getElementById("voice-recording-icon").classList.add("pulse-animation");
+        }).catch(error => {
+        console.error("오디오 녹음을 시작할 수 없습니다.", error);
+    });
+}
+
+// 녹음 중지 함수
+function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+
+        // 애니메이션 클래스 제거
+        document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
     }
 }

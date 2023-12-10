@@ -82,17 +82,6 @@ strong {
     min-width: 30%;
 }
 
-.overlay-summary-right {
-
-}
-
-.voice-input-section {
-    display: flex; /* Flexbox 레이아웃 사용 */
-    flex-direction: column; /* 아이템을 세로 방향으로 정렬 */
-    justify-content: center; /* 수직 중앙 정렬 (선택적) */
-    width: 100%;
-}
-
 .voice-input-section > button,
 .voice-input-section > input {
     margin-bottom: 30px;
@@ -179,18 +168,18 @@ a {
 
 .drop-area {
     display: flex;
-    justify-content: center; /* 자식 요소를 수직 중앙에 배치 */
-    align-items: center; /* 자식 요소를 수평 중앙에 배치 */
-    position: relative; /* 자식 요소의 위치 기준점 설정 */
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
     border: 2px dashed #ccc;
     border-radius: 20px;
-    aspect-ratio: 1 / 1; /* Maintain a square aspect ratio */
+    aspect-ratio: 1 / 1;
     text-align: center;
     padding: 20px;
     transition: all .3s ease-in-out;
     gap: 8px;
 }
-
 
 .drop-area.active {
     border-color: #000;
@@ -212,12 +201,13 @@ a {
     opacity: 0.8;
 }
 
-.drop-area-content {
+.drop-area-p {
     font-size: 1rem;
     line-height: 1.75rem;
 }
 
 .downloadFiles {
+    font-size: 1rem;
     position: absolute;
     bottom: 2rem;
     flex-wrap: nowrap;
@@ -251,6 +241,34 @@ a {
     transform: translate(-50%, -50%);
     z-index: 1000;
     display: none;
+}
+
+.voice-recording-icon img{
+    transition: filter 0.3s ease;
+    max-width: 3rem;
+}
+
+.voice-recording-icon img:hover {
+    filter: brightness(0);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.pulse-animation {
+    animation: pulse 1s infinite;
 }
 
 .spinner {
@@ -444,6 +462,14 @@ a {
         width: 20px;
         height: 20px;
     }
+
+    .drop-area-p {
+        font-size: 0.875rem;
+    }
+
+    .downloadFiles {
+        font-size: 0.875rem;
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -496,12 +522,8 @@ a {
         align-items: center;
     }
 
-    .drop-area-content {
+    .drop-area-p {
         line-height: 1rem;
-    }
-
-    .voice-input-section {
-        flex-direction: inherit;
     }
 
     .summary-chart {
