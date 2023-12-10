@@ -311,10 +311,10 @@ a {
 
 .arrow span {
     display: block;
-    width: 2vw;
-    min-width: 30px;
-    height: 2vw;
-    min-height: 30px;
+    width: 30px;
+    min-width: 10px;
+    height: 30px;
+    min-height: 10px;
     border-bottom: 5px solid white;
     border-right: 5px solid white;
     transform: rotate(45deg);
@@ -436,11 +436,20 @@ a {
     .drop-area {
         font-size: 0.7rem;
     }
+
+    .arrow-container {
+        bottom: 8%;
+    }
+
+    .arrow span {
+        width: 20px;
+        height: 20px;
+    }
 }
 
 @media only screen and (max-width: 600px) {
     .arrow-container {
-        bottom: -1%;
+        bottom: -5%;
         left: 50%;
         transform: translateX(-50%);
     }
