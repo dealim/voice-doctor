@@ -218,8 +218,8 @@ a {
 }
 
 .downloadFiles {
-    position: absolute; /* 또는 relative가 있는 부모 요소에 대해 absolute */
-    bottom: 10px; /* 아래쪽에서 0의 위치 */
+    position: absolute;
+    bottom: 2rem;
     flex-wrap: nowrap;
     display: flex;
 }
@@ -483,6 +483,10 @@ a {
 
     .overlay_summary_description {
         font-size: 1rem;
+    }
+
+    .downloadFiles {
+        bottom: 0.5rem;
     }
 
     .drop-area {
