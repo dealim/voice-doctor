@@ -446,19 +446,14 @@ function showEmotionImage(patient){
 
 // 사용자의 오디오 스트림을 얻는 함수
 function startRecording() {
-    // 브라우저에서 지원하는 오디오 형식 확인
-    let supportedFormat = getSupportedAudioFormat();
-    let extName = 'wav';
-    if (!supportedFormat) {
-        console.error("이 브라우저에서 지원하는 오디오 형식이 없습니다.");
-        return;
-    }
+    let audioType = 'audio/webm'
+    let extName = audioType.split('/')[1];
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
             // MIME 타입을 지원하는 형식으로 설정
-            const options = { mimeType: 'audio/wav' };
-            mediaRecorder = new MediaRecorder(stream, options);
+            const option = { mimeType: audioType };
+            mediaRecorder = new MediaRecorder(stream, option);
             audioChunks = []; // 오디오 청크 초기화
             mediaRecorder.start();
 
@@ -468,7 +463,7 @@ function startRecording() {
 
             // 녹음 끝냈을 때의 이벤트 핸들러
             mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' }); // MIME 타입 일치
+                const audioBlob = new Blob(audioChunks, { type: audioType }); // MIME 타입 일치
                 uploadAudio(audioBlob, extName);
                 audioChunks = []; // 오디오 청크 초기화
             };
@@ -479,7 +474,6 @@ function startRecording() {
         console.error("오디오 녹음을 시작할 수 없습니다.", error);
     });
 }
-
 
 // 녹음 중지 함수
 function stopRecording() {
@@ -507,20 +501,4 @@ function uploadAudio(blob, extName) {
         .catch(error => {
             console.error('Upload failed:', error);
         });
-}
-
-// 브라우저의 mime타입 확인하기
-function getSupportedAudioFormat() {
-    const audioFormats = [
-        'audio/wav',
-        'audio/webm',
-        'audio/ogg',
-        'audio/mp4'
-    ];
-    for (let format of audioFormats) {
-        if (MediaRecorder.isTypeSupported(format)) {
-            return format;
-        }
-    }
-    return null; // 지원되는 형식이 없음
 }
