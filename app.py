@@ -98,11 +98,22 @@ def upload_file():
     else:
         return jsonify({'message': 'No file part'})
 
+@app.route('/api/record', methods=['POST'])
+def upload_record():
+    if 'audio' in request.files:
+        audio_file = request.files['audio']
+
+        # 파일 저장
+        filepath = os.path.join(voice_dir, audio_file.filename)
+        audio_file.save(filepath)
+
+        # 파일 분석 로직
+        return jsonify({'message' : 'File uploaded successfully!'})
+    return jsonify({'message' : 'upload failed'})
 
 @app.route('/audio/<filename>')
 def download_file(filename):
     return send_from_directory('assets', filename)
-
 
 # execute app
 if __name__ == '__main__':

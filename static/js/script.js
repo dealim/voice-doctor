@@ -1,4 +1,3 @@
-// 동적 페이지, SPA 구현
 
 // 첫 페이지 로드
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -44,21 +43,24 @@ document.body.addEventListener('click', function(e) {
     }
 });
 
-// 녹음기 아이콘에 녹음 기능
+// 녹음을 위한 변수 선언
 let mediaRecorder;
 let audioChunks = [];
+
+// 녹음기 아이콘에 녹음 기능
 document.body.addEventListener('click', function(e) {
     // 클릭된 요소가 voice-recording-icon인지 확인
     if (e.target.matches('#voice-recording-icon')) {
+
         // 녹음 상태 확인 후 시작 또는 중지
         if (mediaRecorder && mediaRecorder.state === "recording") {
-
             stopRecording();
         } else {
             startRecording();
         }
     }
 });
+
 
 // 페이드 아웃 및 새 콘텐츠 로드 함수
 function loadContent(url) {
@@ -444,28 +446,40 @@ function showEmotionImage(patient){
 
 // 사용자의 오디오 스트림을 얻는 함수
 function startRecording() {
+    // 브라우저에서 지원하는 오디오 형식 확인
+    let supportedFormat = getSupportedAudioFormat();
+    let extName = 'wav';
+    if (!supportedFormat) {
+        console.error("이 브라우저에서 지원하는 오디오 형식이 없습니다.");
+        return;
+    }
+
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            mediaRecorder = new MediaRecorder(stream);
+            // MIME 타입을 지원하는 형식으로 설정
+            const options = { mimeType: 'audio/wav' };
+            mediaRecorder = new MediaRecorder(stream, options);
+            audioChunks = []; // 오디오 청크 초기화
             mediaRecorder.start();
 
             mediaRecorder.ondataavailable = event => {
                 audioChunks.push(event.data);
             };
 
+            // 녹음 끝냈을 때의 이벤트 핸들러
             mediaRecorder.onstop = () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                const audioUrl = URL.createObjectURL(audioBlob);
-
-                audioChunks = [];
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' }); // MIME 타입 일치
+                uploadAudio(audioBlob, extName);
+                audioChunks = []; // 오디오 청크 초기화
             };
 
-            //펄스 애니메이션 클래스 추가
+            // 펄스 애니메이션 클래스 추가
             document.getElementById("voice-recording-icon").classList.add("pulse-animation");
         }).catch(error => {
         console.error("오디오 녹음을 시작할 수 없습니다.", error);
     });
 }
+
 
 // 녹음 중지 함수
 function stopRecording() {
@@ -475,4 +489,38 @@ function stopRecording() {
         // 애니메이션 클래스 제거
         document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
     }
+}
+
+// 녹음 파일(blob)을 서버로 전송하기
+function uploadAudio(blob, extName) {
+    const formData = new FormData();
+    formData.append('audio', blob, 'recording.' + extName);
+
+    fetch('/api/record', { // Flask 서버의 엔드포인트
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Upload success:', data);
+        })
+        .catch(error => {
+            console.error('Upload failed:', error);
+        });
+}
+
+// 브라우저의 mime타입 확인하기
+function getSupportedAudioFormat() {
+    const audioFormats = [
+        'audio/wav',
+        'audio/webm',
+        'audio/ogg',
+        'audio/mp4'
+    ];
+    for (let format of audioFormats) {
+        if (MediaRecorder.isTypeSupported(format)) {
+            return format;
+        }
+    }
+    return null; // 지원되는 형식이 없음
 }
