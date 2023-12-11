@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 app.secret_key = os.urandom(24) # 세션을 위한 비밀키 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))
-voice_dir = os.path.join(current_dir,'services/voice')
+voice_dir = os.path.join(current_dir,'services','voice')
 
 # Root page
 @app.route('/')
