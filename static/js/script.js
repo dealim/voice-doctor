@@ -200,7 +200,7 @@ function setupFileDragAndDrop() {
         dropArea.classList.add('uploading')
         document.getElementById('loadingSpinner').style.display = 'block';
         document.getElementById('dropAreaMessage').style.display = 'none';
-        document.getElementById('downloadFiles').style.display = 'none';
+        document.getElementById('voice-recording-icon').style.display = 'none';
 
         // 파일 업로드 요청
         fetch('/api/upload', {
@@ -224,7 +224,7 @@ function setupFileDragAndDrop() {
                     setTimeout(() => {
                         dropArea.classList.remove('uploaded');
                         document.getElementById('dropAreaMessage').style.display = 'block';
-                        document.getElementById('downloadFiles').style.display = 'flex';
+                        document.getElementById('voice-recording-icon').style.display = 'block';
                         completeMessage.style.display = 'none';
                     }, 3000);
                 } else {
