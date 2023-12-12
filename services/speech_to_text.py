@@ -26,15 +26,14 @@ def transcribe_audio(filename, file_path, output_json_file):
     config = {
         "language_code": "en-US",
         "model": "medical_dictation",
-        "encoding": "FLAC",
+        "encoding": "LINEAR16",
         "sample_rate_hertz": sample_rate
     }
 
     response = client.recognize(config=config, audio=audio)
     save_response_as_json(response, output_json_file)
 
-    print(f"json 파일 생성 완료: {output_json_file}")
-
+    # print(f"json 파일 생성 완료: {output_json_file}")
 
 def save_response_as_json(response, output_file):
     results = []

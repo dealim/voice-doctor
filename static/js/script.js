@@ -52,7 +52,7 @@ function loadContent(url) {
     // 페이드 아웃
     dynamicContent.classList.add('hidden');
 
-    // CSS 트랜지션을 기다린 후 페이지에 따른
+    // CSS 트랜지션을 기다린 후 페이지 띄우기
     setTimeout(() => {
         fetch(url)
             .then(response => response.text())
@@ -457,7 +457,8 @@ function startRecording() {
                 mimeType: audioType,
                 recorderType: RecordRTC.StereoAudioRecorder, // StereoAudioRecorder 사용
                 sampleRate: 44100,
-                desiredSampRate: 44100 // 원하는 샘플레이트 설정
+                desiredSampRate: 44100, // 원하는 샘플레이트 설정
+                numberOfAudioChannels: 1 // 모노 채널 설정
             });
 
             // 펄스 애니메이션 클래스 추가
@@ -492,7 +493,7 @@ function stopRecording() {
 // 녹음 파일(blob)을 서버로 전송하기
 function uploadAudio(blob, extName) {
     const formData = new FormData();
-    formData.append('audio', blob, 'recording.' + extName);
+    formData.append('audio', blob, '.' + extName);
 
     fetch('/api/record', { // Flask 서버의 엔드포인트
         method: 'POST',

@@ -3,6 +3,7 @@ from services.text_emotion_analysis import get_json_sentiment
 from services.speech_to_text import transcribe_audio
 from services.summary import text_summarization
 import os
+import uuid
 import json
 
 app = Flask(__name__)
@@ -103,13 +104,21 @@ def upload_record():
     if 'audio' in request.files:
         audio_file = request.files['audio']
 
-        # 파일 저장
-        filepath = os.path.join(voice_dir, audio_file.filename)
+        # 세션 ID 생성 또는 기존 세션 ID 사용
+        if 'session_id' not in session:
+            session['session_id'] = str(uuid.uuid4())
+        session_id = session['session_id']
+
+        # 파일 이름을 세션 ID와 결합
+        filename = f"recording_{session_id}{audio_file.filename}"
+
+        # 파일 저장 경로 설정
+        filepath = os.path.join(voice_dir, filename)
         audio_file.save(filepath)
 
-        # 파일 분석 로직
-        return jsonify({'message' : 'File uploaded successfully!'})
-    return jsonify({'message' : 'upload failed'})
+        return jsonify({'message': 'File uploaded successfully!'})
+
+    return jsonify({'message': 'upload failed'})
 
 @app.route('/audio/<filename>')
 def download_file(filename):
