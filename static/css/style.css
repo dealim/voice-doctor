@@ -202,6 +202,14 @@ a {
     opacity: 0.8;
 }
 
+.drop-area.failed {
+    transition: all 0.3s ease;
+    background-color: rgba(255, 59, 59, 0.43);
+    border-color: rgba(255, 59, 59, 0.81);
+    pointer-events: none;
+    opacity: 0.8;
+}
+
 .drop-area-p {
     font-size: 1rem;
     line-height: 1.75rem;

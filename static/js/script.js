@@ -1,4 +1,10 @@
 
+
+// 녹음을 위한 변수 선언
+let audioStream;
+let recorder;
+let isRecording = false;
+
 // 첫 페이지 로드
 document.addEventListener('DOMContentLoaded', (event) => {
     loadContent('/main');
@@ -135,8 +141,9 @@ function setupArrowClickListener() {
     }
 }
 
-// 보이스 파일 드래그 앤 드롭
+
 function setupFileDragAndDrop() {
+    // 보이스 파일 드래그 앤 드롭
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const fileInputLink = document.getElementById('fileInputLink');
@@ -193,11 +200,13 @@ function setupFileDragAndDrop() {
         ([...files]).forEach(uploadFile);
     }
 
+    // 파일 업로드 하기
     function uploadFile(file) {
         let formData = new FormData();
         formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
+
         // 업로드 애니메이션 및 메시지 표시
-        dropArea.classList.add('uploading')
+        dropArea.classList.add('uploading');
         document.getElementById('loadingSpinner').style.display = 'block';
         document.getElementById('dropAreaMessage').style.display = 'none';
         document.getElementById('voice-recording-icon').style.display = 'none';
@@ -207,12 +216,16 @@ function setupFileDragAndDrop() {
             method: 'POST',
             body: formData
         })
-            .then(response => response.json())
+            .then(response => {
+                if(!response.ok){
+                    return response.json().then(json => Promise.reject(new Error(json.error || 'Unknown server error')));
+                }
+                return response.json();
+            })
             .then(data => {
-                // 업로드 완료시 스피너 숨기기
-                document.getElementById('loadingSpinner').style.display = 'none';
-
                 if (data.message === 'File uploaded successfully!') {
+                    // 업로드 완료시 스피너 숨기기
+                    document.getElementById('loadingSpinner').style.display = 'none';
                     dropArea.classList.remove('uploading');
                     dropArea.classList.add('uploaded');
 
@@ -227,16 +240,27 @@ function setupFileDragAndDrop() {
                         document.getElementById('voice-recording-icon').style.display = 'block';
                         completeMessage.style.display = 'none';
                     }, 3000);
-                } else {
-                    document.getElementById('dropAreaMessage').innerText = "Upload failed";
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('dropAreaMessage').innerText = "Upload failed";
+                console.error('Error:', error.message);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('failedMessage').style.display = 'block';
+                dropArea.classList.remove('uploading');
+                dropArea.classList.add('failed');
+
+                setTimeout(() => {
+                    dropArea.classList.remove('failed');
+                    document.getElementById('failedMessage').style.display = 'none';
+                    document.getElementById('dropAreaMessage').style.display = 'block';
+                    document.getElementById('voice-recording-icon').style.display = 'block';
+                }, 3000);
+
             });
     }
 }
+
+
 
 // keyword 차트 만들기
 function createKeywordsChart(labels, confidences) {
@@ -426,11 +450,6 @@ function showEmotionImage(patient){
     }
 }
 
-// 녹음을 위한 변수 선언
-let audioStream;
-let recorder;
-let isRecording = false;
-
 // 녹음기 아이콘에 녹음 기능
 document.body.addEventListener('click', function(e) {
     // 클릭된 요소가 voice-recording-icon인지 확인
@@ -480,6 +499,9 @@ function stopRecording() {
         // 오디오 처리 및 업로드 로직
         uploadAudio(audioBlob, 'wav');
 
+        // 오디오 파일 분석 시작
+        uploadFile(audioBlob,'wav');
+
         // 미디어 스트림 트랙 종료
         audioStream.getAudioTracks().forEach(track => track.stop());
 
@@ -507,3 +529,4 @@ function uploadAudio(blob, extName) {
             console.error('Upload failed:', error);
         });
 }
+
