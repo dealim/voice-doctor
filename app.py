@@ -75,25 +75,22 @@ def upload_file():
             # 파일에 대한 이름 처리
             file = request.files['file']
             filename = file.filename
-
-            # 오디오 파일에 대한 이름처리
-            # TODO : wav 하드코딩 수정할것
-            if(filename=='blob'):
-                filename = f"recording_{session_id}.wav"
-
-            # 파일 이름 처리
             leftname = filename.rsplit('.')[0]
             extname = filename.rsplit('.')[1]
             session['uploadedFileName'] = leftname
 
+            # 오디오 파일에 대한 이름처리
+            if(filename=='blob'):
+                filename = f"recording_{session_id}.{extname}"
+
             # 파일 저장 경로 설정 및 저장
             save_path = os.path.join(voice_dir, filename)
             file.save(save_path)
-            app.logger.info(leftname + ".flac 파일이 서버에 저장됨")
+            app.logger.info(filename + " 파일이 서버에 저장됨")
 
             # ~.flac을 [파일이름]_stt.json으로 변환
             stt_name = leftname +'_stt.json'
-            transcribe_audio(filename, save_path, os.path.join(voice_dir, stt_name))
+            transcribe_audio(filename, os.path.join(voice_dir, stt_name), extname)
             app.logger.info(stt_name + " : stt 완료")
 
             # JSON 파일 읽기

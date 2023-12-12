@@ -11,12 +11,18 @@ os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(parent_dir, "keys/applicationteam02-cf34308f779b.json")
 
 
-def transcribe_audio(filename, file_path, output_json_file):
+def transcribe_audio(filename, output_json_file, extname):
     client = speech_v1.SpeechClient()
     file_path = os.path.join(current_dir, 'voice', filename)
     audio_info = mediainfo(file_path)
     sample_rate = int(audio_info['sample_rate'])
     start_time = time.time()
+
+    encoding = 'FLAC'
+    if(extname == 'wav'):
+        encoding = 'LINEAR16'
+    if(extname == 'FLAC'):
+        encoding = 'FLAC'
 
     with io.open(file_path, "rb") as audio_file:
         content = audio_file.read()
@@ -26,7 +32,7 @@ def transcribe_audio(filename, file_path, output_json_file):
     config = {
         "language_code": "en-US",
         "model": "medical_dictation",
-        "encoding": "LINEAR16",
+        "encoding": encoding,
         "sample_rate_hertz": sample_rate
     }
 
