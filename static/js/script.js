@@ -1,10 +1,3 @@
-
-
-// 녹음을 위한 변수 선언
-let audioStream;
-let recorder;
-let isRecording = false;
-
 // 첫 페이지 로드
 document.addEventListener('DOMContentLoaded', (event) => {
     loadContent('/main');
@@ -23,7 +16,7 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
 });
 
 // 파일 다운로드 이벤트(동적 페이지에 이븐트 구현법)
-document.body.addEventListener('click', function(e) {
+document.body.addEventListener('click', function (e) {
     if (e.target.matches('.downloadFiles a')) {
         e.preventDefault();
         console.log("작동중");
@@ -107,9 +100,9 @@ function loadContent(url) {
                         .then(response => response.json())
                         .then(data => {
 
-                                createEmotionChart(data);
-                                showEmotionTable(data);
-                                showEmotionImage(data);
+                            createEmotionChart(data);
+                            showEmotionTable(data);
+                            showEmotionImage(data);
 
                         })
                         .catch(error => {
@@ -148,13 +141,18 @@ function setupFileDragAndDrop() {
     const fileInput = document.getElementById('fileInput');
     const fileInputLink = document.getElementById('fileInputLink');
 
+    // 녹음을 위한 변수 선언
+    let audioStream;
+    let recorder;
+    let isRecording = false;
+
     // 파일 입력 필드 열기
     fileInputLink.addEventListener('click', (e) => {
         e.preventDefault();
         fileInput.click();
     });
 
-    fileInput.addEventListener('change', function(e) {
+    fileInput.addEventListener('change', function (e) {
         handleFiles(this.files);
     });
 
@@ -217,7 +215,7 @@ function setupFileDragAndDrop() {
             body: formData
         })
             .then(response => {
-                if(!response.ok){
+                if (!response.ok) {
                     return response.json().then(json => Promise.reject(new Error(json.error || 'Unknown server error')));
                 }
                 return response.json();
@@ -258,8 +256,87 @@ function setupFileDragAndDrop() {
 
             });
     }
-}
 
+    // 녹음기 아이콘에 녹음 기능
+    document.body.addEventListener('click', function (e) {
+        // 클릭된 요소가 voice-recording-icon인지 확인
+        if (e.target.matches('#voice-recording-icon')) {
+            // 녹음 상태 확인 후 시작 또는 중지
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+    });
+
+    // 사용자의 오디오 스트림을 얻는 함수
+    function startRecording() {
+        let audioType = 'audio/wav';
+
+        navigator.mediaDevices.getUserMedia({audio: true})
+            .then(stream => {
+                audioStream = stream;
+                // RecordRTC 설정
+                recorder = new RecordRTC(audioStream, {
+                    type: 'audio',
+                    mimeType: audioType,
+                    recorderType: RecordRTC.StereoAudioRecorder, // StereoAudioRecorder 사용
+                    sampleRate: 44100,
+                    desiredSampRate: 44100, // 원하는 샘플레이트 설정
+                    numberOfAudioChannels: 1 // 모노 채널 설정
+                });
+
+                // 펄스 애니메이션 클래스 추가
+                document.getElementById("voice-recording-icon").classList.add("pulse-animation");
+
+                recorder.startRecording();
+
+                isRecording = true;
+            }).catch(error => {
+            console.error("오디오 녹음을 시작할 수 없습니다.", error);
+        });
+    }
+
+    // 녹음 중지 함수
+    function stopRecording() {
+        recorder.stopRecording(() => {
+            let audioBlob = recorder.getBlob();
+
+            // 오디오 처리 및 업로드 로직
+            uploadAudio(audioBlob, 'wav');
+
+            // 오디오 파일 분석 시작
+            uploadFile(audioBlob, 'wav');
+
+            // 미디어 스트림 트랙 종료
+            audioStream.getAudioTracks().forEach(track => track.stop());
+
+            // UI 업데이트 (예: 녹음 중지 상태 표시)
+            document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
+            isRecording = false;
+
+        });
+    }
+
+    // 녹음 파일(blob)을 서버로 전송하기
+    function uploadAudio(blob, extName) {
+        const formData = new FormData();
+        formData.append('audio', blob, '.' + extName);
+
+        fetch('/api/record', { // Flask 서버의 엔드포인트
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Upload success:', data);
+            })
+            .catch(error => {
+                console.error('Upload failed:', error);
+            });
+    }
+}
 
 
 // keyword 차트 만들기
@@ -343,9 +420,9 @@ function createEmotionChart(patient) {
         options: {
             responsive: true,
             scales: {
-                x:{
-                    ticks:{
-                        font:{
+                x: {
+                    ticks: {
+                        font: {
                             size: 14
                         }
                     }
@@ -393,7 +470,7 @@ function createEmotionChart(patient) {
 }
 
 // 감정분석 테이블 삽입
-function showEmotionTable(patient){
+function showEmotionTable(patient) {
     var sentences = patient.text_contents;
     var sentiScores = patient.senti_scores;
     var sentiMagnitudes = patient.senti_magnitudes;
@@ -428,7 +505,7 @@ function showEmotionTable(patient){
 }
 
 // 오늘의 기분 그림
-function showEmotionImage(patient){
+function showEmotionImage(patient) {
     const sentimentScore = patient.doc_sentiment_score;
 
     const sadImage = document.getElementById('sadImage');
@@ -448,85 +525,5 @@ function showEmotionImage(patient){
         noCommentImage.src = '/static/images/nocomment.png';
         happyImage.src = '/static/images/happy_disabled.png';
     }
-}
-
-// 녹음기 아이콘에 녹음 기능
-document.body.addEventListener('click', function(e) {
-    // 클릭된 요소가 voice-recording-icon인지 확인
-    if (e.target.matches('#voice-recording-icon')) {
-        // 녹음 상태 확인 후 시작 또는 중지
-        if (isRecording) {
-            stopRecording();
-        } else {
-            startRecording();
-        }
-    }
-});
-
-// 사용자의 오디오 스트림을 얻는 함수
-function startRecording() {
-    let audioType = 'audio/wav';
-
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => {
-            audioStream = stream;
-            // RecordRTC 설정
-            recorder = new RecordRTC(audioStream, {
-                type: 'audio',
-                mimeType: audioType,
-                recorderType: RecordRTC.StereoAudioRecorder, // StereoAudioRecorder 사용
-                sampleRate: 44100,
-                desiredSampRate: 44100, // 원하는 샘플레이트 설정
-                numberOfAudioChannels: 1 // 모노 채널 설정
-            });
-
-            // 펄스 애니메이션 클래스 추가
-            document.getElementById("voice-recording-icon").classList.add("pulse-animation");
-
-            recorder.startRecording();
-
-            isRecording = true;
-        }).catch(error => {
-        console.error("오디오 녹음을 시작할 수 없습니다.", error);
-    });
-}
-
-// 녹음 중지 함수
-function stopRecording() {
-    recorder.stopRecording(() => {
-        let audioBlob = recorder.getBlob();
-
-        // 오디오 처리 및 업로드 로직
-        uploadAudio(audioBlob, 'wav');
-
-        // 오디오 파일 분석 시작
-        uploadFile(audioBlob,'wav');
-
-        // 미디어 스트림 트랙 종료
-        audioStream.getAudioTracks().forEach(track => track.stop());
-
-        // UI 업데이트 (예: 녹음 중지 상태 표시)
-        document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
-        isRecording = false;
-
-    });
-}
-
-// 녹음 파일(blob)을 서버로 전송하기
-function uploadAudio(blob, extName) {
-    const formData = new FormData();
-    formData.append('audio', blob, '.' + extName);
-
-    fetch('/api/record', { // Flask 서버의 엔드포인트
-        method: 'POST',
-        body: formData
-    })
-        .then(response => response.text())
-        .then(data => {
-            console.log('Upload success:', data);
-        })
-        .catch(error => {
-            console.error('Upload failed:', error);
-        });
 }
 

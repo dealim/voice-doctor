@@ -2,12 +2,14 @@ from flask import Flask, render_template, request, jsonify, session, send_from_d
 from services.text_emotion_analysis import get_json_sentiment
 from services.speech_to_text import transcribe_audio
 from services.summary import text_summarization
+from config import Config
 import os
 import uuid
 import json
 
 app = Flask(__name__)
 
+app.config.from_object(Config)
 app.secret_key = os.urandom(24) # 세션을 위한 비밀키 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir,'services','voice')
