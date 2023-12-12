@@ -99,9 +99,8 @@ def upload_file():
                 text = json_data[0]['transcript']
 
             # stt.json을 분석 후 [파일이름]_emotion.json 으로 변환
-            emotion_name = leftname + '_stt.json'
-            get_json_sentiment(os.path.join(voice_dir, emotion_name), leftname)
-            app.logger.info(emotion_name + " : 감정 분석 완료")
+            get_json_sentiment(os.path.join(voice_dir, stt_name), leftname)
+            app.logger.info("감정 분석 완료")
 
             # stt.json을 분석 후 [파일이름]_health_response.json 으로 변환
             file_health_response = leftname + '_health_response.json'
