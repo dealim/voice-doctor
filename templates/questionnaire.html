@@ -5,8 +5,15 @@
 <title>questionnaire 결과</title>
 </head>
 <body>
-		<h1> OCR 결과 </h1>
-		<p>{{ ocr_result }}</p>
+		<h1> OCR 3줄 요약 결과 </h1>
+		<p>{{ doc_summary_result }}</p>
 
+		<h1> OCR에서 특정 정보 추출 결과 </h1>
+		<p>{{ doc_info_export_result_json }}</p>
+
+		<h1>확인용 PDF Viewer</h1>
+    	<iframe src="{{ url_for('static', filename=pdf_path) }}" width="100%" height="800px"></iframe>
+		
+ㄴ
 </body>
 </html>

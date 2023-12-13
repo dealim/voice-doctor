@@ -13,19 +13,19 @@ from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
-voice_dir = os.path.join(current_dir, 'voice')
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 
 def text_generation(
         temperature: float,
         location: str,
         text: str,
+        model_command: str,
 ) -> str:
     """Summarization Example with a Large Language Model"""
-
-    print("vertexai는 init 중")
+    
+    # 같은 이름의 다른 환경 변수와 중복 시, 에러나기 때문에 함수 안으로 이동
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
+    
     vertexai.init(project=get_projectId(), location=location)
-    print("vertexai는 init 됨")
     
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -36,16 +36,13 @@ def text_generation(
     }
 
     model = TextGenerationModel.from_pretrained("text-bison")
-    print("모델 생성됨")
     
     response = model.predict(
-        """Provide a summary for the following conversation in three sentences:""" + text,
+        model_command + text,
         **parameters,
     )
 
     # text generation 완료
     summary = response.text
-    print(summary)
     current_app.logger.info("text generation 완료")
     return summary
-

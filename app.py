@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, session, send_from_d
 from services.text_emotion_analysis import get_json_sentiment
 from services.speech_to_text import transcribe_audio
 from services.summary import text_summarization
-from services.summary_copy import text_generation
+from services.vertexai_text_command import text_generation
 from services.document_ai_ocr import process_document
 import os
 import json
@@ -118,6 +118,14 @@ def download_file(filename):
     return send_from_directory('assets', filename)
 
 #### 임의로 만들었습니다. (mj) ### 
+    """pdf filename -> process_document()로 pdf에서 text 추출하는 ocr 진행 -> vertex ai 모델로 text에서 원하는 것들 명령함
+
+    Returns:
+        html : 예시로 결과 보여주는 html,
+        str : 확인용 pdf path
+        str : 3줄 요약, 
+        json : 특정 정보 추출 후 json 생성, 
+    """
 @app.route('/questionnaire/ocr', methods=['GET'])
 def questionnaire_ocr():
     # 문진표 파일 정보 
@@ -128,16 +136,27 @@ def questionnaire_ocr():
     text = process_document(file_path=file_path, mime_type='application/pdf')
     app.logger.info("OCR완료")
     
-    # OCR 진행한 파일에서 특정 정보 추출
-    model_command = """Please compile information pertaining to \
-            'NAME, DATE OF SERVICE, DATE OF BIRTH, DOCTOR, PATIENT, CHIEF COMPLAINT, ONSET OF SYMPTOMS, \
-            MECHANISM OF INJURY, What makes the pain better?, What makes the pain worse?' and present it:"""
-
-    ocr_result = text_generation(0.0, 'us-central1', text)
-    app.logger.info("OCR에서 정보 추출 완료")
-    print(ocr_result)
+    # OCR 진행한 파일에서 3줄 요약
+    doc_summary_command = """Provide a summary for the following conversation in three sentences:"""
+    doc_summary_result = text_generation(0.0, 'us-central1', text, doc_summary_command)
+    app.logger.info("OCR에서 3줄 요약 완료")
     
-    return render_template('questionnaire.html', ocr_result)
+    # OCR 진행한 파일에서 특정 정보 추출
+    doc_info_export_command = """Please compile information pertaining to \
+            'NAME, DATE OF SERVICE, DATE OF BIRTH, DOCTOR, PATIENT, CHIEF COMPLAINT, ONSET OF SYMPTOMS, \
+            MECHANISM OF INJURY, What makes the pain better?, What makes the pain worse?' \
+            and Pair each key with its corresponding value and format it in JSON:"""  
+    doc_info_export_result = text_generation(0.0, 'us-central1', text, doc_info_export_command)
+    # 텍스트를 JSON으로 변환
+    doc_info_export_result_json = json.loads(doc_info_export_result.replace('json', '').replace("```", ''))
+    app.logger.info("OCR에서 특정 정보 추출 완료")
+    
+    """ pdf 확인용 : 추후에 병합할 때는 다음 부분을 삭제해 주세요.
+    파일 삭제 : static/images/questionnaire_english.pdf
+    코드 삭제 : pdf_path 관련 코드 (아래 2개)
+    """
+    pdf_path ="images/" + filename
+    return render_template('questionnaire.html', pdf_path=pdf_path, doc_summary_result=doc_summary_result, doc_info_export_result_json=doc_info_export_result_json)
 
 # execute app
 if __name__ == '__main__':
