@@ -46,6 +46,7 @@ def text_summarization(
     # 요약 완료
     summary = response.text
     current_app.logger.info("[text_summarization] : 요약 완료")
+    print("summary:\n", summary)
 
     # 필요한 스코프 지정
     scopes = ['https://www.googleapis.com/auth/cloud-platform']
@@ -78,6 +79,7 @@ def text_summarization(
     current_app.logger.info("Healthcare API 응답 코드 : " + str(response.status_code))
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
+    print("response_json:\n", response_json)
     response_json = response.json()
     filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
     final_output = {

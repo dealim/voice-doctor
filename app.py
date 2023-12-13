@@ -91,7 +91,7 @@ def upload_file():
 
         # stt.json을 분석후 [파일이름]_health_response.json 으로 변환
         file_health_response = fileleftname + '_health_response.json'
-        text_summarization(file_health_response,0.0, 'applicationteam02', 'us-central1', text);
+        text_summarization(file_health_response,0.0, 'applicationteam02', 'us-central1', text)
         app.logger.info(file_health_response + " : 헬스케어 요약 완료")
 
         return jsonify({'message': 'File uploaded successfully!', 'filename' : filename})
