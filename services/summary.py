@@ -79,7 +79,13 @@ def text_summarization(
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
     response_json = response.json()
-    filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
+
+    # entityMentions 키의 존재 여부 확인
+    if "entityMentions" in response_json:
+        filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
+    else:
+        filtered_entities = []
+
     final_output = {
         "summary": summary,
         "keywords": filtered_entities
