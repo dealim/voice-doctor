@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify, session, send_from_d
 from services.text_emotion_analysis import get_json_sentiment
 from services.speech_to_text import transcribe_audio
 from services.summary import text_summarization
+from services.summary_copy import text_generation
+from services.document_ai_ocr import process_document
 import os
 import json
 
@@ -114,6 +116,28 @@ def upload_record():
 @app.route('/audio/<filename>')
 def download_file(filename):
     return send_from_directory('assets', filename)
+
+#### 임의로 만들었습니다. (mj) ### 
+@app.route('/questionnaire/ocr', methods=['GET'])
+def questionnaire_ocr():
+    # 문진표 파일 정보 
+    filename = "questionnaire_english.pdf"
+    file_path = os.path.join(current_dir, "assets", filename)
+
+    # 문진표 OCR 진행
+    text = process_document(file_path=file_path, mime_type='application/pdf')
+    app.logger.info("OCR완료")
+    
+    # OCR 진행한 파일에서 특정 정보 추출
+    model_command = """Please compile information pertaining to \
+            'NAME, DATE OF SERVICE, DATE OF BIRTH, DOCTOR, PATIENT, CHIEF COMPLAINT, ONSET OF SYMPTOMS, \
+            MECHANISM OF INJURY, What makes the pain better?, What makes the pain worse?' and present it:"""
+
+    ocr_result = text_generation(0.0, 'us-central1', text)
+    app.logger.info("OCR에서 정보 추출 완료")
+    print(ocr_result)
+    
+    return render_template('questionnaire.html', ocr_result)
 
 # execute app
 if __name__ == '__main__':
