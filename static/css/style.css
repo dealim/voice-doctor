@@ -281,7 +281,9 @@ a {
 
 .pulse-animation {
     animation: pulse 1s infinite;
+    -webkit-animation: pulse 1s infinite; /* Safari 및 Chrome */
 }
+
 
 .spinner {
     transform: translate(-50%, -50%); /* 요소의 중앙 정렬 */
