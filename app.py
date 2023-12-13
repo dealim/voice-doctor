@@ -67,21 +67,22 @@ def get_emotion():
 def upload_file():
     try:
         if 'file' in request.files:
+            file = request.files['file']
+            filename = file.filename
+
             # 세션 ID 생성 또는 기존 세션 ID 사용
             if 'session_id' not in session:
                 session['session_id'] = str(uuid.uuid4())
             session_id = session['session_id']
 
-            # 파일에 대한 이름 처리
-            file = request.files['file']
-            filename = file.filename
-            leftname = filename.rsplit('.')[0]
-            extname = filename.rsplit('.')[1]
-            session['uploadedFileName'] = leftname
-
             # 오디오 파일에 대한 이름처리
             if(filename=='blob'):
-                filename = f"recording_{session_id}.{extname}"
+                filename = f"recording_{session_id}.wav"
+
+            # 파일에 대한 이름 처리
+            leftname = filename.split('.')[0]
+            extname = filename.split('.')[1]
+            session['uploadedFileName'] = leftname
 
             # 파일 저장 경로 설정 및 저장
             save_path = os.path.join(voice_dir, filename)
@@ -127,8 +128,8 @@ def upload_record():
 
         # 파일 이름 처리
         filename = f"recording_{session_id}{audio_file.filename}"
-        leftname = filename.rsplit('.')[0]
-        extname = filename.rsplit('.')[1]
+        leftname = filename.split('.')[0]
+        extname = filename.split('.')[1]
         session['uploadedFileName'] = leftname
 
         # 파일 경로 설정 및 저장
