@@ -15,7 +15,6 @@ from google.oauth2 import service_account
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir, 'voice')
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 PROJ = get_projectId()
 
 
@@ -27,6 +26,7 @@ def text_summarization(
         text: str,
 ) -> str:
     """Summarization Example with a Large Language Model"""
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 
     vertexai.init(project=project_id, location=location)
     parameters = {
@@ -46,7 +46,6 @@ def text_summarization(
     # 요약 완료
     summary = response.text
     current_app.logger.info("[text_summarization] : 요약 완료")
-    print("summary:\n", summary)
 
     # 필요한 스코프 지정
     scopes = ['https://www.googleapis.com/auth/cloud-platform']
@@ -79,7 +78,6 @@ def text_summarization(
     current_app.logger.info("Healthcare API 응답 코드 : " + str(response.status_code))
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
-    print("response_json:\n", response_json)
     response_json = response.json()
 
     # entityMentions 키의 존재 여부 확인
