@@ -7,15 +7,17 @@
     <!-- Description -->
     <p class="overlay__description">
         This app extracts keywords and analyzes sentiment from patient's voice questionnaire to predict illnesses. It identifies important terms and emotional cues, aiding in early <strong>disease detection.</strong>
-
     </p>
     <!-- Buttons -->
     <div class="overlay__btns">
-        <button id="startEmotionAnalysis" class="overlay__btn overlay__btn--transparent">
-            View Sentiment 🔎
+        <button id="viewEmotionAnalysis" class="overlay__btn overlay__btn--transparent">
+            Show Sentiment 🔎
         </button>
         <button id="viewTextSummary" class="overlay__btn overlay__btn--colors">
             Show summary
+        </button>
+        <button id="viewOcrAnalysis" class="display-none overlay__btn overlay__btn--transparent-none">
+            View Questionnaires 🔎
         </button>
     </div>
 </div>
@@ -24,9 +26,9 @@
         <div class="voice-recording-icon">
             <img id="voice-recording-icon" src="static/images/recording.svg" alt="recording">
         </div>
-        <p class="drop-area-p" id="dropAreaMessage">click icon to record voice or drag and drop file  <a href="#" id="fileInputLink">browse
-            for files</a></p>
-        <input type="file" id="fileInput" accept=".wav,.aif,.aiff,.flac,.alac,.aac,.ogg,.mp3" hidden>
+        <p class="drop-area-p" id="dropAreaMessage">click icon to record voice or drag and drop file  <a href="#" id="fileInputLink">browse for files</a>
+        </p>
+        <input type="file" id="fileInput" accept=".wav,.aif,.aiff,.flac,.alac,.aac,.ogg,.mp3,.pdf" hidden>
         <div id="loadingSpinner" class="loading-spinner-hidden">
             <div class="spinner"></div>
         </div>
@@ -36,6 +38,10 @@
         <div class="failedMessage" id="failedMessage" style="display: none">
             Analysis failed!!
         </div>
+    </div>
+    <div class="toggle">
+        <input type="checkbox" id="switch">
+        <label for="switch"></label>
     </div>
 </div>
 <div id="downloadFiles" class="downloadFiles">

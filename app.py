@@ -63,6 +63,14 @@ def get_emotion():
     else:
         return jsonify({"error": "File not found"}), 404
 
+@app.route('/show/ocr')
+def show_ocr():
+    return render_template('show_text_summary.html')
+
+@app.route('/get/ocr')
+def get_ocr():
+
+
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():

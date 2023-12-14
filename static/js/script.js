@@ -9,17 +9,55 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
         e.preventDefault();
         loadContent('/show/voicetext');
     }
-    if (e.target.id === 'startEmotionAnalysis') {
+    if (e.target.id === 'viewEmotionAnalysis') {
         e.preventDefault();
         loadContent('/show/emotion');
     }
+    if (e.target.id === 'viewOcrAnalysis') {
+        e.preventDefault();
+        loadContent('/show/ocr');
+    }
 });
 
-// 파일 다운로드 이벤트(동적 페이지에 이븐트 구현법)
+// 토글
+document.body.addEventListener('click', function (e) {
+    if (e.target === document.getElementById("switch")) {
+        let icon = document.getElementById("voice-recording-icon");
+        const dropAreaMessage = document.getElementById("dropAreaMessage");
+        const emotionBtn = document.getElementById("viewEmotionAnalysis");
+        const summaryBtn = document.getElementById("viewTextSummary");
+        const ocrBtn = document.getElementById("viewOcrAnalysis");
+
+        if (e.target.checked) {
+            if (icon) {
+                icon.addEventListener('click', preventClickEvent);
+                icon.src = "static/images/pdf.svg";
+                icon.alt = "pdf";
+                dropAreaMessage.innerHTML = 'drag and drop pdf file here <a href="#" id="fileInputLink">browse for files</a>';
+                emotionBtn.style.display = "none";
+                summaryBtn.style.display = "none";
+                ocrBtn.style.display = "flex";
+                setupFileDragAndDrop();
+            }
+        } else {
+            if (icon) {
+                icon.removeEventListener('click', preventClickEvent);
+                icon.src = "static/images/recording.svg";
+                icon.alt = "recording";
+                dropAreaMessage.innerHTML = 'click icon to record voice or drag and drop file <a href="#" id="fileInputLink">browse for files</a>';
+                emotionBtn.style.display = "flex";
+                summaryBtn.style.display = "flex";
+                ocrBtn.style.display = "none";
+                setupFileDragAndDrop();
+            }
+        }
+    }
+});
+
+// 파일 다운로드 이벤트(동적 페이지에 이벤트 구현)
 document.body.addEventListener('click', function (e) {
     if (e.target.matches('.downloadFiles a')) {
         e.preventDefault();
-        console.log("작동중");
 
         // 클릭된 링크에서 URL과 파일 이름 추출
         const fileUrl = e.target.href;
@@ -108,6 +146,10 @@ function loadContent(url) {
                         .catch(error => {
                             console.error('Error fetching voice text data:', error);
                         });
+                }
+
+                if (url === '/show/ocr'){
+                    fetch('/get/ocr')
                 }
 
                 setupArrowClickListener();
@@ -527,5 +569,11 @@ function showEmotionImage(patient) {
         noCommentImage.src = '/static/images/nocomment.png';
         happyImage.src = '/static/images/happy_disabled.png';
     }
+}
+
+// 클릭 이벤트 막는 함수
+function preventClickEvent(e) {
+    e.preventDefault();
+    e.stopPropagation();
 }
 
