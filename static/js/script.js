@@ -325,7 +325,6 @@ function setupFileDragAndDrop() {
     function uploadAudio(blob, extName) {
         const formData = new FormData();
         formData.append('audio', blob, '.' + extName);
-        console.log(formData);
 
         fetch('/api/record', { // Flask 서버의 엔드포인트
             method: 'POST',

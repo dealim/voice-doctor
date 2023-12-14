@@ -129,5 +129,5 @@ def json_analyze_sentiment(jsonfile):
 def get_json_sentiment(jsonfile, filename):
     patient = json_analyze_sentiment(jsonfile)
 
-    with open(os.path.join(current_dir, 'voice', filename + '_emotion.json'), 'w') as f:
+    with open(os.path.join(current_dir, 'voice', filename), 'w') as f:
         json.dump(patient[0], f)

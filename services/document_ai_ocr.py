@@ -1,5 +1,9 @@
 from google.cloud import documentai_v1 as documentai
 import os
+import json
+from flask import current_app
+from services.vertexai_text_command import text_generation
+from services.filesave import save_file
 from .settings import get_secret, get_projectId
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,3 +44,27 @@ def process_document(file_path: str, mime_type: str) -> str:
         result = documentai_client.process_document(request=request)
 
     return result.document.text
+
+def get_ocr_json(pdf_file_name, saved_ocr_name):
+    # 문진표 파일 정보
+    file_path = os.path.join(current_dir, "voice", pdf_file_name)
+
+    # 문진표 OCR 진행
+    text = process_document(file_path=file_path, mime_type='application/pdf')
+
+    # OCR 진행한 파일에서 특정 정보 추출
+    doc_info_export_command = """Please compile information pertaining to \
+            'NAME, DATE OF SERVICE, DATE OF BIRTH, DOCTOR, PATIENT, CHIEF COMPLAINT, ONSET OF SYMPTOMS, \
+            MECHANISM OF INJURY, What makes the pain better?, What makes the pain worse?' \
+            and Pair each key with its corresponding value and format it in JSON:"""
+    doc_info_export_result = text_generation(0.0, 'us-central1', text, doc_info_export_command)
+
+    # 텍스트를 JSON으로 변환
+    doc_info_export_result_json = json.loads(doc_info_export_result.replace('json', '').replace("```", ''))
+
+    # 파일 저장
+    file_path = os.path.join(current_dir, "voice")
+    file_name = saved_ocr_name
+    file_form = "json"
+
+    save_file(file_path, file_name, file_form, doc_info_export_result_json)
