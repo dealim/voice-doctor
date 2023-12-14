@@ -18,6 +18,9 @@ voice_dir = os.path.join(current_dir,'services','voice')
 # Root page
 @app.route('/')
 def index():
+    # 세션 ID 생성 또는 기존 세션 ID 사용
+    if 'session_id' not in session:
+        session['session_id'] = str(uuid.uuid4())
     return render_template('index.html')
 
 # 동적 메인 페이지
@@ -33,8 +36,9 @@ def show_voicetext():
 
 @app.route('/get/voicetext')
 def get_voicetext():
-    filename = session.get('uploadedFileName')
-    json_file_name = filename + '_health_response.json'
+    session_id = session['session_id']
+    json_file_name = session_id + '_health_response.json'
+    app.logger.info(json_file_name)
     file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
@@ -52,8 +56,8 @@ def show_emotion():
 
 @app.route('/get/emotion')
 def get_emotion():
-    filename = session.get('uploadedFileName')
-    json_file_name = filename + '_emotion.json'
+    session_id = session['session_id']
+    json_file_name = session_id + '_emotion.json'
     file_path = os.path.join(voice_dir, json_file_name)
 
     if os.path.exists(file_path):
@@ -65,11 +69,20 @@ def get_emotion():
 
 @app.route('/show/ocr')
 def show_ocr():
-    return render_template('show_text_summary.html')
+    return render_template('show_text_ocr.html')
 
 @app.route('/get/ocr')
 def get_ocr():
+    session_id = session['session_id']
+    json_file_name = session_id + '_ocr.json'
+    file_path = os.path.join(voice_dir, json_file_name)
 
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            json_data = json.load(file)
+        return jsonify(json_data)
+    else:
+        return jsonify({"error": "File not found"}), 404
 
 
 @app.route('/api/upload', methods=['POST'])
@@ -78,20 +91,16 @@ def upload_file():
         if 'file' in request.files:
             file = request.files['file']
             file_name = file.filename
-
-            # 세션 ID 생성 또는 기존 세션 ID 사용
-            if 'session_id' not in session:
-                session['session_id'] = str(uuid.uuid4())
             session_id = session['session_id']
 
             # 오디오 파일에 대한 이름처리
             if(file_name=='blob'):
-                file_name = f"recording_{session_id}.wav"
+                file_name = f"{session_id}.wav"
 
             # 파일에 대한 이름 처리
             left_name = file_name.split('.')[0]
             ext_name = file_name.split('.')[1]
-            session['uploadedFileName'] = left_name
+            file_name = session_id + '.' + ext_name
 
             # 파일 저장 경로 설정 및 저장
             save_path = os.path.join(voice_dir, file_name)
@@ -100,8 +109,9 @@ def upload_file():
 
             # pdf 파일에 대한 처리
             if(ext_name == 'pdf'):
-                get_ocr_json(file_name, session_id + "_ocr")
-                app.logger.info("OCR 분석 완료")
+                json_filename = session_id + "_ocr"
+                get_ocr_json(file_name, json_filename)
+                app.logger.info(json_filename + " : OCR 분석 완료")
                 return jsonify({'message': 'File uploaded successfully!', 'file_name': file_name})
 
             # 보이스 파일을 [session_id]_stt.json으로 변환
@@ -118,10 +128,10 @@ def upload_file():
             # stt.json을 분석 후 [파일이름]_emotion.json 으로 변환
             emotion_name = session_id + '_emotion.json'
             get_json_sentiment(os.path.join(voice_dir, stt_name), emotion_name)
-            app.logger.info("감정 분석 완료")
+            app.logger.info(emotion_name + " : 감정 분석 완료")
 
             # stt.json을 분석 후 [파일이름]_health_response.json 으로 변환
-            file_health_response = left_name + '_health_response.json'
+            file_health_response = session_id + '_health_response.json'
             text_summarization(file_health_response, 0.0, 'applicationteam02', 'us-central1', text)
             app.logger.info(file_health_response + " : 헬스케어 요약 완료")
 
@@ -144,10 +154,7 @@ def upload_record():
         session_id = session['session_id']
 
         # 파일 이름 처리
-        filename = f"recording_{session_id}{audio_file.filename}"
-        leftname = filename.split('.')[0]
-        extname = filename.split('.')[1]
-        session['uploadedFileName'] = leftname
+        filename = session_id + ".wav"
 
         # 파일 경로 설정 및 저장
         filepath = os.path.join(voice_dir, filename)

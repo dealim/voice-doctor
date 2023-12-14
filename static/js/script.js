@@ -150,6 +150,12 @@ function loadContent(url) {
 
                 if (url === '/show/ocr'){
                     fetch('/get/ocr')
+                        .then(response=>response.json())
+                        .then(data=>{
+
+                            showOCR(data);
+
+                        })
                 }
 
                 setupArrowClickListener();
@@ -366,7 +372,7 @@ function setupFileDragAndDrop() {
     // 녹음 파일(blob)을 서버로 전송하기
     function uploadAudio(blob, extName) {
         const formData = new FormData();
-        formData.append('audio', blob, '.' + extName);
+        formData.append('audio', blob, "recording." + extName);
 
         fetch('/api/record', { // Flask 서버의 엔드포인트
             method: 'POST',
@@ -569,6 +575,30 @@ function showEmotionImage(patient) {
         noCommentImage.src = '/static/images/nocomment.png';
         happyImage.src = '/static/images/happy_disabled.png';
     }
+}
+
+// ocr 파싱
+function showOCR(data){
+    const summaryLeft = document.querySelector('.overlay-summary-left .overlay_summary_description');
+    const summaryRight = document.querySelector('.overlay-summary-right .patient-details');
+
+    // 좌측 요약 정보 구성
+    summaryLeft.innerHTML = `
+                <strong>Name:</strong> ${data["NAME"]}<br>
+                <strong>Date of Service:</strong> ${data["DATE OF SERVICE"]}<br>
+                <strong>Doctor:</strong> ${data["DOCTOR"]}<br>
+                <strong>Chief Complaint:</strong> ${data["CHIEF COMPLAINT"]}<br>
+                <strong>Date of Birth:</strong> ${data["DATE OF BIRTH"]}<br>
+                <strong>Patient:</strong> ${data["PATIENT"]}<br>
+            `;
+
+    // 우측 상세 정보 구성
+    summaryRight.innerHTML = `
+                <strong>Onset of Symptoms:</strong> ${data["ONSET OF SYMPTOMS"]}<br>
+                <strong>Mechanism of Injury:</strong> ${data["MECHANISM OF INJURY"]}<br>
+                <strong>What makes the pain better?:</strong> ${data["What makes the pain better?"]}<br>
+                <strong>What makes the pain worse?:</strong> ${data["What makes the pain worse?"]}
+            `;
 }
 
 // 클릭 이벤트 막는 함수
