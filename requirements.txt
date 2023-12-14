@@ -2,9 +2,7 @@ flask~=3.0.0
 google-cloud-language
 google-cloud-aiplatform
 google-cloud-speech
+google-cloud-documentai
+google-cloud-storage
+pandas
 pydub
-
-----------document ai용 api
-pip3 install --upgrade pandas
-pip3 install --upgrade google-cloud-documentai
-pip3 install --upgrade google-cloud-storage
