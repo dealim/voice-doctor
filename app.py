@@ -5,6 +5,7 @@ from services.summary import text_summarization
 from config import Config
 from services.vertexai_text_command import text_generation
 from services.document_ai_ocr import process_document
+from services.filesave import save_file
 import os
 import uuid
 import json
@@ -179,6 +180,14 @@ def questionnaire_ocr():
     doc_info_export_result = text_generation(0.0, 'us-central1', text, doc_info_export_command)
     # 텍스트를 JSON으로 변환
     doc_info_export_result_json = json.loads(doc_info_export_result.replace('json', '').replace("```", ''))
+    
+    # 파일 저장
+    file_path = "services\\voice\\"
+    file_name = "ocr"
+    file_form = "json"
+
+    saved_path = save_file(file_path, file_name, file_form, doc_info_export_result_json)
+    app.logger.info(f"File saved at: {saved_path}")
     app.logger.info("OCR에서 특정 정보 추출 완료")
     
     """ pdf 확인용 : 추후에 병합할 때는 다음 부분을 삭제해 주세요.
