@@ -288,6 +288,7 @@ function setupFileDragAndDrop() {
                 });
 
                 // 펄스 애니메이션 클래스 추가
+                document.getElementById("voice-recording-icon").src = "static/images/recording-red.svg";
                 document.getElementById("voice-recording-icon").classList.add("pulse-animation");
 
                 recorder.startRecording();
@@ -314,6 +315,7 @@ function setupFileDragAndDrop() {
 
             // UI 업데이트 (예: 녹음 중지 상태 표시)
             document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
+            document.getElementById("voice-recording-icon").src = "static/images/recording.svg";
             isRecording = false;
 
         });
