@@ -40,6 +40,7 @@ document.body.addEventListener('click', function (e) {
             emotionBtn.style.display = "none";
             summaryBtn.style.display = "none";
             ocrBtn.style.display = "flex";
+            icon.addEventListener('click',fileInputClick);
             setupFileDragAndDrop();
         } else {
             switchBtn.setAttribute('data-state','voice');
@@ -50,6 +51,7 @@ document.body.addEventListener('click', function (e) {
             emotionBtn.style.display = "flex";
             summaryBtn.style.display = "flex";
             ocrBtn.style.display = "none";
+            icon.removeEventListener('click',fileInputClick);
             setupFileDragAndDrop();
         }
     }
@@ -193,7 +195,6 @@ function setupFileDragAndDrop() {
     let audioStream;
     let recorder;
     let isRecording = false;
-
 
     // 파일 입력 필드 열기
     fileInputLink.addEventListener('click', (e) => {
@@ -614,6 +615,13 @@ function showOCR(data){
 function preventClickEvent(e) {
     e.preventDefault();
     e.stopPropagation();
+}
+
+// pdf 아이콘 기능 설정
+function fileInputClick(e){
+    const fileInput = document.getElementById('fileInput');
+    e.preventDefault();
+    fileInput.click();
 }
 
 // 토글 함수
