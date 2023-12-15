@@ -582,4 +582,8 @@ a {
         margin-bottom: 0;
     }
 
+    .overlay-summary-left{
+        display: block;
+    }
+
 }
