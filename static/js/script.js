@@ -21,12 +21,18 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
 
 // 토글
 document.body.addEventListener('click', function (e) {
+
     if (e.target === document.getElementById("switch")) {
         let icon = document.getElementById("voice-recording-icon");
         const dropAreaMessage = document.getElementById("dropAreaMessage");
         const emotionBtn = document.getElementById("viewEmotionAnalysis");
         const summaryBtn = document.getElementById("viewTextSummary");
         const ocrBtn = document.getElementById("viewOcrAnalysis");
+        const checkBox = document.getElementById("switch");
+
+        // 체크박스 변경 시 localStorage에 저장
+        localStorage.setItem('checkboxState', checkBox.checked);
+        console.log(localStorage.getItem('checkboxState'));
 
         if (e.target.checked) {
             if (icon) {
@@ -166,6 +172,7 @@ function loadContent(url) {
                 }
             });
     }, 300); // CSS 트랜지션 시간과 일치
+
 }
 
 // 화살표 클릭 이벤트 리스너 설정 함수
@@ -193,6 +200,7 @@ function setupFileDragAndDrop() {
     let audioStream;
     let recorder;
     let isRecording = false;
+
 
     // 파일 입력 필드 열기
     fileInputLink.addEventListener('click', (e) => {
@@ -606,4 +614,3 @@ function preventClickEvent(e) {
     e.preventDefault();
     e.stopPropagation();
 }
-
