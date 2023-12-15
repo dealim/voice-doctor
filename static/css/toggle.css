@@ -4,9 +4,8 @@
 
 .toggle {
     --color: #F6F8FF;
-    --background: #0b1e21;
-    --background-hover: #1E2235;
-    --icon-color: #BBC1E1;
+    --background: hsl(207, 77%, 10%);
+    --icon-color: #e1e4ea;
     padding: 6px 12px 6px 8px;
     margin: 0;
     display: -webkit-box;
