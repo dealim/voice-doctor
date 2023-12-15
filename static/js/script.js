@@ -21,41 +21,39 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
 
 // 토글
 document.body.addEventListener('click', function (e) {
+    console.log(e.target.closest("#switch"));
+    console.log(document.getElementById("switch"));
+    console.log(e.target.closest("#switch") === document.getElementById("switch"));
 
-    if (e.target === document.getElementById("switch")) {
-        let icon = document.getElementById("voice-recording-icon");
+    if (e.target.closest("#switch").id === document.getElementById("switch").id) {
+        const switchBtn = document.getElementById("switch");
+        let currentState = switchBtn.getAttribute('data-state');
+        const icon = document.getElementById("voice-recording-icon");
         const dropAreaMessage = document.getElementById("dropAreaMessage");
         const emotionBtn = document.getElementById("viewEmotionAnalysis");
         const summaryBtn = document.getElementById("viewTextSummary");
         const ocrBtn = document.getElementById("viewOcrAnalysis");
-        const checkBox = document.getElementById("switch");
 
-        // 체크박스 변경 시 localStorage에 저장
-        localStorage.setItem('checkboxState', checkBox.checked);
-        console.log(localStorage.getItem('checkboxState'));
-
-        if (e.target.checked) {
-            if (icon) {
-                icon.addEventListener('click', preventClickEvent);
-                icon.src = "static/images/pdf.svg";
-                icon.alt = "pdf";
-                dropAreaMessage.innerHTML = 'drag and drop pdf file here <a href="#" id="fileInputLink">browse for files</a>';
-                emotionBtn.style.display = "none";
-                summaryBtn.style.display = "none";
-                ocrBtn.style.display = "flex";
-                setupFileDragAndDrop();
-            }
+        if (currentState === 'voice') {
+            switchBtn.setAttribute('data-state','pdf');
+            icon.addEventListener('click', preventClickEvent);
+            icon.src = "static/images/pdf.svg";
+            icon.alt = "pdf";
+            dropAreaMessage.innerHTML = 'drag and drop pdf file here <a href="#" id="fileInputLink">browse for files</a>';
+            emotionBtn.style.display = "none";
+            summaryBtn.style.display = "none";
+            ocrBtn.style.display = "flex";
+            setupFileDragAndDrop();
         } else {
-            if (icon) {
-                icon.removeEventListener('click', preventClickEvent);
-                icon.src = "static/images/recording.svg";
-                icon.alt = "recording";
-                dropAreaMessage.innerHTML = 'click icon to record voice or drag and drop file <a href="#" id="fileInputLink">browse for files</a>';
-                emotionBtn.style.display = "flex";
-                summaryBtn.style.display = "flex";
-                ocrBtn.style.display = "none";
-                setupFileDragAndDrop();
-            }
+            switchBtn.setAttribute('data-state','voice');
+            icon.removeEventListener('click', preventClickEvent);
+            icon.src = "static/images/recording.svg";
+            icon.alt = "recording";
+            dropAreaMessage.innerHTML = 'click icon to record voice or drag and drop file <a href="#" id="fileInputLink">browse for files</a>';
+            emotionBtn.style.display = "flex";
+            summaryBtn.style.display = "flex";
+            ocrBtn.style.display = "none";
+            setupFileDragAndDrop();
         }
     }
 });
@@ -89,6 +87,7 @@ document.body.addEventListener('click', function (e) {
 
 // 페이드 아웃 및 새 콘텐츠 로드 함수
 function loadContent(url) {
+
     // 동적 페이지 구현
     const dynamicContent = document.getElementById('dynamicContent');
 
@@ -394,6 +393,9 @@ function setupFileDragAndDrop() {
                 console.error('Upload failed:', error);
             });
     }
+
+    // 토글 설정
+    document.querySelector('.toggle').addEventListener('click',toggle);
 }
 
 
@@ -587,25 +589,30 @@ function showEmotionImage(patient) {
 
 // ocr 파싱
 function showOCR(data){
-    const summaryLeft = document.querySelector('.overlay-summary-left .overlay_summary_description');
+    const summaryLeft1 = document.getElementById('overlay_summary_description1');
+    const summaryLeft2 = document.getElementById('overlay_summary_description2');
     const summaryRight = document.querySelector('.overlay-summary-right .patient-details');
 
     // 좌측 요약 정보 구성
-    summaryLeft.innerHTML = `
-                <strong>Name:</strong> ${data["NAME"]}<br>
-                <strong>Date of Service:</strong> ${data["DATE OF SERVICE"]}<br>
-                <strong>Doctor:</strong> ${data["DOCTOR"]}<br>
-                <strong>Chief Complaint:</strong> ${data["CHIEF COMPLAINT"]}<br>
-                <strong>Date of Birth:</strong> ${data["DATE OF BIRTH"]}<br>
-                <strong>Patient:</strong> ${data["PATIENT"]}<br>
+    summaryLeft1.innerHTML = `
+                <strong>Name :</strong> ${data["NAME"]}<br>
+                <strong>Date of Service :</strong> ${data["DATE OF SERVICE"]}<br>
+                <strong>Doctor :</strong> ${data["DOCTOR"]}<br>
+
+            `;
+
+    summaryLeft2.innerHTML = `
+                <strong>Chief Complaint :</strong> ${data["CHIEF COMPLAINT"]}<br>
+                <strong>Date of Birth :</strong> ${data["DATE OF BIRTH"]}<br>
+                <strong>Patient :</strong> ${data["PATIENT"]}<br>
             `;
 
     // 우측 상세 정보 구성
     summaryRight.innerHTML = `
-                <strong>Onset of Symptoms:</strong> ${data["ONSET OF SYMPTOMS"]}<br>
-                <strong>Mechanism of Injury:</strong> ${data["MECHANISM OF INJURY"]}<br>
-                <strong>What makes the pain better?:</strong> ${data["What makes the pain better?"]}<br>
-                <strong>What makes the pain worse?:</strong> ${data["What makes the pain worse?"]}
+                <strong>Onset of Symptoms :</strong> ${data["ONSET OF SYMPTOMS"]}<br>
+                <strong>Mechanism of Injury :</strong> ${data["MECHANISM OF INJURY"]}<br>
+                <strong>What makes the pain better? :</strong> ${data["What makes the pain better?"]}<br>
+                <strong>What makes the pain worse? :</strong> ${data["What makes the pain worse?"]}
             `;
 }
 
@@ -613,4 +620,14 @@ function showOCR(data){
 function preventClickEvent(e) {
     e.preventDefault();
     e.stopPropagation();
+}
+
+// 토글 함수
+function toggle() {
+    let btn = this;
+    btn.classList.add('animation');
+    btn.classList.toggle('active');
+    let newElem = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newElem, btn);
+    newElem.addEventListener('click', toggle);
 }

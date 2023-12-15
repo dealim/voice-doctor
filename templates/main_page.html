@@ -28,7 +28,7 @@
         </div>
         <p class="drop-area-p" id="dropAreaMessage">click icon to record voice or drag and drop file  <a href="#" id="fileInputLink">browse for files</a>
         </p>
-        <input type="file" id="fileInput" accept=".wav,.aif,.aiff,.flac,.alac,.aac,.ogg,.mp3,.pdf" hidden>
+        <input type="file" id="fileInput" accept=".wav,.flac,.pdf" hidden>
         <div id="loadingSpinner" class="loading-spinner-hidden">
             <div class="spinner"></div>
         </div>
@@ -39,10 +39,20 @@
             Analysis failed!!
         </div>
     </div>
-    <div class="toggle">
-        <input type="checkbox" id="switch">
-        <label for="switch"></label>
-    </div>
+    <button id="switch" class="toggle" data-state="voice">
+        <div class="icon">
+            <div class="dots">
+                <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="lines">
+                <i></i><i></i><i></i><i></i>
+            </div>
+        </div>
+        <div class="text">
+            <span>Voice</span>
+            <span>PDF</span>
+        </div>
+    </button>
 </div>
 <div id="downloadFiles" class="downloadFiles">
     <a href="https://gcp.dealim.site/audio/Digestion.flac" download="Digestion.flac">voicefile1</a>

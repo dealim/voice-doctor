@@ -1,0 +1,316 @@
+#switch {
+    margin-top: 20px;
+}
+
+.toggle {
+    --color: #F6F8FF;
+    --background: #0b1e21;
+    --background-hover: #1E2235;
+    --icon-color: #BBC1E1;
+    padding: 6px 12px 6px 8px;
+    margin: 0;
+    display: -webkit-box;
+    display: flex;
+    outline: none;
+    position: relative;
+    border: none;
+    border-radius: 9px;
+    background: var(--b, var(--background));
+    cursor: pointer;
+    -webkit-appearence: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-transform: scale(var(--scale, 1)) translateZ(0);
+    transform: scale(var(--scale, 1)) translateZ(0);
+    -webkit-transition: background .4s, -webkit-transform .15s;
+    transition: background .4s, -webkit-transform .15s;
+    transition: transform .15s, background .4s;
+    transition: transform .15s, background .4s, -webkit-transform .15s;
+}
+.toggle:active {
+    --scale: .95;
+}
+.toggle:hover {
+    --b: var(--background-hover);
+    transform: scale(1.05);
+    cursor: pointer;
+}
+.toggle.without-text {
+    --background: #275EFE;
+    --background-hover: #1548DB;
+    --icon-color: #FFFFFF;
+    padding: 6px;
+}
+.toggle .icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+.toggle .icon i {
+    position: absolute;
+    left: var(--left, 4px);
+    top: var(--top, 4px);
+    display: block;
+    border-radius: 2px;
+    width: var(--width, 7px);
+    height: var(--height, 7px);
+    background: var(--icon-color);
+    -webkit-animation: var(--name, var(--dots-name, none)) var(--duration, var(--dots-duration, 0.5s)) var(--easing, var(--dots-easing, linear)) forwards var(--delay, var(--dots-delay, 0s));
+    animation: var(--name, var(--dots-name, none)) var(--duration, var(--dots-duration, 0.5s)) var(--easing, var(--dots-easing, linear)) forwards var(--delay, var(--dots-delay, 0s));
+}
+.toggle .icon .dots i:nth-child(1) {
+    --x-middle: -8px;
+    --y-middle: 10px;
+    --x-end: -2px;
+    --y-end: 12px;
+    --x-back: 10px;
+    --y-back: 7px;
+    --x-back-end: 9px;
+    --y-back-end: 0;
+}
+.toggle .icon .dots i:nth-child(2) {
+    --left: 13px;
+    --x-middle: -12px;
+    --y-middle: 5px;
+    --x-end: -11px;
+    --y-end: 7px;
+    --x-back: -3px;
+    --y-back: 1px;
+    --x-back-end: -9px;
+    --y-back-end: 0;
+}
+.toggle .icon .dots i:nth-child(3) {
+    --top: 13px;
+    --x-middle: 4px;
+    --y-middle: -5px;
+    --x-end: -2px;
+    --y-end: -7px;
+    --x-back: -5px;
+    --y-back: 0px;
+    --x-back-end: 9px;
+    --y-back-end: 0;
+}
+.toggle .icon .dots i:nth-child(4) {
+    --left: 13px;
+    --top: 13px;
+    --x-middle: 0;
+    --y-middle: -10px;
+    --x-end: -11px;
+    --y-end: -12px;
+    --x-back: -14px;
+    --y-back: -8px;
+    --x-back-end: -9px;
+    --y-back-end: 0;
+}
+.toggle .icon .lines {
+    --name: var(--lines-name, none);
+    --duration: var(--lines-duration, .15s);
+    --easing: var(--lines-easing, linear);
+    --delay: var(--lines-delay, 0s);
+}
+.toggle .icon .lines i {
+    --left: 9px;
+    --top: 3px;
+    --height: 2px;
+    --width: 11px;
+    -webkit-transform: translateY(20%) translateZ(0) scaleX(0);
+    transform: translateY(20%) translateZ(0) scaleX(0);
+}
+.toggle .icon .lines i:nth-child(2) {
+    --top: 8px;
+}
+.toggle .icon .lines i:nth-child(3) {
+    --top: 13px;
+}
+.toggle .icon .lines i:nth-child(4) {
+    --top: 18px;
+}
+.toggle .text {
+    margin-left: 4px;
+    position: relative;
+    line-height: 24px;
+    font-weight: 600;
+    font-size: 14px;
+    min-width: 28px;
+    color: var(--color);
+}
+.toggle .text span {
+    --y-default: 0;
+    --o-default: 1;
+    --y-active: -12px;
+    --o-active: 0;
+    display: block;
+    opacity: var(--o-default);
+    -webkit-transform: translateY(var(--y-default)) translateZ(0);
+    transform: translateY(var(--y-default)) translateZ(0);
+    -webkit-animation: var(--span-name, none) 0.4s ease forwards;
+    animation: var(--span-name, none) 0.4s ease forwards;
+}
+.toggle .text span:last-child {
+    --y-default: 12px;
+    --o-default: 0;
+    --y-active: 0;
+    --o-active: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+.toggle.animation {
+    --span-name: text;
+    --dots-name: back;
+    --lines-name: scale-down;
+}
+.toggle.animation .lines i {
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+}
+.toggle.animation .lines i:nth-child(3), .toggle.animation .lines i:nth-child(4) {
+    -webkit-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+}
+.toggle.animation.active {
+    --span-name: text-active;
+    --dots-name: move;
+    --lines-name: scale;
+    --lines-duration: .15s;
+    --lines-delay: .3s;
+}
+.toggle.animation.active .lines i {
+    -webkit-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+}
+.toggle.animation.active .lines i:nth-child(3), .toggle.animation.active .lines i:nth-child(4) {
+    -webkit-transform-origin: 0 50%;
+    transform-origin: 0 50%;
+}
+
+@-webkit-keyframes text {
+    0% {
+        opacity: var(--o-active);
+        -webkit-transform: translateY(var(--y-active)) translateZ(0);
+        transform: translateY(var(--y-active)) translateZ(0);
+    }
+    100% {
+        opacity: var(--o-default);
+        -webkit-transform: translateY(var(--y-default)) translateZ(0);
+        transform: translateY(var(--y-default)) translateZ(0);
+    }
+}
+
+@keyframes text {
+    0% {
+        opacity: var(--o-active);
+        -webkit-transform: translateY(var(--y-active)) translateZ(0);
+        transform: translateY(var(--y-active)) translateZ(0);
+    }
+    100% {
+        opacity: var(--o-default);
+        -webkit-transform: translateY(var(--y-default)) translateZ(0);
+        transform: translateY(var(--y-default)) translateZ(0);
+    }
+}
+@-webkit-keyframes text-active {
+    0% {
+        opacity: var(--o-default);
+        -webkit-transform: translateY(var(--y-default)) translateZ(0);
+        transform: translateY(var(--y-default)) translateZ(0);
+    }
+    100% {
+        opacity: var(--o-active);
+        -webkit-transform: translateY(var(--y-active)) translateZ(0);
+        transform: translateY(var(--y-active)) translateZ(0);
+    }
+}
+@keyframes text-active {
+    0% {
+        opacity: var(--o-default);
+        -webkit-transform: translateY(var(--y-default)) translateZ(0);
+        transform: translateY(var(--y-default)) translateZ(0);
+    }
+    100% {
+        opacity: var(--o-active);
+        -webkit-transform: translateY(var(--y-active)) translateZ(0);
+        transform: translateY(var(--y-active)) translateZ(0);
+    }
+}
+@-webkit-keyframes move {
+    50% {
+        -webkit-transform: translate(var(--x-middle, 0), var(--y-middle, 0)) scale(0.4);
+        transform: translate(var(--x-middle, 0), var(--y-middle, 0)) scale(0.4);
+    }
+    100% {
+        -webkit-transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+        transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+    }
+}
+@keyframes move {
+    50% {
+        -webkit-transform: translate(var(--x-middle, 0), var(--y-middle, 0)) scale(0.4);
+        transform: translate(var(--x-middle, 0), var(--y-middle, 0)) scale(0.4);
+    }
+    100% {
+        -webkit-transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+        transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+    }
+}
+@-webkit-keyframes back {
+    0%,
+    15% {
+        -webkit-transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+        transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+    }
+    50% {
+        -webkit-transform: translate(var(--x-back, 0), var(--y-back, 0)) scale(0.5);
+        transform: translate(var(--x-back, 0), var(--y-back, 0)) scale(0.5);
+    }
+    100% {
+        -webkit-transform: translate(var(--x-back-end, 0), var(--y-back-end, 0)) scale(1);
+        transform: translate(var(--x-back-end, 0), var(--y-back-end, 0)) scale(1);
+    }
+}
+@keyframes back {
+    0%,
+    15% {
+        -webkit-transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+        transform: translate(var(--x-end, 0), var(--y-end, 0)) scale(0.4);
+    }
+    50% {
+        -webkit-transform: translate(var(--x-back, 0), var(--y-back, 0)) scale(0.5);
+        transform: translate(var(--x-back, 0), var(--y-back, 0)) scale(0.5);
+    }
+    100% {
+        -webkit-transform: translate(var(--x-back-end, 0), var(--y-back-end, 0)) scale(1);
+        transform: translate(var(--x-back-end, 0), var(--y-back-end, 0)) scale(1);
+    }
+}
+@-webkit-keyframes scale {
+    100% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(1);
+        transform: translateY(20%) translateZ(0) scaleX(1);
+    }
+}
+@keyframes scale {
+    100% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(1);
+        transform: translateY(20%) translateZ(0) scaleX(1);
+    }
+}
+@-webkit-keyframes scale-down {
+    0% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(1);
+        transform: translateY(20%) translateZ(0) scaleX(1);
+    }
+    100% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(0);
+        transform: translateY(20%) translateZ(0) scaleX(0);
+    }
+}
+@keyframes scale-down {
+    0% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(1);
+        transform: translateY(20%) translateZ(0) scaleX(1);
+    }
+    100% {
+        -webkit-transform: translateY(20%) translateZ(0) scaleX(0);
+        transform: translateY(20%) translateZ(0) scaleX(0);
+    }
+}
