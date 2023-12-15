@@ -87,6 +87,7 @@ strong {
 .patient-details {
     font-size: 1.1rem;
     margin-top: 30px;
+    line-height: 1.5rem;
 }
 
 .overlay-summary-left {
@@ -366,8 +367,8 @@ a {
     min-width: 10px;
     height: 30px;
     min-height: 10px;
-    border-bottom: 5px solid white;
-    border-right: 5px solid white;
+    border-bottom: 5px solid rgba(11, 38, 73, 0.8); /* 투명한 색상 */
+    border-right: 5px solid rgba(11, 38, 73, 0.8); /* 투명한 색상 */
     transform: rotate(45deg);
     margin: -10px;
     animation: animate 2s infinite;

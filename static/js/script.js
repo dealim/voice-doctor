@@ -21,9 +21,6 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
 
 // 토글
 document.body.addEventListener('click', function (e) {
-    console.log(e.target.closest("#switch"));
-    console.log(document.getElementById("switch"));
-    console.log(e.target.closest("#switch") === document.getElementById("switch"));
 
     if (e.target.closest("#switch").id === document.getElementById("switch").id) {
         const switchBtn = document.getElementById("switch");
@@ -87,8 +84,6 @@ document.body.addEventListener('click', function (e) {
 
 // 페이드 아웃 및 새 콘텐츠 로드 함수
 function loadContent(url) {
-
-    // 동적 페이지 구현
     const dynamicContent = document.getElementById('dynamicContent');
 
     // 페이드 아웃
@@ -171,7 +166,6 @@ function loadContent(url) {
                 }
             });
     }, 300); // CSS 트랜지션 시간과 일치
-
 }
 
 // 화살표 클릭 이벤트 리스너 설정 함수
