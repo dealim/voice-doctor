@@ -350,13 +350,10 @@ a {
 .arrow-container {
     position: absolute;
     left: 10%;
-    bottom: 15%;
+    bottom: 5%;
 }
 
 .arrow {
-    position: absolute;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%);
     transform: rotate(90deg);
     cursor: pointer;
@@ -510,7 +507,7 @@ a {
 
 @media only screen and (max-width: 600px) {
     .arrow-container {
-        bottom: -5%;
+        bottom: -10%;
         left: 50%;
         transform: translateX(-50%);
     }
@@ -584,6 +581,10 @@ a {
 
     .overlay-summary-left{
         display: block;
+    }
+
+    .patient-details{
+        font-size: 0.9rem;
     }
 
 }
