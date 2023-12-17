@@ -18,41 +18,41 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
         loadContent('/show/ocr');
     }
 });
-$(()=>{
-    $(document).on('click','#switch',(e)=>{
-        const switchBtn = document.getElementById("switch");
-        let currentState = switchBtn.getAttribute('data-state');
-        const icon = document.getElementById("voice-recording-icon");
-        const dropAreaMessage = document.getElementById("dropAreaMessage");
-        const emotionBtn = document.getElementById("viewEmotionAnalysis");
-        const summaryBtn = document.getElementById("viewTextSummary");
-        const ocrBtn = document.getElementById("viewOcrAnalysis");
 
-        if (currentState === 'voice') {
-            switchBtn.setAttribute('data-state','pdf');
-            icon.addEventListener('click', preventClickEvent);
-            icon.src = "static/images/pdf.svg";
-            icon.alt = "pdf";
-            dropAreaMessage.innerHTML = 'drag and drop pdf file here <a href="#" id="fileInputLink">browse for files</a>';
-            emotionBtn.style.display = "none";
-            summaryBtn.style.display = "none";
-            ocrBtn.style.display = "flex";
-            icon.addEventListener('click',fileInputClick);
-            setupFileDragAndDrop();
-        } else {
-            switchBtn.setAttribute('data-state','voice');
-            icon.removeEventListener('click', preventClickEvent);
-            icon.src = "static/images/recording.svg";
-            icon.alt = "recording";
-            dropAreaMessage.innerHTML = 'click icon to record voice or drag and drop file <a href="#" id="fileInputLink">browse for files</a>';
-            emotionBtn.style.display = "flex";
-            summaryBtn.style.display = "flex";
-            ocrBtn.style.display = "none";
-            icon.removeEventListener('click',fileInputClick);
-            setupFileDragAndDrop();
-        }
+// 토글
+$(document).on('click', '#switch', (e) => {
+    const switchBtn = document.getElementById("switch");
+    let currentState = switchBtn.getAttribute('data-state');
+    const icon = document.getElementById("voice-recording-icon");
+    const dropAreaMessage = document.getElementById("dropAreaMessage");
+    const emotionBtn = document.getElementById("viewEmotionAnalysis");
+    const summaryBtn = document.getElementById("viewTextSummary");
+    const ocrBtn = document.getElementById("viewOcrAnalysis");
 
-    });
+    if (currentState === 'voice') {
+        switchBtn.setAttribute('data-state', 'pdf');
+        icon.addEventListener('click', preventClickEvent);
+        icon.src = "static/images/pdf.svg";
+        icon.alt = "pdf";
+        dropAreaMessage.innerHTML = 'drag and drop pdf file here <a href="#" id="fileInputLink">browse for files</a>';
+        emotionBtn.style.display = "none";
+        summaryBtn.style.display = "none";
+        ocrBtn.style.display = "flex";
+        icon.addEventListener('click', fileInputClick);
+        setupFileDragAndDrop();
+    } else {
+        switchBtn.setAttribute('data-state', 'voice');
+        icon.removeEventListener('click', preventClickEvent);
+        icon.src = "static/images/recording.svg";
+        icon.alt = "recording";
+        dropAreaMessage.innerHTML = 'click icon to record voice or drag and drop file <a href="#" id="fileInputLink">browse for files</a>';
+        emotionBtn.style.display = "flex";
+        summaryBtn.style.display = "flex";
+        ocrBtn.style.display = "none";
+        icon.removeEventListener('click', fileInputClick);
+        setupFileDragAndDrop();
+    }
+
 });
 
 // 파일 다운로드 이벤트(동적 페이지에 이벤트 구현)
@@ -62,7 +62,7 @@ document.body.addEventListener('click', function (e) {
 
         // 클릭된 링크에서 URL과 파일 이름 추출
         const fileUrl = e.target.href;
-        const fileName = e.target.textContent;
+        const fileName = e.target.getAttribute('download');
 
         // 파일 다운로드를 위한 fetch 요청
         fetch(fileUrl)
@@ -148,10 +148,10 @@ function loadContent(url) {
                         });
                 }
 
-                if (url === '/show/ocr'){
+                if (url === '/show/ocr') {
                     fetch('/get/ocr')
-                        .then(response=>response.json())
-                        .then(data=>{
+                        .then(response => response.json())
+                        .then(data => {
 
                             showOCR(data);
 
@@ -388,7 +388,7 @@ function setupFileDragAndDrop() {
     }
 
     // 토글 설정
-    document.querySelector('.toggle').addEventListener('click',toggle);
+    document.querySelector('.toggle').addEventListener('click', toggle);
 }
 
 
@@ -581,7 +581,7 @@ function showEmotionImage(patient) {
 }
 
 // ocr 파싱
-function showOCR(data){
+function showOCR(data) {
     const summaryLeft1 = document.getElementById('overlay_summary_description1');
     const summaryLeft2 = document.getElementById('overlay_summary_description2');
     const summaryRight = document.querySelector('.overlay-summary-right .patient-details');
@@ -616,7 +616,7 @@ function preventClickEvent(e) {
 }
 
 // pdf 아이콘 기능 설정
-function fileInputClick(e){
+function fileInputClick(e) {
     const fileInput = document.getElementById('fileInput');
     e.preventDefault();
     fileInput.click();

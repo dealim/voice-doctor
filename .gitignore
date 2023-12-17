@@ -171,3 +171,6 @@ services/voice/
 
 # api response json files
 services/*.json
+
+# 빈 폴더 생성
+!.gitkeep

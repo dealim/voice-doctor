@@ -164,9 +164,10 @@ def upload_record():
 
     return jsonify({'message': 'upload failed'})
 
-@app.route('/audio/<filename>')
+@app.route('/download/<filename>')
 def download_file(filename):
     return send_from_directory('assets', filename)
+
 # execute app
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=10100, debug=True)
