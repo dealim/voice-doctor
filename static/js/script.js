@@ -18,11 +18,8 @@ document.getElementById('dynamicContent').addEventListener('click', function (e)
         loadContent('/show/ocr');
     }
 });
-
-// 토글
-document.body.addEventListener('click', function (e) {
-
-    if (e.target.closest("#switch").id === document.getElementById("switch").id) {
+$(()=>{
+    $(document).on('click','#switch',(e)=>{
         const switchBtn = document.getElementById("switch");
         let currentState = switchBtn.getAttribute('data-state');
         const icon = document.getElementById("voice-recording-icon");
@@ -54,7 +51,8 @@ document.body.addEventListener('click', function (e) {
             icon.removeEventListener('click',fileInputClick);
             setupFileDragAndDrop();
         }
-    }
+
+    });
 });
 
 // 파일 다운로드 이벤트(동적 페이지에 이벤트 구현)
