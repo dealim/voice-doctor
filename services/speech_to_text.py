@@ -10,7 +10,7 @@ parent_dir = os.path.dirname(current_dir)
 os.environ[
     "GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(parent_dir, "keys/applicationteam02-cf34308f779b.json")
 
-
+# 음성 변환
 def transcribe_audio(filename, output_json_file, extname):
     client = speech_v1.SpeechClient()
     file_path = os.path.join(current_dir, 'voice', filename)
