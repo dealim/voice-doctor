@@ -41,6 +41,7 @@ def transcribe_audio(filename, output_json_file, extname):
 
     # print(f"json 파일 생성 완료: {output_json_file}")
 
+# json 저장
 def save_response_as_json(response, output_file):
     results = []
     for result in response.results:
