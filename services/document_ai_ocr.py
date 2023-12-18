@@ -5,6 +5,7 @@ from flask import current_app
 from services.vertexai_text_command import text_generation
 from services.filesave import save_file
 from .settings import get_secret, get_projectId
+# from services.language_detection import detect_language
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -42,7 +43,7 @@ def process_document(file_path: str, mime_type: str) -> str:
 
         # Use the Document AI client to process the sample form
         result = documentai_client.process_document(request=request)
-
+    
     return result.document.text
 
 def get_ocr_json(pdf_file_name, saved_ocr_name):

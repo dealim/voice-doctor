@@ -6,3 +6,4 @@ google-cloud-documentai
 google-cloud-storage
 pandas
 pydub
+langid
