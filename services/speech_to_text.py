@@ -47,7 +47,8 @@ def save_response_as_json(response, output_file):
         alternative = result.alternatives[0]
         results.append({
             "transcript": alternative.transcript,
-            "confidence": alternative.confidence
+            "confidence": alternative.confidence,
+            "language_code": result.language_code
         })
 
     with open(output_file, 'w') as json_file:

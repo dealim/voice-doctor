@@ -15,12 +15,13 @@ PROJECT_ID = get_projectId()
 # 현재 폴더 경로 가져오기
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-def analyze_sentiment(text_content):
+def analyze_sentiment(text_content, language_code):
     """
     문자열 내에서 감정 분석
 
     Args:
       text_content: 한 화자의 담화 문장들
+      language_code: 문자열이 어느나라 말인지
       
     return:
         dict안에 다음의 변수들이 묶어서 들어감
