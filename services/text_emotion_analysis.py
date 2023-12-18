@@ -15,13 +15,13 @@ PROJECT_ID = get_projectId()
 # 현재 폴더 경로 가져오기
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
-def analyze_sentiment(text_content, language_code):
+def analyze_sentiment(text_content, stt_language_code):
     """
     문자열 내에서 감정 분석
 
     Args:
       text_content: 한 화자의 담화 문장들
-      language_code: 문자열이 어느나라 말인지
+      language_code: 문자열이 어느 나라 말인지 코드
       
     return:
         dict안에 다음의 변수들이 묶어서 들어감
@@ -39,7 +39,9 @@ def analyze_sentiment(text_content, language_code):
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
-    language_code = "en"
+    stt_language_codes = {"en-us":"en", "ko-kr":"ko", "ja-jp":"ja"}
+    language_code = stt_language_codes[stt_language_code]
+
     document = {
         "content": text_content,
         "type_": document_type_in_plain_text,
@@ -120,7 +122,8 @@ def json_analyze_sentiment(jsonfile):
 
     for result in json_data:
         transcript = result["transcript"]
-        sentiment_result = analyze_sentiment(transcript)
+        stt_language_code = result["language_code"]
+        sentiment_result = analyze_sentiment(transcript, stt_language_code)
         sentiment_results.append(sentiment_result)
 
     return sentiment_results
