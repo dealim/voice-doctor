@@ -30,6 +30,7 @@ def multi_transcribe_audio(filename):
     response = client.recognize(config=config, audio=audio)
 
     for i, result in enumerate(response.results):
+        print("result : ",result)
         alternative = result.alternatives[0]
         print("-" * 20)
         print(f"First alternative of result {i}: {alternative}")

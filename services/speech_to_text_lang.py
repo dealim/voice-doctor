@@ -85,9 +85,11 @@ def save_response_as_json(response, output_file):
     results = []
     for result in response.results:
         alternative = result.alternatives[0]
+        print(result.language_code)
         results.append({
             "transcript": alternative.transcript,
-            "confidence": alternative.confidence
+            "confidence": alternative.confidence,
+            "language_code": result.language_code
         })
 
     with io.open(output_file, 'w') as json_file:
