@@ -45,7 +45,6 @@ def multi_transcribe_audio(filename, extname):
 
     return response.results, encoding, sample_rate
 
-
 def detect_language(lan_result):
 
     lang_code = multi_transcribe_audio()

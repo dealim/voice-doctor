@@ -44,6 +44,8 @@ def detect_language():
         language_check = result.language_code
     return language_check
 
+
+
 detect_lang = detect_language()
 print(detect_lang)
 
