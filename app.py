@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 from services.text_emotion_analysis import get_json_sentiment
-from services.speech_to_text import transcribe_audio
+from services.speech_to_text_lang import transcribe_audio
 from services.summary import text_summarization
 from services.document_ai_ocr import get_ocr_json
 from config import Config
@@ -9,7 +9,6 @@ import uuid
 import json
 
 app = Flask(__name__)
-
 app.config.from_object(Config)
 app.secret_key = os.urandom(24) # 세션을 위한 비밀키 설정
 current_dir = os.path.dirname(os.path.abspath(__file__))
