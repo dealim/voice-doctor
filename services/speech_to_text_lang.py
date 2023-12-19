@@ -93,5 +93,5 @@ def save_response_as_json(response, output_file):
             "language_code": result.language_code
         })
 
-    with io.open(output_file, 'w') as json_file:
-        json.dump(results, json_file, indent=4)
+    with io.open(output_file, 'w', encoding='utf-8') as json_file:
+        json.dump(results, json_file, ensure_ascii=False, indent=4)
