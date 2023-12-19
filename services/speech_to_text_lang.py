@@ -65,14 +65,16 @@ def transcribe_audio(filename, output_json_file, extname):
             "language_code": language_check,
             "model": "medical_dictation",
             "encoding": encoding,
-            "sample_rate_hertz": sample_rate
+            "sample_rate_hertz": sample_rate,
+            "enable_automatic_punctuation" : True,
         }
 
     elif language_check == "ko-KR" or "ja-JP":
         config = {
             "language_code": language_check,
             "encoding": encoding,
-            "sample_rate_hertz": sample_rate
+            "sample_rate_hertz": sample_rate,
+            "enable_automatic_punctuation": True,
         }
 
     response = client.recognize(config=config, audio=audio)
@@ -85,7 +87,6 @@ def save_response_as_json(response, output_file):
     results = []
     for result in response.results:
         alternative = result.alternatives[0]
-        print(result.language_code)
         results.append({
             "transcript": alternative.transcript,
             "confidence": alternative.confidence,
