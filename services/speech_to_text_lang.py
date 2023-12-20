@@ -37,6 +37,7 @@ def multi_transcribe_audio(filename, extname):
         audio_channel_count=1,
         language_code=first_lang,
         alternative_language_codes=alternate_languages,
+
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -59,24 +60,32 @@ def transcribe_audio(filename, output_json_file, extname):
         encoding = 'LINEAR16'
     elif (file_encoding == speech.RecognitionConfig.AudioEncoding.FLAC):
         encoding = 'FLAC'
-    # print("language_check : ",language_check)
-    if language_check == "en-US":
+    print("language_check : ",language_check)
+    if language_check == "en-US" or "ja-JP":
         config = {
             "language_code": language_check,
-            "model": "medical_dictation",
+            # "model": "medical_dictation",
             "encoding": encoding,
             "sample_rate_hertz": sample_rate,
             "enable_automatic_punctuation" : True,
+            "use_enhanced" : True,
+            # A model must be specified to use enhanced model.
+            "model" : "phone_call"
         }
 
-    elif language_check == "ko-KR" or "ja-JP":
+    elif language_check == "ko-KR":
+
         config = {
             "language_code": language_check,
             "encoding": encoding,
             "sample_rate_hertz": sample_rate,
             "enable_automatic_punctuation": True,
+            "use_enhanced": True,
+            # A model must be specified to use enhanced model.
+            "model" : "telephony"
         }
 
+    print("config : ", config)
     response = client.recognize(config=config, audio=audio)
     save_response_as_json(response, output_json_file)
 
@@ -93,5 +102,11 @@ def save_response_as_json(response, output_file):
             "language_code": result.language_code
         })
 
+<<<<<<< HEAD
+=======
+    # with io.open(output_file, 'w') as json_file:
+    #     json.dump(results, json_file, indent=4)
+
+>>>>>>> 999e27073ff2d4935244e10fa8a15556fe1fe1d3
     with io.open(output_file, 'w', encoding='utf-8') as json_file:
         json.dump(results, json_file, ensure_ascii=False, indent=4)
