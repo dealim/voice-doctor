@@ -551,7 +551,7 @@ a {
     }
 
     .downloadFiles {
-        bottom: 0.5rem;
+        bottom: -3rem;
     }
 
     .drop-area {
