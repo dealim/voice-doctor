@@ -7,6 +7,3 @@ google-cloud-storage
 pandas
 pydub
 langid
-
-
-pip install --upgrade google-cloud-aiplatform
