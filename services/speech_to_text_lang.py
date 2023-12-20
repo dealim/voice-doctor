@@ -59,7 +59,7 @@ def transcribe_audio(filename, output_json_file, extname):
         encoding = 'LINEAR16'
     elif (file_encoding == speech.RecognitionConfig.AudioEncoding.FLAC):
         encoding = 'FLAC'
-    print("language_check : ",language_check)
+    # print("language_check : ",language_check)
     if language_check == "en-US":
         config = {
             "language_code": language_check,
