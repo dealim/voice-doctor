@@ -131,6 +131,10 @@ strong {
     line-height: 2rem;
 }
 
+#overlay_summary_description1{
+    margin-right: 100px;
+}
+
 .overlay-questionnaire {
     display: flex;
     flex-direction: column;

@@ -101,12 +101,5 @@ def save_response_as_json(response, output_file):
             "confidence": alternative.confidence,
             "language_code": result.language_code
         })
-
-<<<<<<< HEAD
-=======
-    # with io.open(output_file, 'w') as json_file:
-    #     json.dump(results, json_file, indent=4)
-
->>>>>>> 999e27073ff2d4935244e10fa8a15556fe1fe1d3
     with io.open(output_file, 'w', encoding='utf-8') as json_file:
         json.dump(results, json_file, ensure_ascii=False, indent=4)

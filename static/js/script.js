@@ -585,28 +585,56 @@ function showOCR(data) {
     const summaryLeft1 = document.getElementById('overlay_summary_description1');
     const summaryLeft2 = document.getElementById('overlay_summary_description2');
     const summaryRight = document.querySelector('.overlay-summary-right .patient-details');
+    if(isJapaneseData(data)){
+        summaryLeft1.innerHTML = `
+                <strong>名前 :</strong> ${data["名前"]}<br>
+                <strong>診療日 :</strong> ${data["診療日"]}<br>
+                <strong>性別 :</strong> ${data["性別"]}<br>
+                <strong>生年月日 :</strong> ${data["生年月日"]}<br>
+            `;
 
-    // 좌측 요약 정보 구성
-    summaryLeft1.innerHTML = `
+        summaryLeft2.innerHTML = `
+                <strong>医師 :</strong> ${data["医師"]}<br>
+                <strong>患者 :</strong> ${data["患者"]}<br>
+                <strong>主訴 :</strong> ${data["主訴"]}<br>
+            `;
+
+        // 우측 상세 정보 구성
+        summaryRight.innerHTML = `
+                <strong>症状の発生時期 :</strong> ${data["症状の発生時期"]}<br>
+                <strong>けがの原因 :</strong> ${data["けがの原因"]}<br>
+                <strong>何が痛みを和らげますか? :</strong> ${data["何が痛みを和らげますか?"]}<br>
+                <strong>何が痛みを悪化させますか? :</strong> ${data["何が痛みを悪化させますか?"]}
+            `;
+
+
+    } else {
+        // 좌측 요약 정보 구성
+        summaryLeft1.innerHTML = `
                 <strong>Name :</strong> ${data["NAME"]}<br>
                 <strong>Date of Service :</strong> ${data["DATE OF SERVICE"]}<br>
                 <strong>Doctor :</strong> ${data["DOCTOR"]}<br>
-
             `;
 
-    summaryLeft2.innerHTML = `
+        summaryLeft2.innerHTML = `
                 <strong>Chief Complaint :</strong> ${data["CHIEF COMPLAINT"]}<br>
                 <strong>Date of Birth :</strong> ${data["DATE OF BIRTH"]}<br>
                 <strong>Patient :</strong> ${data["PATIENT"]}<br>
             `;
 
-    // 우측 상세 정보 구성
-    summaryRight.innerHTML = `
+        // 우측 상세 정보 구성
+        summaryRight.innerHTML = `
                 <strong>Onset of Symptoms :</strong> ${data["ONSET OF SYMPTOMS"]}<br>
                 <strong>Mechanism of Injury :</strong> ${data["MECHANISM OF INJURY"]}<br>
                 <strong>What makes the pain better? :</strong> ${data["What makes the pain better?"]}<br>
                 <strong>What makes the pain worse? :</strong> ${data["What makes the pain worse?"]}
             `;
+
+    }
+}
+
+function isJapaneseData(data) {
+    return data.hasOwnProperty("名前") || data.hasOwnProperty("診療日") || data.hasOwnProperty("生年月日");
 }
 
 // 클릭 이벤트 막는 함수
