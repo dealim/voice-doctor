@@ -23,10 +23,10 @@ def save_file(file_path, file_name, file_form, data):
         file_path = os.path.join(file_path, f"{file_name}.{file_form}")
 
         # 데이터를 파일에 쓰기
-        with open(file_path, 'w') as file:
+        with open(file_path, 'w', encoding='utf-8') as file:
             if file_form.lower() == 'json':
                 # JSON 형식으로 저장
-                json.dump(data, file)
+                json.dump(data, file, ensure_ascii=False)
             else:
                 # 다른 형식에 대한 처리를 추가할 수 있습니다.
                 file.write(str(data))
@@ -35,6 +35,3 @@ def save_file(file_path, file_name, file_form, data):
 
     except Exception as e:
         return f"Error: {str(e)}"
-
-
-
