@@ -61,7 +61,7 @@ def transcribe_audio(filename, output_json_file, extname):
     elif (file_encoding == speech.RecognitionConfig.AudioEncoding.FLAC):
         encoding = 'FLAC'
     print("language_check : ",language_check)
-    if language_check == "en-US" or "ja-JP":
+    if language_check == "en-us" or language_check == "ja-jp":
         config = {
             "language_code": language_check,
             # "model": "medical_dictation",
@@ -73,8 +73,8 @@ def transcribe_audio(filename, output_json_file, extname):
             "model" : "phone_call"
         }
 
-    elif language_check == "ko-KR":
 
+    elif language_check == "ko-kr":
         config = {
             "language_code": language_check,
             "encoding": encoding,
@@ -83,7 +83,9 @@ def transcribe_audio(filename, output_json_file, extname):
             "use_enhanced": True,
             # A model must be specified to use enhanced model.
             "model" : "telephony"
+            # "model": "latest_long"
         }
+
 
     print("config : ", config)
     response = client.recognize(config=config, audio=audio)
