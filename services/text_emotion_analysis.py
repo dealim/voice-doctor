@@ -28,7 +28,7 @@ def analyze_sentiment(text_content, stt_language_code):
             int : doc_sentiment_score, doc_sentiment_magnitude
             list : text_contents, senti_scores, senti_magnitude
     """
-
+    print("text_content: ", text_content)
     client = language_v2.LanguageServiceClient(
         client_options={"api_key": SECRET_API_KEY, "quota_project_id": PROJECT_ID}
     )
