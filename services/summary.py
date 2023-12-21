@@ -39,12 +39,13 @@ def text_summarization(
 
     model = TextGenerationModel.from_pretrained("text-bison")
     response = model.predict(
-        """Provide a summary for the following conversation in three sentences:""" + text,
+        """Provide a summary for the following conversation in three sentences. Please answer according to the language i entered:""" + text,
         **parameters,
     )
 
     # 요약 완료
     summary = response.text
+    print(summary)
     current_app.logger.info("[text_summarization] : 요약 완료")
 
     # 필요한 스코프 지정
@@ -71,10 +72,11 @@ def text_summarization(
         "documentContent": "{response.text}",
         "alternativeOutputFormat": "FHIR_BUNDLE"
     }}"""
+    data_encoded = json.dumps(data).encode('utf-8')
     url = "https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
 
     # Healthcare API 요청
-    response = requests.post(url, data=data, headers=header)
+    response = requests.post(url, data=data_encoded, headers=header)
     current_app.logger.info("Healthcare API 응답 코드 : " + str(response.status_code))
 
     # 요약, 키워드 요소들만 뽑아서 json으로 저장
@@ -91,8 +93,8 @@ def text_summarization(
         "keywords": filtered_entities
     }
 
-    with open(os.path.join(voice_dir, filename), 'w') as f:
-        json.dump(final_output, f)
+    with open(os.path.join(voice_dir, filename), 'w', encoding='utf-8') as f:
+        json.dump(final_output, f, ensure_ascii=False)
 
 if __name__ == "__main__":
     text_summarization(current_dir + "/patient_text_request.json")

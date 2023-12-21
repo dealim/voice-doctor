@@ -93,13 +93,24 @@ def transcribe_audio(filename, output_json_file, extname):
 
 
 def save_response_as_json(response, output_file):
-    results = []
+    combined_transcript = ''
+    combined_confidence = 0
+    num_results = 0
+
     for result in response.results:
         alternative = result.alternatives[0]
-        results.append({
-            "transcript": alternative.transcript,
-            "confidence": alternative.confidence,
-            "language_code": result.language_code
-        })
-    with io.open(output_file, 'w', encoding='utf-8') as json_file:
-        json.dump(results, json_file, ensure_ascii=False, indent=4)
+        combined_transcript += alternative.transcript + ' '
+        combined_confidence += alternative.confidence
+        num_results += 1
+
+    if num_results > 0:
+        combined_confidence /= num_results  # 평균 신뢰도 계산
+
+    combined_result = {
+        "transcript": combined_transcript.strip(),
+        "confidence": combined_confidence,
+        "language_code": response.results[0].language_code if num_results > 0 else None
+    }
+
+    with open(output_file, 'w', encoding='utf-8') as json_file:
+        json.dump([combined_result], json_file, ensure_ascii=False, indent=4)
