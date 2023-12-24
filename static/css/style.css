@@ -519,12 +519,16 @@ a {
         transform: translateX(-50%);
     }
 
+    .body{
+        min-height: 100vh;
+    }
+
     .body table {
         word-break: break-word;
     }
 
     .overlay {
-        padding: 2rem;
+        padding: 1.5rem;
         flex-direction: column;
         max-height: none;
     }
@@ -552,7 +556,7 @@ a {
     }
 
     .downloadFiles {
-        bottom: -3rem;
+        bottom: -4rem;
     }
 
     .drop-area {
