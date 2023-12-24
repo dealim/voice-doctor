@@ -487,7 +487,6 @@ a {
     .overlay__description {
         font-size: 0.875rem;
         line-height: 1.5rem;
-        margin-bottom: 2.5rem;
     }
 
     .drop-area {
@@ -528,7 +527,7 @@ a {
     }
 
     .overlay {
-        padding: 1rem;
+        padding: 1.5rem;
         flex-direction: column;
         max-height: none;
     }
