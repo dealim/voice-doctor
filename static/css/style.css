@@ -250,7 +250,8 @@ a {
     position: absolute;
     bottom: 2rem;
     flex-wrap: nowrap;
-    display: flex;
+    display: inline-block;
+    text-align: center;
 }
 
 .downloadFiles a {
