@@ -27,14 +27,32 @@ def index():
 def main_page():
     return render_template('main_page.html')
 
+@app.route('/show/stt')
+def show_stt():
+    return render_template('show_text_stt.html')
 
-@app.route('/show/voicetext')
-def show_voicetext():
+@app.route('/get/stt')
+def get_stt():
+    session_id = session['session_id']
+    json_file_name = session_id + '_stt.json'
+    app.logger.info(json_file_name)
+    file_path = os.path.join(voice_dir, json_file_name)
+
+    if os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as file:
+            json_data = json.load(file)
+        return jsonify(json_data)
+    else:
+        return jsonify({"error": "File not found"}), 404
+
+
+@app.route('/show/summary')
+def show_summary():
     return render_template('show_text_summary.html')
 
 
-@app.route('/get/voicetext')
-def get_voicetext():
+@app.route('/get/summary')
+def get_summary():
     session_id = session['session_id']
     json_file_name = session_id + '_health_response.json'
     app.logger.info(json_file_name)
@@ -82,7 +100,6 @@ def get_ocr():
         return jsonify(json_data)
     else:
         return jsonify({"error": "File not found"}), 404
-
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():

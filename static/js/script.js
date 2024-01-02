@@ -1,22 +1,30 @@
 // 첫 페이지 로드
-document.addEventListener('DOMContentLoaded', (event) => {
+$(() => {
     loadContent('/main');
-});
+})
 
 // 버튼별 페이지 이동
-document.getElementById('dynamicContent').addEventListener('click', function (e) {
-    if (e.target.id === 'viewTextSummary') {
-        e.preventDefault();
-        loadContent('/show/voicetext');
-    }
-    if (e.target.id === 'viewEmotionAnalysis') {
-        e.preventDefault();
-        loadContent('/show/emotion');
-    }
-    if (e.target.id === 'viewOcrAnalysis') {
-        e.preventDefault();
-        loadContent('/show/ocr');
-    }
+$(()=>{
+    $('#dynamicContent').on('click', function (e) {
+        var target = $(e.target);
+
+        if (target.is('#viewTextSummary')) {
+            e.preventDefault();
+            loadContent('/show/summary');
+        }
+        if (target.is('#viewEmotionAnalysis')) {
+            e.preventDefault();
+            loadContent('/show/emotion');
+        }
+        if (target.is('#viewOcrAnalysis')) {
+            e.preventDefault();
+            loadContent('/show/ocr');
+        }
+        if(target.is('#viewStt')) {
+            e.preventDefault();
+            loadContent('/show/stt');
+        }
+    });
 });
 
 // 토글
@@ -99,9 +107,9 @@ function loadContent(url) {
                 dynamicContent.innerHTML = html;
                 dynamicContent.classList.remove('hidden');
 
-                // '/show/voicetext' 페이지가 로드된 후 추가적인 JSON 데이터 요청
-                if (url === '/show/voicetext') {
-                    fetch('/get/voicetext')
+                // '/show/summary' 페이지가 로드된 후 추가적인 JSON 데이터 요청
+                if (url === '/show/summary') {
+                    fetch('/get/summary')
                         .then(response => response.json())
                         .then(data => {
                             const descriptionElement = document.querySelector('.overlay_summary_description');
@@ -158,7 +166,19 @@ function loadContent(url) {
                         })
                 }
 
-                setupArrowClickListener();
+                if (url === '/show/stt') {
+                    fetch('/get/stt')
+                        .then(response => response.json())
+                        .then(data => {
+                            const descriptionElement = document.querySelector('.overlay_summary_description');
+                            console.log(data);
+                            if (data && data[0].transcript) {
+                                descriptionElement.innerHTML = data[0].transcript;
+                            }
+                        })
+                }
+
+                setupArrowClickListener(url);
 
                 // 드래그앤드랍 기능 셋업
                 if (url === '/main') {
@@ -169,14 +189,19 @@ function loadContent(url) {
 }
 
 // 화살표 클릭 이벤트 리스너 설정 함수
-function setupArrowClickListener() {
+function setupArrowClickListener(url) {
     const arrowContainer = document.querySelector('.arrow-container');
     if (arrowContainer) {
         arrowContainer.addEventListener('click', function (e) {
-            // Arrow 부분이 클릭되면 main_page 로드
+
             if (e.target.closest('.arrow')) {
                 e.preventDefault();
-                loadContent('/main');
+                console.log(url);
+                if(url === '/show/stt'){
+                    loadContent('/show/summary');
+                }else{
+                    loadContent('/main');
+                }
             }
         });
     }
