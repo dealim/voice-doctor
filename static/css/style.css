@@ -188,6 +188,13 @@ strong {
     margin-left: 0.375rem;
 }
 
+#viewStt {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 10rem;
+}
+
 a {
     text-decoration: none;
     color: var(--dark-color);
@@ -512,6 +519,12 @@ a {
 }
 
 @media only screen and (max-width: 600px) {
+    #viewStt {
+        position: relative;
+        bottom: 0;
+        right: 0;
+    }
+
     .arrow-container {
         bottom: -10%;
         left: 50%;
