@@ -178,12 +178,12 @@ function loadContent(url) {
                         })
                 }
 
-                setupArrowClickListener(url);
-
                 // 드래그앤드랍 기능 셋업
                 if (url === '/main') {
                     setupFileDragAndDrop();
                 }
+
+                setupArrowClickListener(url);
             });
     }, 300); // CSS 트랜지션 시간과 일치
 }
@@ -207,17 +207,12 @@ function setupArrowClickListener(url) {
     }
 }
 
-
+// 보이스 파일 드래그 앤 드롭
 function setupFileDragAndDrop() {
-    // 보이스 파일 드래그 앤 드롭
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const fileInputLink = document.getElementById('fileInputLink');
 
-    // 녹음을 위한 변수 선언
-    let audioStream;
-    let recorder;
-    let isRecording = false;
 
     // 파일 입력 필드 열기
     fileInputLink.addEventListener('click', (e) => {
@@ -271,149 +266,152 @@ function setupFileDragAndDrop() {
         ([...files]).forEach(uploadFile);
     }
 
-    // 파일 업로드 하기
-    function uploadFile(file) {
-        let formData = new FormData();
-        formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
-
-        // 업로드 애니메이션 및 메시지 표시
-        dropArea.classList.add('uploading');
-        document.getElementById('loadingSpinner').style.display = 'block';
-        document.getElementById('dropAreaMessage').style.display = 'none';
-        document.getElementById('voice-recording-icon').style.display = 'none';
-
-        // 파일 업로드 요청
-        fetch('/api/upload', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(json => Promise.reject(new Error(json.error || 'Unknown server error')));
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.message === 'File uploaded successfully!') {
-                    // 업로드 완료시 스피너 숨기기
-                    document.getElementById('loadingSpinner').style.display = 'none';
-                    dropArea.classList.remove('uploading');
-                    dropArea.classList.add('uploaded');
-
-                    // 업로드 완료 메시지 표시
-                    const completeMessage = document.getElementById('completeMessage');
-                    completeMessage.style.display = 'block';
-
-                    // 3초 후에 'uploaded' 클래스 제거 + 원래대로 돌리기
-                    setTimeout(() => {
-                        dropArea.classList.remove('uploaded');
-                        document.getElementById('dropAreaMessage').style.display = 'block';
-                        document.getElementById('voice-recording-icon').style.display = 'block';
-                        completeMessage.style.display = 'none';
-                    }, 3000);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error.message);
-                document.getElementById('loadingSpinner').style.display = 'none';
-                document.getElementById('failedMessage').style.display = 'block';
-                dropArea.classList.remove('uploading');
-                dropArea.classList.add('failed');
-
-                setTimeout(() => {
-                    dropArea.classList.remove('failed');
-                    document.getElementById('failedMessage').style.display = 'none';
-                    document.getElementById('dropAreaMessage').style.display = 'block';
-                    document.getElementById('voice-recording-icon').style.display = 'block';
-                }, 3000);
-
-            });
-    }
-
-    // 녹음기 아이콘에 녹음 기능
-    document.body.addEventListener('click', function (e) {
-        // 클릭된 요소가 voice-recording-icon인지 확인
-        if (e.target.matches('#voice-recording-icon')) {
-            // 녹음 상태 확인 후 시작 또는 중지
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
-        }
-    });
-
-    // 사용자의 오디오 스트림을 얻는 함수
-    function startRecording() {
-        let audioType = 'audio/wav';
-
-        navigator.mediaDevices.getUserMedia({audio: true})
-            .then(stream => {
-                audioStream = stream;
-                // RecordRTC 설정
-                recorder = new RecordRTC(audioStream, {
-                    type: 'audio',
-                    mimeType: audioType,
-                    recorderType: RecordRTC.StereoAudioRecorder, // StereoAudioRecorder 사용
-                    sampleRate: 44100,
-                    desiredSampRate: 44100, // 원하는 샘플레이트 설정
-                    numberOfAudioChannels: 1 // 모노 채널 설정
-                });
-
-                // 펄스 애니메이션 클래스 추가
-                document.getElementById("voice-recording-icon").src = "static/images/recording-red.svg";
-                document.getElementById("voice-recording-icon").classList.add("pulse-animation");
-
-                recorder.startRecording();
-
-                isRecording = true;
-            }).catch(error => {
-            console.error("오디오 녹음을 시작할 수 없습니다.", error);
-        });
-    }
-
-    // 녹음 중지 함수
-    function stopRecording() {
-        recorder.stopRecording(() => {
-            let audioBlob = recorder.getBlob();
-
-            // 오디오 처리 및 업로드 로직
-            uploadAudio(audioBlob, 'wav');
-
-            // 오디오 파일 분석 시작
-            uploadFile(audioBlob, 'wav');
-
-            // 미디어 스트림 트랙 종료
-            audioStream.getAudioTracks().forEach(track => track.stop());
-
-            // UI 업데이트 (예: 녹음 중지 상태 표시)
-            document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
-            document.getElementById("voice-recording-icon").src = "static/images/recording.svg";
-            isRecording = false;
-
-        });
-    }
-
-    // 녹음 파일(blob)을 서버로 전송하기
-    function uploadAudio(blob, extName) {
-        const formData = new FormData();
-        formData.append('audio', blob, "recording." + extName);
-
-        fetch('/api/record', { // Flask 서버의 엔드포인트
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.text())
-            .then(data => {
-                console.log('Upload success:', data);
-            })
-            .catch(error => {
-                console.error('Upload failed:', error);
-            });
-    }
-
     // 토글 설정
     document.querySelector('.toggle').addEventListener('click', toggle);
+}
+
+// 파일 업로드 하기
+function uploadFile(file) {
+    let formData = new FormData();
+    formData.append('file', file); // 'file'은 서버에서 받을 때 사용할 키
+
+    // 업로드 애니메이션 및 메시지 표시
+    dropArea.classList.add('uploading');
+    document.getElementById('loadingSpinner').style.display = 'block';
+    document.getElementById('dropAreaMessage').style.display = 'none';
+    document.getElementById('voice-recording-icon').style.display = 'none';
+
+    // 파일 업로드 요청
+    fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(json => Promise.reject(new Error(json.error || 'Unknown server error')));
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.message === 'File uploaded successfully!') {
+                // 업로드 완료시 스피너 숨기기
+                document.getElementById('loadingSpinner').style.display = 'none';
+                dropArea.classList.remove('uploading');
+                dropArea.classList.add('uploaded');
+
+                // 업로드 완료 메시지 표시
+                const completeMessage = document.getElementById('completeMessage');
+                completeMessage.style.display = 'block';
+
+                // 3초 후에 'uploaded' 클래스 제거 + 원래대로 돌리기
+                setTimeout(() => {
+                    dropArea.classList.remove('uploaded');
+                    document.getElementById('dropAreaMessage').style.display = 'block';
+                    document.getElementById('voice-recording-icon').style.display = 'block';
+                    completeMessage.style.display = 'none';
+                }, 3000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('failedMessage').style.display = 'block';
+            dropArea.classList.remove('uploading');
+            dropArea.classList.add('failed');
+
+            setTimeout(() => {
+                dropArea.classList.remove('failed');
+                document.getElementById('failedMessage').style.display = 'none';
+                document.getElementById('dropAreaMessage').style.display = 'block';
+                document.getElementById('voice-recording-icon').style.display = 'block';
+            }, 3000);
+
+        });
+}
+
+// 녹음기 아이콘에 녹음 기능
+let audioStream;
+let recorder;
+let isRecording = false;
+$(document.body).click(function (e){
+    // 클릭된 요소가 voice-recording-icon인지 확인
+    if (e.target.matches('#voice-recording-icon')) {
+        // 녹음 상태 확인 후 시작 또는 중지
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
+    }
+});
+
+// 사용자의 오디오 스트림을 얻는 함수
+function startRecording() {
+    let audioType = 'audio/wav';
+
+    navigator.mediaDevices.getUserMedia({audio: true})
+        .then(stream => {
+            audioStream = stream;
+            // RecordRTC 설정
+            recorder = new RecordRTC(audioStream, {
+                type: 'audio',
+                mimeType: audioType,
+                recorderType: RecordRTC.StereoAudioRecorder, // StereoAudioRecorder 사용
+                sampleRate: 44100,
+                desiredSampRate: 44100, // 원하는 샘플레이트 설정
+                numberOfAudioChannels: 1 // 모노 채널 설정
+            });
+
+            // 펄스 애니메이션 클래스 추가
+            document.getElementById("voice-recording-icon").src = "static/images/recording-red.svg";
+            document.getElementById("voice-recording-icon").classList.add("pulse-animation");
+
+            recorder.startRecording();
+
+            isRecording = true;
+        }).catch(error => {
+        console.error("오디오 녹음을 시작할 수 없습니다.", error);
+    });
+}
+
+// 녹음 중지 함수
+function stopRecording() {
+    recorder.stopRecording(() => {
+        let audioBlob = recorder.getBlob();
+
+        // 오디오 처리 및 업로드 로직
+        uploadAudio(audioBlob, 'wav');
+
+        // 오디오 파일 분석 시작
+        uploadFile(audioBlob, 'wav');
+
+        // 미디어 스트림 트랙 종료
+        audioStream.getAudioTracks().forEach(track => track.stop());
+
+        // UI 업데이트 (예: 녹음 중지 상태 표시)
+        document.getElementById("voice-recording-icon").classList.remove("pulse-animation");
+        document.getElementById("voice-recording-icon").src = "static/images/recording.svg";
+        isRecording = false;
+
+    });
+}
+
+// 녹음 파일(blob)을 서버로 전송하기
+function uploadAudio(blob, extName) {
+    const formData = new FormData();
+    formData.append('audio', blob, "recording." + extName);
+
+    fetch('/api/record', { // Flask 서버의 엔드포인트
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log('Upload success:', data);
+        })
+        .catch(error => {
+            console.error('Upload failed:', error);
+        });
 }
 
 
