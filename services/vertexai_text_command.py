@@ -44,5 +44,5 @@ def text_generation(
 
     # text generation 완료
     summary = response.text
-    current_app.logger.info("text generation 완료")
+    current_app.logger.info("vertex ai text generation 완료")
     return summary

@@ -3,6 +3,8 @@ from services.text_emotion_analysis import get_json_sentiment
 from services.speech_to_text_lang import transcribe_audio
 from services.summary import text_summarization
 from services.document_ai_ocr import get_ocr_json
+from services.filesave import save_file
+from services.vertexai_text_command import text_generation
 from config import Config
 import os
 import uuid
@@ -140,6 +142,7 @@ def upload_file():
                 json_data = json.load(file)
                 # TODO: JSON에 transcript가 정의 되지 않았을 때 오류발생
                 text = json_data[0]['transcript']
+                language_code = json_data[0]['language_code']
 
             # stt.json을 분석 후 [파일이름]_emotion.json 으로 변환
             emotion_name = session_id + '_emotion.json'
@@ -148,7 +151,7 @@ def upload_file():
 
             # stt.json을 분석 후 [파일이름]_health_response.json 으로 변환
             file_health_response = session_id + '_health_response.json'
-            text_summarization(file_health_response, 0.0, 'applicationteam02', 'us-central1', text)
+            text_summarization(file_health_response, 0.0, 'us-central1', text, language_code)
             app.logger.info(file_health_response + " : 헬스케어 요약 완료")
 
             return jsonify({'message': 'File uploaded successfully!', 'file_name': file_name})

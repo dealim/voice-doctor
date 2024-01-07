@@ -1,100 +1,83 @@
-# pip install google-cloud-aiplatform
+# # pip install google-cloud-aiplatform
 import os
+from services.vertexai_text_command import text_generation
 import json
 from flask import current_app
-import subprocess
+# import subprocess
 
-import google.auth
-import vertexai
-import requests
-from vertexai.preview.language_models import TextGenerationModel
-from .settings import get_secret, get_projectId
-from google.auth.transport.requests import Request
-from google.oauth2 import service_account
+# import google.auth
+# import vertexai
+# import requests
+# from vertexai.preview.language_models import TextGenerationModel
+# from .settings import get_secret, get_projectId
+# from google.auth.transport.requests import Request
+# from google.oauth2 import service_account
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir, 'voice')
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
-PROJ = get_projectId()
+# PROJ = get_projectId()
 
+"""
+텍스트 요약을 위해 
+text(stt로 말이 변환된 것) 입력 -> text_generation(command:"language_code에 맞게 요약해라") -> 파일 저장하는 코드
 
+* text_generation() : vertex ai에게 command를 주고 답변을 받음
+
+"""
 def text_summarization(
         filename: str,
         temperature: float,
-        project_id: str,
         location: str,
         text: str,
+        language_code : str
 ) -> str:
     """Summarization Example with a Large Language Model"""
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
 
-    vertexai.init(project=project_id, location=location)
-    parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
-        "top_p": 0.95,
-        # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
-    }
-
-    model = TextGenerationModel.from_pretrained("text-bison")
-    response = model.predict(
-        """Provide a summary for the following conversation in three sentences. Please answer according to the language i entered:""" + text,
-        **parameters,
-    )
-
-    # 요약 완료
-    summary = response.text
+    # 1. 각 언어에 따라 명령 다르게 진행 (내용은 같으나, 언어만 다름) : 단순 요약
+    if language_code == "en-us":
+        command = """You should be an assistant nurse so that the doctor can see the patient's questionnaire easily. The following is what the patient asks. Please summarize the article briefly about the patient's symptoms and write it in one paragraph. Write "<h3><b>Summary</b></h3>" to begin with. If the sentence entered is too short, just organize it and show it to me.: """
+    elif language_code == "ja-jp":
+        command = """医師が患者の問診内容を見やすいように、あなたが補助看護師になってくれます。 次の内容は患者が問診する内容です。 患者の症状と関連して文章を簡単に要約し、一つの段落で作成してください。 始まりは"<h3><b>要約</b></h3>と書いてください。もし入力された文章が短すぎるなら、そのまま整理して見せて。: """
+    elif language_code == "ko-kr":
+        command = """의사가 환자의 문진 내용을 보기 편하도록 너가 보조간호사가 되어줘. 다음 내용은 환자가 문진하는 내용이야. 환자의 증상과 관련해서 글을 간략하게 요약하고, 하나의 문단으로 작성해줘. 시작은 "<h3><b>요약</b></h3>"이라고 적어줘. 만약 입력된 문장이 너무 짧다면 그냥 정리해서 보여줘.: """  
+    # 요약
+    summary = text_generation(temperature, location, text, command)
     print(summary)
     current_app.logger.info("[text_summarization] : 요약 완료")
 
-    # 필요한 스코프 지정
-    scopes = ['https://www.googleapis.com/auth/cloud-platform']
+    # 2. 각 언어에 따라 명령 다르게 진행 (내용은 같으나, 언어만 다름) : 질병 예측
+    if language_code == "en-us":
+        command = """You become an assistant nurse so that the doctor can see the patient's questionnaire easily. The following is about the patient's questionnaire. If the patient's symptoms can predict the disease, tell me only three suspected diseases and why. Please write "<h3><b>Top 3 Suspected Diseases Based on Patient Symptoms</b></h3>". Organize the things that can be organized into a list using <ol><li> or <ul><li> among the html tags, and write down the <b> tag or <br> tag so that the user can easily and neatly organize them.: """
+    elif language_code == "ja-jp":
+        command = """医師が患者の問診内容を見やすいように、あなたが補助看護師になってくれ。 次の内容は患者が問診する内容だよ。 患者の症状が病気を予測できれば、疑いのある病気3つとその理由についてだけ言ってくれ。 始まりは「<h3><b>患者の症状に基づくトップ3疑わしい疾患</b></h3>」と書いてくれ。 リストにまとめられるものはhtmlタグの中で<ol><li>あるいは<ul><li>を利用して整理し、ユーザーが見やすくきれいに整理できるように<b>タグや<br>タグも書いてね : """
+    elif language_code == "ko-kr":
+        command = """의사가 환자의 문진 내용을 보기 편하도록 너가 보조간호사가 되어줘. 다음 내용은 환자가 문진하는 내용이야. 환자의 증상이 질병을 예측할 수 있으면 의심 질병 3개와 그 이유에 대해서만 말해줘. 시작은 "<h3><b>환자 증상 기반 Top 3 의심 질환</b></h3>"이라고 적어줘. 리스트로 정리될 만한 것들은 html 태그 중에서 <ol><li> 혹은 <ul><li> 이용해서 정리해주고, 사용자가 보기 편하고 깔끔하게 정리할 수 있도록 <b>태그나 <br> 태그도 써줘 : """  
+    # 질병 예측
+    summary_predict_disease = text_generation(temperature, location, text, command)
+    print(summary_predict_disease)
+    current_app.logger.info("[text_summarization] : 질병 예측 완료")
 
-    # 서비스 계정을 사용하여 인증 정보 생성
-    credentials = service_account.Credentials.from_service_account_file(
-        get_secret("HEALTH"),
-        scopes=scopes
-    )
-
-    # 기존 로직을 유지하면서 credentials 객체를 사용하여 헤더 설정
-    credentials.refresh(Request())
-    header = {
-        "Authorization": f"Bearer {credentials.token}",
-        "Content-Type": "application/json"
-    }
-
-    # print_token = subprocess.run('gcloud auth print-access-token', shell=True, capture_output=True, text=True).stdout.strip()
-    # header={"Authorization": f"Bearer {print_token}", "Content-Type": "application/json"}
-
-    # 데이터 및 URL 설정
-    data = f"""{{
-        "documentContent": "{response.text}",
-        "alternativeOutputFormat": "FHIR_BUNDLE"
-    }}"""
-    data_encoded = json.dumps(data).encode('utf-8')
-    url = "https://healthcare.googleapis.com/v1/projects/applicationteam02/locations/us-central1/services/nlp:analyzeEntities"
-
-    # Healthcare API 요청
-    response = requests.post(url, data=data_encoded, headers=header)
-    current_app.logger.info("Healthcare API 응답 코드 : " + str(response.status_code))
-
-    # 요약, 키워드 요소들만 뽑아서 json으로 저장
-    response_json = response.json()
-
-    # entityMentions 키의 존재 여부 확인
-    if "entityMentions" in response_json:
-        filtered_entities = [mention for mention in response_json["entityMentions"] if "mentionId" in mention.keys()]
-    else:
-        filtered_entities = []
-
+    # 3. 각 언어에 따라 명령 다르게 진행 (내용은 같으나, 언어만 다름) : 추가 질문
+    if language_code == "en-us":
+        command = """Make it easy for the doctor to review the patient's medical history by assisting as a nurse. The following is what the patient is documenting. Provide 10 additional questions that can help predict illnesses based on the symptoms. Start with "<h3><b>Top 10 Additional Questions for a More Definitive Diagnosis</b></h3>". Use HTML tags like <ol><li> or <ul><li> to organize the list neatly. Make it user-friendly and well-organized.: """
+    elif language_code == "ja-jp":
+        command = """医師が患者の問診内容を見やすくするために、あなたは看護助手としてお手伝いしてください。以下は患者が問診する内容です。患者の症状から病気を予測できるように、追加できる質問についてだけ10個教えてください。始めは「<h3><b>より確定的な診断のためのトップ10追加質問</b></h3>」と書いてください。整理されるものは<ol><li>または<ul><li>のHTMLタグを使用して整理し、ユーザーが見やすくきれいにまとめて書いてください。: """
+    elif language_code == "ko-kr":
+        command = """의사가 환자의 문진 내용을 보기 편하도록 너가 보조간호사가 되어줘. 다음 내용은 환자가 문진하는 내용이야. 환자의 증상이 질병을 예측할 수 있도록 추가로 할 수 있는 질문에 대해서만 10개 말해줘. 시작은 "<h3><b>환자 응답을 확장하는데 도움되는 10가지 질문</b></h3>"이라고 적어줘. 리스트로 정리될 만한 것들은 html 태그 중에서 <ol><li> 혹은 <ul><li> 이용해서 정리해주고, 사용자가 보기 편하고 깔끔하게 정리해서 써줘. : """  
+    # 추가 질문
+    summary_add_questions = text_generation(temperature, location, text, command)
+    print(summary_add_questions)
+    current_app.logger.info("[text_summarization] : 추가 질문 생성 완료")
+    
+    # 각 질문별 답변 따로 저장 (html 태그 포함되어서 저장되어 있음)
     final_output = {
-        "summary": summary,
-        "keywords": filtered_entities
+    "summary": summary + "<br><br>" + summary_predict_disease + "<br><br>" + summary_add_questions,
+    "summary_predict_disease" : summary_predict_disease,
+    "summary_add_questions" : summary_add_questions,
     }
 
     with open(os.path.join(voice_dir, filename), 'w', encoding='utf-8') as f:
         json.dump(final_output, f, ensure_ascii=False)
 
-if __name__ == "__main__":
-    text_summarization(current_dir + "/patient_text_request.json")
+ 

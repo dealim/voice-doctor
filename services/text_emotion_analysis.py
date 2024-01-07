@@ -78,26 +78,6 @@ def analyze_sentiment(text_content, stt_language_code):
         "senti_magnitudes" : senti_magnitudes
     }
 
-    """
-    # input 문장들의 종합적인 sentiment score, manitude
-    print("="*50)
-    print(f"전체 감정 score: {doc_sentiment_score}")
-    print(f"전체 감정 magnitude: {doc_sentiment_magnitude}")
-    print("="*50)
-    
-    # input 문장들 각각에 대한 sentiment score, manitude
-    for sentence in response.sentences:
-        print(f"문장: {sentence.text.content}")
-        print(f"감정 score: {sentence.sentiment.score}")
-        print(f"감정 magnitude: {sentence.sentiment.magnitude}")
-        print()
-
-    # Get the language of the text, which will be the same as
-    # the language specified in the request or, if not specified,
-    # the automatically-detected language.
-    print(f"언어: {response.language_code}")
-    """
-
     return sentiment_result
 
 
