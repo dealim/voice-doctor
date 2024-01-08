@@ -1,22 +1,10 @@
-# # pip install google-cloud-aiplatform
 import os
 from services.vertexai_text_command import text_generation
 import json
 from flask import current_app
-# import subprocess
-
-# import google.auth
-# import vertexai
-# import requests
-# from vertexai.preview.language_models import TextGenerationModel
-# from .settings import get_secret, get_projectId
-# from google.auth.transport.requests import Request
-# from google.oauth2 import service_account
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 voice_dir = os.path.join(current_dir, 'voice')
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("SUMMARY")
-# PROJ = get_projectId()
 
 """
 텍스트 요약을 위해 

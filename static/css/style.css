@@ -477,7 +477,7 @@ a {
 
 @media only screen and (max-width: 840px) {
     body {
-        padding: 1.5rem;
+        padding: 0.5rem;
     }
 
     .overlay {
@@ -540,7 +540,7 @@ a {
     }
 
     .overlay {
-        padding: 1.5rem;
+        padding: 2rem;
         flex-direction: column;
         max-height: none;
     }

@@ -14,7 +14,7 @@ except Exception as e:
     print("파일 읽기 오류:", e)
 
 def get_projectId():
-    return "applicationteam02"
+    return "voicedoctor"
 
 
 def get_secret(setting):

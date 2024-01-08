@@ -6,11 +6,11 @@ import os
 import time
 import json
 from flask import current_app
+from .settings import get_projectId, get_secret
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(parent_dir, "keys/applicationteam02-cf34308f779b.json")
-
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("STT")
 
 def multi_transcribe_audio(filename, extname):
     client = speech.SpeechClient()

@@ -20,7 +20,7 @@ $(()=>{
             e.preventDefault();
             loadContent('/show/ocr');
         }
-        if(target.is('#viewStt')) {
+        if (target.is('#viewStt')) {
             e.preventDefault();
             loadContent('/show/stt');
         }
