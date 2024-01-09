@@ -23,7 +23,7 @@ jobs:
         timeout : 60s
         script: |
           echo "##### START #####"
-          cd ~/GCP-TEAM4
+          cd ~/VoiceDoctor
           
           echo "##### GIT PULL #####"
           git pull origin main
