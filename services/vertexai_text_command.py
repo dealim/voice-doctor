@@ -23,8 +23,8 @@ def text_generation(
     """Summarization Example with a Large Language Model"""
     
     # 같은 이름의 다른 환경 변수와 중복 시, 에러나기 때문에 함수 안으로 이동
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("HEALTH")
-    
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("VERTEX_AI")
+
     vertexai.init(project=get_projectId(), location=location)
     
     parameters = {
