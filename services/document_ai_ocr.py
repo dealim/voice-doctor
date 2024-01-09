@@ -9,13 +9,14 @@ import langid
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("OCR")
 
 project_id = get_projectId()
 location = 'us'  # Format is 'us' or 'eu'
-processor_id = '3e3e9b508026de35'  # Create processor in Cloud Console
+processor_id = '8d319a64be776b'  # Create processor in Cloud Console
 
 def process_document(file_path: str, mime_type: str) -> str:
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_secret("OCR")
+
     """
     Processes a document using the Document AI API.
     """
