@@ -119,21 +119,21 @@ function loadContent(url) {
                                 descriptionElement.innerHTML = data.summary;
                             }
 
-                            // Keywords 및 신뢰도 표시
-                            if (data && data.keywords) {
-                                const labels = data.keywords.map(keyword => keyword.text.content);
-                                const confidences = data.keywords.map(keyword => {
-                                    // certaintyAssessment 객체와 confidence 속성이 있는지 확인
-                                    if (keyword.certaintyAssessment && typeof keyword.certaintyAssessment.confidence === 'number') {
-                                        return keyword.certaintyAssessment.confidence.toFixed(3);
-                                    } else {
-                                        // certaintyAssessment 객체 또는 confidence 속성이 없는 경우 안전한 기본값 반환
-                                        return '0.000';
-                                    }
-                                });
-
-                                createKeywordsChart(labels, confidences);
-                            }
+                            // // Keywords 및 신뢰도 표시
+                            // if (data && data.keywords) {
+                            //     const labels = data.keywords.map(keyword => keyword.text.content);
+                            //     const confidences = data.keywords.map(keyword => {
+                            //         // certaintyAssessment 객체와 confidence 속성이 있는지 확인
+                            //         if (keyword.certaintyAssessment && typeof keyword.certaintyAssessment.confidence === 'number') {
+                            //             return keyword.certaintyAssessment.confidence.toFixed(3);
+                            //         } else {
+                            //             // certaintyAssessment 객체 또는 confidence 속성이 없는 경우 안전한 기본값 반환
+                            //             return '0.000';
+                            //         }
+                            //     });
+                            //
+                            //     createKeywordsChart(labels, confidences);
+                            // }
                         })
                         .catch(error => {
                             console.error('Error fetching voice text data:', error);
@@ -212,7 +212,6 @@ function setupFileDragAndDrop() {
     const dropArea = document.getElementById('dropArea');
     const fileInput = document.getElementById('fileInput');
     const fileInputLink = document.getElementById('fileInputLink');
-
 
     // 파일 입력 필드 열기
     fileInputLink.addEventListener('click', (e) => {

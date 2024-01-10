@@ -37,7 +37,6 @@ def multi_transcribe_audio(filename, extname):
         audio_channel_count=1,
         language_code=first_lang,
         alternative_language_codes=alternate_languages,
-
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -60,7 +59,7 @@ def transcribe_audio(filename, output_json_file, extname):
         encoding = 'LINEAR16'
     elif (file_encoding == speech.RecognitionConfig.AudioEncoding.FLAC):
         encoding = 'FLAC'
-    print("language_check : ",language_check)
+
     if language_check == "en-us" or language_check == "ja-jp":
         config = {
             "language_code": language_check,
