@@ -13,9 +13,6 @@ Google Cloud Platform을 적극 활용하여 개발했습니다.
 지원언어: 음성인식 - 한국어, 영어, 일본어 / pdf 업로드 - 영어, 일본어
 ![기능구조](./assets/기능구조.png)
 
-### 시연 영상
-[![Video Label](http://img.youtube.com/vi/4RMyuYGm1PM/0.jpg)](https://youtu.be/4RMyuYGm1PM)
-
 ### GCP API
 - Speech to Text API
 - Natural Language API
@@ -61,3 +58,6 @@ GCP-TEAM2/
 
 ### 참고
 [노션](https://far-fossa-e64.notion.site/94272df5c9344a48bc73169efd122623?pvs=4)
+
+### 시연 영상
+[![Video Label](http://img.youtube.com/vi/4RMyuYGm1PM/0.jpg)](https://youtu.be/4RMyuYGm1PM)
