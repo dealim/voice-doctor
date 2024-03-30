@@ -113,3 +113,4 @@ voice-doctor/
 
 ## License
 MIT License
+Copyright (c) 2023 dealim
