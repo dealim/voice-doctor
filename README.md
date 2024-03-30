@@ -1,31 +1,80 @@
-# VoiceDoctor 🧑🏼‍⚕️
-
-### Members
-강승구, 김민지, 김지창, 유혜린
-
-### 프로젝트 진행 기간
-2023.11.17 ~ 2023.11.27
-
-### 개요
+## Description
 환자가 녹음한 문진 내용을 입력해 감정분석, 요약, 키워드 분석 결과를 보여주는 CDSS.  
-(CDSS : 환자로부터 얻어진 임상 정보를 바탕으로 의료인이 질병을 진단하고 치료할 때 의사결정을 도와주는 시스템)  
-Google Cloud Platform을 적극 활용하여 개발했습니다.  
-지원언어: 음성인식 - 한국어, 영어, 일본어 / pdf 업로드 - 영어, 일본어
-![기능구조](./assets/기능구조.png)
+(CDSS : 환자로부터 얻어진 임상 정보를 바탕으로 의료인이 질병을 진단하고 치료할 때 의사결정을 도와주는 시스템)
 
-### GCP API
-- Speech to Text API
-- Natural Language API
-- Healthcare Natural Language API
-- Vertex Ai Text Generation Model
-- Document Ai API
+## Features
 
-### 아키텍쳐
-![아키텍처](./assets/아키텍처.png)
+- Speech To Text
+  - 실시간 녹음
+  - 텍스트 감정분석
+  - 다중 언어 지원 : 한, 영, 일
+  - wav, flac 파일 지원
+- PDF
+    - OCR을 통한 디지털화
+- Vertex Ai
+    - 의사-환자 대화 요약
+    - 의심 질환 예측
+    - 환자에 대한 추가 질문 생성
 
-### 프로젝트 구조
+## System Requirements
+
+- Mac OS: macOS 10.9 (Mavericks) 이상
+- Linux: 커널 버전 3.10 이상을 권장(Ubuntu 18.04 LTS 이상, CentOS 7 이상, Debian 9 이상 등)
+
+## Getting Started
+### 사전 요구사항
+> 이 프로젝트는 Docker와 Docker Compose를 사용하여 로컬 환경에서 쉽게 실행할 수 있도록 구성되어 있습니다.  
+> 다음 단계를 따라 프로젝트를 설정하고 실행하세요.   
+> Docker 설치 방법은 [Docker 공식 문서](https://docs.docker.com/desktop/)를 참조하세요.
+ 
+### **설치 및 실행 단계**
+
+1. **프로젝트 클론**  
+   Git을 사용하여 이 프로젝트를 로컬 시스템으로 클론합니다.
+    ```bash
+    git clone https://github.com/dealim/voice-doctor
+    cd voice-doctor
+    ```
+
+2. **구글 클라우드 서비스키 설정**  
+    **[공식문서 링크]**  
+    - [Google Cloud Natural Language (감정 분석)](https://cloud.google.com/natural-language/docs)
+    - [Google Cloud Healthcare API](https://cloud.google.com/healthcare/docs)
+    - [Google Cloud Vision API (OCR)](https://cloud.google.com/vision/docs/ocr)
+    - [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech/docs)
+    - [Vertex AI](https://cloud.google.com/vertex-ai/docs)  
+   
+    **[서비스키 적용]**  
+    공식문서를 따라 발급받은 키들을 적용해야합니다. `keys` 폴더에 secrets.json 파일을 생성하고 다음과 같이 입력합니다.  
+    ```
+    {
+    "APIKEY_TEXT_EMOTION_ANALYSIS" : "서비스키 파일명",
+    "HEALTH": "서비스키 파일명",
+    "OCR": "서비스키 파일명",
+    "STT": "서비스키 파일명",
+    "VERTEX_AI": "서비스키 파일명"
+    }
+    ```
+   `keys`폴더에 발급받은 서비스키를 이동한뒤, 파일명을 위에 맞춰 입력합니다.
+
+
+3. **Docker 이미지 빌드 및 컨테이너 실행**  
+   Docker Compose를 사용하여 서비스를 빌드하고 실행합니다.
+    ```bash
+    docker-compose up --build
+    ```
+   빌드가 완료되고 컨테이너가 실행되면, Flask 애플리케이션과 Nginx 서버가 시작됩니다.
+
+
+5. **웹사이트 접속**  
+   브라우저를 열고 **`http://localhost:10100`**로 접속합니다. 애플리케이션의 홈페이지가 표시됩니다.
+
+## Architecture
+![](./assets/아키텍처.png)
+
+## Folder Structure
 ```
-GCP-TEAM2/
+voice-doctor/
 │
 ├── static/                 
 │   ├── css/                                    # CSS 파일들
@@ -55,9 +104,11 @@ GCP-TEAM2/
 ├── docker-compose.yml                          # nginx + flask 서버
 └── requirements.txt                            # 프로젝트 의존성 목록 파일
 ```
+## Roles
+[팀원 역할](./docs/ROLES.md)
 
-### 참고
-[노션](https://far-fossa-e64.notion.site/94272df5c9344a48bc73169efd122623?pvs=4)
-
-### 시연 영상
+## 시연 영상
 [![Video Label](http://img.youtube.com/vi/4RMyuYGm1PM/0.jpg)](https://youtu.be/4RMyuYGm1PM)
+
+## License
+MIT License

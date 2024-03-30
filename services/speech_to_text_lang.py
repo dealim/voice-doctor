@@ -72,7 +72,6 @@ def transcribe_audio(filename, output_json_file, extname):
             "model" : "phone_call"
         }
 
-
     elif language_check == "ko-kr":
         config = {
             "language_code": language_check,
@@ -84,7 +83,6 @@ def transcribe_audio(filename, output_json_file, extname):
             "model" : "telephony"
             # "model": "latest_long"
         }
-
 
     print("config : ", config)
     response = client.recognize(config=config, audio=audio)

@@ -185,7 +185,7 @@ def upload_record():
 
 @app.route('/download/<filename>')
 def download_file(filename):
-    return send_from_directory('assets', filename)
+    return send_from_directory('assets/demos', filename)
 
 # execute app
 if __name__ == '__main__':

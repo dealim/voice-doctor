@@ -1,5 +1,4 @@
 #FROM python:3.9
-
 FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:latest
 
 # 파이썬 설치

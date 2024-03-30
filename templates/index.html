@@ -23,5 +23,27 @@
 
 <script type="module" src="{{ url_for('static', filename='js/stylescript.js') }}"></script>
 <script type="module" src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+    function downloadFile(filename) {
+        fetch(`/download/${filename}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => console.error('There has been a problem with your fetch operation:', error));
+    }
+
+</script>
 </body>
 </html>

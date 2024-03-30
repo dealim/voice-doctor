@@ -16,9 +16,7 @@ except Exception as e:
 def get_projectId():
     return "voicedoctor"
 
-
 def get_secret(setting):
-    """비밀 변수를 가져오거나 명시적 예외를 반환한다."""
     if setting == "APIKEY_TEXT_EMOTION_ANALYSIS":
         return secrets[setting]
     elif setting == "SUMMARY":
