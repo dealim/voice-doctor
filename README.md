@@ -108,7 +108,7 @@ voice-doctor/
 ## Roles
 [팀원 역할](./docs/ROLES.md)
 
-## 시연 영상
+## Demo Video
 [![Video Label](http://img.youtube.com/vi/4RMyuYGm1PM/0.jpg)](https://youtu.be/4RMyuYGm1PM)
 
 ## License
