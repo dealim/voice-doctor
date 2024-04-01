@@ -43,10 +43,11 @@
     - [Google Cloud Healthcare API](https://cloud.google.com/healthcare/docs)
     - [Google Cloud Vision API (OCR)](https://cloud.google.com/vision/docs/ocr)
     - [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech/docs)
-    - [Vertex AI](https://cloud.google.com/vertex-ai/docs)  
-   
+    - [Vertex AI](https://cloud.google.com/vertex-ai/docs)
+
     **[서비스키 적용]**  
     공식문서를 따라 발급받은 키들을 적용해야합니다. `keys` 폴더에 secrets.json 파일을 생성하고 다음과 같이 입력합니다.  
+    
     ```
     {
     "APIKEY_TEXT_EMOTION_ANALYSIS" : "서비스키 파일명",
