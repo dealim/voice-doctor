@@ -1,4 +1,5 @@
 # VoiceDoctor 🧑🏼‍⚕️
+
 환자가 녹음한 문진 내용을 입력해 감정분석, 요약, 키워드 분석 결과를 보여주는 CDSS.  
 (CDSS : 환자로부터 얻어진 임상 정보를 바탕으로 의료인이 질병을 진단하고 치료할 때 의사결정을 도와주는 시스템) 
 > [!Important]
@@ -31,7 +32,9 @@
 - Linux: 커널 버전 3.10 이상을 권장(Ubuntu 18.04 LTS 이상, CentOS 7 이상, Debian 9 이상 등)
 
 ## Getting Started
+
 ### 사전 요구사항
+
 > [!Note]
 > 이 프로젝트는 Docker와 Docker Compose를 사용하여 로컬 환경에서 쉽게 실행할 수 있도록 구성되어 있습니다.  
 > 다음 단계를 따라 프로젝트를 설정하고 실행하세요.   
@@ -80,9 +83,11 @@
    브라우저를 열고 `http://localhost:10100`로 접속합니다. 애플리케이션의 홈페이지가 표시됩니다.
 
 ## Architecture
+
 ![](./assets/아키텍처.png)
 
 ## Folder Structure
+
 ```
 voice-doctor/
 │
@@ -114,7 +119,9 @@ voice-doctor/
 ├── docker-compose.yml                          # nginx + flask 서버
 └── requirements.txt                            # 프로젝트 의존성 목록 파일
 ```
+
 ## Roles
+
 [팀원 역할](./docs/ROLES.md)
 
 ## Demo Video
