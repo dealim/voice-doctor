@@ -6,4 +6,5 @@ services:
     volumes:
       - .:/app
     environment:
-      - FLASK_ENV=development
+      - FLASK_ENV=production
+    restart: on-failure
